@@ -15,7 +15,7 @@
             border-radius: 15px;
             display: inline-block;
             width: 100%;
-            max-width: 1400px; /* 12칸 배치를 위해 가로폭 확장 */
+            max-width: 1400px;
         }
 
         h1 { font-size: 3rem; margin-bottom: 10px; color: var(--accent); text-shadow: 0 0 10px rgba(250, 204, 21, 0.2); }
@@ -29,7 +29,7 @@
         }
         .download-btn {
             background-color: var(--accent);
-            color: #1a1a1a; /* 노란색 배경에 잘 보이도록 검은 글씨 */
+            color: #1a1a1a;
             box-shadow: 0 4px 15px rgba(250, 204, 21, 0.3);
         }
         .download-btn:hover { transform: scale(1.05); background-color: #eab308; }
@@ -40,7 +40,7 @@
         }
         .share-btn:hover { transform: scale(1.05); background-color: #2563eb; }
 
-        /* [★요청] 12칸 그리드 설정 */
+        /* 12칸 그리드 설정 */
         .grid-container {
             display: grid;
             grid-template-columns: repeat(12, 1fr);
@@ -49,11 +49,10 @@
             margin: 0 auto;
         }
 
-        /* 캡처 신뢰성을 위해 투명도 중심 설계 */
         .sticker-card {
             background: #2a2a2a; border-radius: 8px; padding: 6px;
             cursor: pointer; transition: 0.2s;
-            opacity: 0.2; /* 100종 대형 도감 특성상 미수집은 더 흐리게 하여 가독성 확보 */
+            opacity: 0.2;
         }
 
         .sticker-card img {
@@ -62,10 +61,9 @@
             display: block;
         }
 
-        /* 수집 완료(클릭됨) 상태 스타일 */
         .sticker-card.collected {
             background: #3e3e3e; 
-            opacity: 1 !important; /* 캡처 시에도 투명도 100% 강제 보장 */
+            opacity: 1 !important;
             box-shadow: 0 0 12px rgba(250, 204, 21, 0.3);
             border: 1px solid var(--accent);
         }
@@ -83,12 +81,16 @@
         <p class="release-date">2026년 05월 07일 출시</p>
 
         <div class="grid-container" id="grid"></div>
+
+        <div style="text-align: right; margin-top: 40px; padding-right: 10px; font-size: 0.9rem; color: #555; letter-spacing: 2px;">
+            CREATED BY <strong style="color: var(--accent); text-shadow: 0 0 5px rgba(250,204,21,0.3);">AND</strong>
+        </div>
     </div>
 
     <script>
-        const total = 100; // 100종 설정
+        const total = 100;
         const grid = document.getElementById('grid');
-        const storageKey = 'collected_art_30y'; // 30주년 전용 저장 키
+        const storageKey = 'collected_art_30y';
 
         const urlParams = new URLSearchParams(window.location.search);
         const codeParam = urlParams.get('code');
@@ -100,7 +102,6 @@
             collected = JSON.parse(localStorage.getItem(storageKey)) || [];
         }
 
-        // 도감 그리드 생성 (1부터 100까지)
         for (let i = 1; i <= total; i++) {
             const card = document.createElement('div');
             card.className = 'sticker-card';
@@ -108,7 +109,6 @@
             if (collected.includes(i)) card.classList.add('collected');
 
             const img = document.createElement('img');
-            // 요청하신 경로: image/30y_art/ 폴더 안의 이미지 호출
             img.src = `../image/30y_art/${i}.png`;
             img.alt = `스티커 ${i}`;
             img.crossOrigin = "anonymous"; 
@@ -150,13 +150,12 @@
             navigator.clipboard.writeText(window.location.href).then(() => {
                 alert('30주년 도감 수집 현황이 담긴 공유 링크가 복사되었습니다!');
             }).catch(err => {
-                alert('링크 복사에 실패했습니다. 주소창의 주소를 직접 복사해주세요.');
+                alert('リンク 복사에 실패했습니다. 주소창의 주소를 직접 복사해주세요.');
             });
         }
 
         function downloadDoc() {
             const target = document.getElementById('capture-area');
-            
             html2canvas(target, {
                 useCORS: true,
                 allowTaint: true,
