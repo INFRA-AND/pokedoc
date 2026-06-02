@@ -48,11 +48,10 @@
             margin: 0 auto;
         }
 
-        /* [★수정] html2canvas 호환성을 위해 필터 대신 투명도 중심 설계 */
         .sticker-card {
             background: #2a2a2a; border-radius: 10px; padding: 10px;
             cursor: pointer; transition: 0.3s;
-            opacity: 0.25; /* 미수집 상태는 카드 전체를 흐리게 처리 */
+            opacity: 0.25;
         }
 
         .sticker-card img {
@@ -61,10 +60,9 @@
             display: block;
         }
 
-        /* 수집 완료(클릭됨) 상태 스타일 */
         .sticker-card.collected {
-            background: #3a3a3a; /* 미세하게 더 밝은 배경 */
-            opacity: 1 !important; /* 캡처 시에도 투명도 100% 강제 보장 */
+            background: #3a3a3a;
+            opacity: 1 !important;
             box-shadow: 0 0 10px rgba(255, 117, 24, 0.2);
         }
     </style>
@@ -81,6 +79,10 @@
         <p class="release-date">2022년 09월 29일 출시</p>
 
         <div class="grid-container" id="grid"></div>
+
+        <div style="text-align: right; margin-top: 40px; padding-right: 10px; font-size: 0.9rem; color: #555; letter-spacing: 2px;">
+            CREATED BY <strong style="color: var(--accent); text-shadow: 0 0 5px rgba(255,117,24,0.3);">AND</strong>
+        </div>
     </div>
 
     <script>
@@ -98,7 +100,6 @@
             collected = JSON.parse(localStorage.getItem(storageKey)) || [];
         }
 
-        // 도감 그리드 생성
         for (let i = 1; i <= total; i++) {
             const card = document.createElement('div');
             card.className = 'sticker-card';
@@ -108,7 +109,7 @@
             const img = document.createElement('img');
             img.src = `../image/2022_Halloween/${i}.png`;
             img.alt = `스티커 ${i}`;
-            img.crossOrigin = "anonymous"; // 캡처 시 오작동 방지 중요 보안 설정
+            img.crossOrigin = "anonymous";
 
             card.appendChild(img);
             
@@ -151,11 +152,8 @@
             });
         }
 
-        // [★수정] 이미지 다운로드 함수 최적화
         function downloadDoc() {
             const target = document.getElementById('capture-area');
-            
-            // 캡처 옵션 정밀 튜닝
             html2canvas(target, {
                 useCORS: true,
                 allowTaint: true,
