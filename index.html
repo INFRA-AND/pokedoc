@@ -5,8 +5,18 @@
     <title>포켓몬 띠부실 도감 보관소</title>
     <style>
         body { font-family: sans-serif; background: #f4f4f9; padding: 50px; text-align: center; }
+        
+        /* [추가] 여러 도감 카드가 생겨도 가로로 예쁘게 정렬해주는 상자 */
+        .menu-container {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: 40px;
+        }
+
         .menu-card {
-            background: white; border-radius: 15px; padding: 30px;
+            background: white; border-radius: 15px; padding: 30px; width: 250px;
             box-shadow: 0 4px 15px rgba(0,0,0,0.1); display: inline-block;
             cursor: pointer; transition: 0.3s; text-decoration: none; color: #333;
         }
@@ -15,9 +25,24 @@
 </head>
 <body>
     <h1>나의 띠부실 도감 목록</h1>
-    <a href="main/2022_halloween.html" class="menu-card">
-        <h2>🎃 2022 할로윈 도감</h2>
-        <p>27종의 특별한 할로윈 스티커</p>
-    </a>
+    
+    <div class="menu-container">
+        
+        <a href="main/2022_halloween.html" class="menu-card">
+            <h2>🎃 2022 할로윈</h2>
+            <p>27종의 특별한 할로윈 스티커</p>
+        </a>
+
+        <a href="main/30y_art.html" class="menu-card">
+            <h2>✨ 30주년 아트윅</h2>
+            <p>100종의 아트윅 스페셜 스티커</p>
+        </a>
+
+    </div>
+
+    <!-- [★추가] 화면 맨 아래에 들어가는 AND 제작자 표시 -->
+    <footer style="margin-top: 100px; font-size: 0.9rem; color: #bbb; letter-spacing: 1px;">
+        Designed & Built by <strong style="color: #888; font-weight: bold;">AND</strong>
+    </footer>
 </body>
 </html>
