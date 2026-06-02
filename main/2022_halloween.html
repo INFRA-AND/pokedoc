@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>2022년 할로윈 띠부실 도감</title>
+    <style>
+        :root { --bg-color: #1a1a1a; --text-color: #ffffff; --accent: #ff7518; }
+        body { background-color: var(--bg-color); color: var(--text-color); font-family: 'Apple SD Gothic Neo', sans-serif; padding: 40px; text-align: center; }
+        
+        h1 { font-size: 3rem; margin-bottom: 10px; color: var(--accent); }
+        .release-date { font-size: 1.2rem; color: #aaa; margin-bottom: 50px; }
+
+        /* 6칸 그리드 설정 */
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            gap: 20px;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .sticker-card {
+            background: #2a2a2a; border-radius: 10px; padding: 10px;
+            cursor: pointer; transition: 0.3s;
+        }
+
+        .sticker-card img {
+            width: 100%; height: auto;
+            filter: grayscale(1) opacity(0.3); /* 기본 흑백 및 투명도 */
+            transition: 0.3s;
+        }
+
+        /* 클릭 시 'collected' 클래스가 붙으면 색상 복구 */
+        .sticker-card.collected img {
+            filter: grayscale(0) opacity(1);
+        }
+    </style>
+</head>
+<body>
+
+    <h1>2022년 할로윈 띠부실 도감 (27종)</h1>
+    <p class="release-date">2022년 09월 29일 출시</p>
+
+    <div class="grid-container" id="grid"></div>
+
+    <script>
+        const total = 27;
+        const grid = document.getElementById('grid');
+        const storageKey = 'collected_halloween_2022';
+
+        // 로컬 스토리지에서 저장된 데이터 불러오기
+        let collected = JSON.parse(localStorage.getItem(storageKey)) || [];
+
+        for (let i = 1; i <= total; i++) {
+            const card = document.createElement('div');
+            card.className = 'sticker-card';
+            if (collected.includes(i)) card.classList.add('collected');
+
+            const img = document.createElement('img');
+            // 이미지 경로 설정: ../../image/2022_Halloween/ (현재 main 폴더 기준)
+            img.src = `../../image/2022_Halloween/${i}.png`;
+            img.alt = `스티커 ${i}`;
+
+            card.appendChild(img);
+            
+            card.onclick = () => {
+                card.classList.toggle('collected');
+                updateStorage(i);
+            };
+
+            grid.appendChild(card);
+        }
+
+        function updateStorage(id) {
+            const index = collected.indexOf(id);
+            if (index > -1) {
+                collected.splice(index, 1);
+            } else {
+                collected.push(id);
+            }
+            localStorage.setItem(storageKey, JSON.stringify(collected));
+        }
+    </script>
+</body>
+</html>
