@@ -3,12 +3,42 @@
 <head>
     <meta charset="UTF-8">
     <title>2022년 할로윈 띠부실 도감</title>
+    <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
     <style>
         :root { --bg-color: #1a1a1a; --text-color: #ffffff; --accent: #ff7518; }
         body { background-color: var(--bg-color); color: var(--text-color); font-family: 'Apple SD Gothic Neo', sans-serif; padding: 40px; text-align: center; }
         
+        /* 캡처 구역 설정 */
+        #capture-area {
+            background-color: var(--bg-color);
+            padding: 20px;
+            border-radius: 15px;
+            display: inline-block;
+            width: 100%;
+            max-width: 1040px;
+        }
+
         h1 { font-size: 3rem; margin-bottom: 10px; color: var(--accent); }
-        .release-date { font-size: 1.2rem; color: #aaa; margin-bottom: 50px; }
+        .release-date { font-size: 1.2rem; color: #aaa; margin-bottom: 40px; }
+
+        /* 이미지 다운로드 버튼 스타일 */
+        .download-btn {
+            background-color: var(--accent);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            border-radius: 25px;
+            cursor: pointer;
+            margin-bottom: 30px;
+            transition: 0.2s;
+            box-shadow: 0 4px 15px rgba(255, 117, 24, 0.4);
+        }
+        .download-btn:hover {
+            transform: scale(1.05);
+            background-color: #e06413;
+        }
 
         /* 6칸 그리드 설정 */
         .grid-container {
@@ -38,10 +68,14 @@
 </head>
 <body>
 
-    <h1>2022년 할로윈 띠부실 도감 (27종)</h1>
-    <p class="release-date">2022년 09월 29일 출시</p>
+    <button class="download-btn" onclick="downloadDoc()">내 도감 이미지로 저장하기</button>
 
-    <div class="grid-container" id="grid"></div>
+    <div id="capture-area">
+        <h1>2022년 할로윈 띠부실 도감 (27종)</h1>
+        <p class="release-date">2022년 09월 29일 출시</p>
+
+        <div class="grid-container" id="grid"></div>
+    </div>
 
     <script>
         const total = 27;
@@ -57,9 +91,11 @@
             if (collected.includes(i)) card.classList.add('collected');
 
             const img = document.createElement('img');
-            // 이미지 경로 설정: ../../image/2022_Halloween/ (현재 main 폴더 기준)
             img.src = `../image/2022_Halloween/${i}.png`;
             img.alt = `스티커 ${i}`;
+            
+            // ⚠️ 중요: html2canvas가 다른 폴더의 이미지를 잘 읽어오도록 설정
+            img.crossOrigin = "Anonymous"; 
 
             card.appendChild(img);
             
@@ -79,6 +115,23 @@
                 collected.push(id);
             }
             localStorage.setItem(storageKey, JSON.stringify(collected));
+        }
+
+        // 이미지 다운로드 기능 함수
+        function downloadDoc() {
+            const target = document.getElementById('capture-area');
+            
+            // 버튼을 누른 시점의 화면 상태 그대로 캡처 시작
+            html2canvas(target, {
+                useCORS: true, // 외부 이미지나 다른 경로 이미지 허용
+                backgroundColor: "#1a1a1a", // 배경색 강제 지정 (주변이 투명해지는 것 방지)
+                scale: 2 // 화질을 2배로 깨끗하게 저장
+            }).then(canvas => {
+                const link = document.createElement('a');
+                link.download = '내_2022_할로윈_도감.png'; // 다운로드될 파일명
+                link.href = canvas.toDataURL('image/png');
+                link.click();
+            });
         }
     </script>
 </body>
