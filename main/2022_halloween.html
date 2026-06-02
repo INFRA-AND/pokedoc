@@ -10,8 +10,8 @@
         
         /* 캡처 구역 설정 */
         #capture-area {
-            background-color: var(--bg-color);
-            padding: 20px;
+            background-color: #1a1a1a;
+            padding: 30px;
             border-radius: 15px;
             display: inline-block;
             width: 100%;
@@ -48,20 +48,24 @@
             margin: 0 auto;
         }
 
+        /* [★수정] html2canvas 호환성을 위해 필터 대신 투명도 중심 설계 */
         .sticker-card {
             background: #2a2a2a; border-radius: 10px; padding: 10px;
             cursor: pointer; transition: 0.3s;
+            opacity: 0.25; /* 미수집 상태는 카드 전체를 흐리게 처리 */
         }
 
         .sticker-card img {
             width: 100%; height: auto;
-            filter: grayscale(1) opacity(0.3); /* 기본 흑백 및 투명도 */
             transition: 0.3s;
+            display: block;
         }
 
-        /* 클릭 시 'collected' 클래스가 붙으면 색상 복구 */
-        .sticker-card.collected img {
-            filter: grayscale(0) opacity(1);
+        /* 수집 완료(클릭됨) 상태 스타일 */
+        .sticker-card.collected {
+            background: #3a3a3a; /* 미세하게 더 밝은 배경 */
+            opacity: 1 !important; /* 캡처 시에도 투명도 100% 강제 보장 */
+            box-shadow: 0 0 10px rgba(255, 117, 24, 0.2);
         }
     </style>
 </head>
@@ -84,16 +88,13 @@
         const grid = document.getElementById('grid');
         const storageKey = 'collected_halloween_2022';
 
-        // 1. 주소창에 수집 데이터(?code=...)가 있는지 먼저 확인, 없으면 로컬 스토리지에서 로드
         const urlParams = new URLSearchParams(window.location.search);
         const codeParam = urlParams.get('code');
         
         let collected = [];
         if (codeParam) {
-            // 주소에 코드가 있으면 그것을 기반으로 도감 세팅 (공유링크 접속자용)
             collected = codeParam.split(',').map(Number).filter(n => n > 0 && n <= total);
         } else {
-            // 평소 본인 브라우저로 접속했을 때는 기존 저장 데이터 활용
             collected = JSON.parse(localStorage.getItem(storageKey)) || [];
         }
 
@@ -107,20 +108,19 @@
             const img = document.createElement('img');
             img.src = `../image/2022_Halloween/${i}.png`;
             img.alt = `스티커 ${i}`;
-            img.crossOrigin = "Anonymous"; 
+            img.crossOrigin = "anonymous"; // 캡처 시 오작동 방지 중요 보안 설정
 
             card.appendChild(img);
             
             card.onclick = () => {
                 card.classList.toggle('collected');
                 updateStorage(i);
-                updateURL(); // 클릭할 때마다 주소창 실시간 업데이트
+                updateURL();
             };
 
             grid.appendChild(card);
         }
 
-        // 수집 데이터 저장 처리
         function updateStorage(id) {
             const index = collected.indexOf(id);
             if (index > -1) {
@@ -131,34 +131,34 @@
             localStorage.setItem(storageKey, JSON.stringify(collected));
         }
 
-        // 주소창의 ?code=... 부분을 실시간으로 바꿔주는 함수
         function updateURL() {
             if (collected.length > 0) {
                 const sortedCollected = [...collected].sort((a, b) => a - b);
                 const newUrl = `${window.location.protocol}//${window.location.host}${window.location.pathname}?code=${sortedCollected.join(',')}`;
                 window.history.replaceState({ path: newUrl }, '', newUrl);
             } else {
-                // 아무것도 선택 안 했을 때는 깔끔하게 주소창 뒤를 비움
                 const cleanUrl = `${window.location.protocol}//${window.location.host}${window.location.pathname}`;
                 window.history.replaceState({ path: cleanUrl }, '', cleanUrl);
             }
         }
 
-        // [링크 복사] 버튼 함수
         function copyShareLink() {
-            updateURL(); // 최신 상태 반영 확인
+            updateURL();
             navigator.clipboard.writeText(window.location.href).then(() => {
-                alert('현재 수집 현황이 담긴 공유 링크가 복사되었습니다! 필요한 곳에 붙여넣기 하세요.');
+                alert('현재 수집 현황이 담긴 공유 링크가 복사되었습니다!');
             }).catch(err => {
                 alert('링크 복사에 실패했습니다. 주소창의 주소를 직접 복사해주세요.');
             });
         }
 
-        // 이미지 다운로드 함수
+        // [★수정] 이미지 다운로드 함수 최적화
         function downloadDoc() {
             const target = document.getElementById('capture-area');
+            
+            // 캡처 옵션 정밀 튜닝
             html2canvas(target, {
                 useCORS: true,
+                allowTaint: true,
                 backgroundColor: "#1a1a1a",
                 scale: 2
             }).then(canvas => {
@@ -169,7 +169,6 @@
             });
         }
 
-        // 최초 접속 시 주소창 뒤에 데이터가 없다면 본인 데이터 기준으로 한 번 주소 생성
         if (!codeParam && collected.length > 0) {
             updateURL();
         }
