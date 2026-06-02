@@ -21,12 +21,26 @@
         h1 { font-size: 3rem; margin-bottom: 10px; color: var(--accent); }
         .release-date { font-size: 1.2rem; color: #aaa; margin-bottom: 40px; }
 
-        /* 버튼 컨테이너 및 스타일 */
-        .btn-container { margin-bottom: 30px; display: flex; justify-content: center; gap: 15px; }
+        /* [수정] 버튼들을 좌우 양끝으로 정렬하는 컨테이너 */
+        .btn-container { 
+            margin: 0 auto 30px auto; 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            width: 100%;
+            max-width: 1040px; 
+        }
         .btn {
             color: white; border: none; padding: 12px 25px; font-size: 1.1rem;
             font-weight: bold; border-radius: 25px; cursor: pointer; transition: 0.2s;
         }
+        /* 메인 홈 버튼 스타일 */
+        .home-btn {
+            background-color: #475569;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+        }
+        .home-btn:hover { transform: scale(1.05); background-color: #334155; }
+
         .download-btn {
             background-color: var(--accent);
             box-shadow: 0 4px 15px rgba(255, 117, 24, 0.4);
@@ -69,9 +83,15 @@
 </head>
 <body>
 
+    <!-- [수정] 상단 버튼 영역 양끝 정렬 구조 -->
     <div class="btn-container">
-        <button class="btn download-btn" onclick="downloadDoc()">내 도감 이미지로 저장</button>
-        <button class="btn share-btn" onclick="copyShareLink()">현재 도감 링크 복사</button>
+        <a href="../index.html" style="text-decoration: none;">
+            <button class="btn home-btn">🏠 메인 목록으로</button>
+        </a>
+        <div style="display: flex; gap: 15px;">
+            <button class="btn download-btn" onclick="downloadDoc()">내 도감 이미지로 저장</button>
+            <button class="btn share-btn" onclick="copyShareLink()">현재 도감 링크 복사</button>
+        </div>
     </div>
 
     <div id="capture-area">
