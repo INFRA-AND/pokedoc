@@ -5,7 +5,7 @@
     <title>2022년 할로윈 띠부실 도감</title>
     <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
     <style>
-        :root { --bg-color: #1a1a1a; --text-color: #ffffff; --accent: #ff7518; }
+        :root { --bg-color: #1a1a1a; --text-color: #ffffff; --accent: #ff7518; --sub-accent: #3b82f6; }
         body { background-color: var(--bg-color); color: var(--text-color); font-family: 'Apple SD Gothic Neo', sans-serif; padding: 40px; text-align: center; }
         
         /* 캡처 구역 설정 */
@@ -21,24 +21,23 @@
         h1 { font-size: 3rem; margin-bottom: 10px; color: var(--accent); }
         .release-date { font-size: 1.2rem; color: #aaa; margin-bottom: 40px; }
 
-        /* 이미지 다운로드 버튼 스타일 */
+        /* 버튼 컨테이너 및 스타일 */
+        .btn-container { margin-bottom: 30px; display: flex; justify-content: center; gap: 15px; }
+        .btn {
+            color: white; border: none; padding: 12px 25px; font-size: 1.1rem;
+            font-weight: bold; border-radius: 25px; cursor: pointer; transition: 0.2s;
+        }
         .download-btn {
             background-color: var(--accent);
-            color: white;
-            border: none;
-            padding: 12px 30px;
-            font-size: 1.1rem;
-            font-weight: bold;
-            border-radius: 25px;
-            cursor: pointer;
-            margin-bottom: 30px;
-            transition: 0.2s;
             box-shadow: 0 4px 15px rgba(255, 117, 24, 0.4);
         }
-        .download-btn:hover {
-            transform: scale(1.05);
-            background-color: #e06413;
+        .download-btn:hover { transform: scale(1.05); background-color: #e06413; }
+        
+        .share-btn {
+            background-color: var(--sub-accent);
+            box-shadow: 0 4px 15px rgba(59, 130, 246, 0.4);
         }
+        .share-btn:hover { transform: scale(1.05); background-color: #2563eb; }
 
         /* 6칸 그리드 설정 */
         .grid-container {
@@ -68,7 +67,10 @@
 </head>
 <body>
 
-    <button class="download-btn" onclick="downloadDoc()">내 도감 이미지로 저장하기</button>
+    <div class="btn-container">
+        <button class="btn download-btn" onclick="downloadDoc()">내 도감 이미지로 저장</button>
+        <button class="btn share-btn" onclick="copyShareLink()">현재 도감 링크 복사</button>
+    </div>
 
     <div id="capture-area">
         <h1>2022년 할로윈 띠부실 도감 (27종)</h1>
@@ -82,19 +84,29 @@
         const grid = document.getElementById('grid');
         const storageKey = 'collected_halloween_2022';
 
-        // 로컬 스토리지에서 저장된 데이터 불러오기
-        let collected = JSON.parse(localStorage.getItem(storageKey)) || [];
+        // 1. 주소창에 수집 데이터(?code=...)가 있는지 먼저 확인, 없으면 로컬 스토리지에서 로드
+        const urlParams = new URLSearchParams(window.location.search);
+        const codeParam = urlParams.get('code');
+        
+        let collected = [];
+        if (codeParam) {
+            // 주소에 코드가 있으면 그것을 기반으로 도감 세팅 (공유링크 접속자용)
+            collected = codeParam.split(',').map(Number).filter(n => n > 0 && n <= total);
+        } else {
+            // 평소 본인 브라우저로 접속했을 때는 기존 저장 데이터 활용
+            collected = JSON.parse(localStorage.getItem(storageKey)) || [];
+        }
 
+        // 도감 그리드 생성
         for (let i = 1; i <= total; i++) {
             const card = document.createElement('div');
             card.className = 'sticker-card';
+            card.setAttribute('data-id', i);
             if (collected.includes(i)) card.classList.add('collected');
 
             const img = document.createElement('img');
             img.src = `../image/2022_Halloween/${i}.png`;
             img.alt = `스티커 ${i}`;
-            
-            // ⚠️ 중요: html2canvas가 다른 폴더의 이미지를 잘 읽어오도록 설정
             img.crossOrigin = "Anonymous"; 
 
             card.appendChild(img);
@@ -102,11 +114,13 @@
             card.onclick = () => {
                 card.classList.toggle('collected');
                 updateStorage(i);
+                updateURL(); // 클릭할 때마다 주소창 실시간 업데이트
             };
 
             grid.appendChild(card);
         }
 
+        // 수집 데이터 저장 처리
         function updateStorage(id) {
             const index = collected.indexOf(id);
             if (index > -1) {
@@ -117,21 +131,47 @@
             localStorage.setItem(storageKey, JSON.stringify(collected));
         }
 
-        // 이미지 다운로드 기능 함수
+        // 주소창의 ?code=... 부분을 실시간으로 바꿔주는 함수
+        function updateURL() {
+            if (collected.length > 0) {
+                const sortedCollected = [...collected].sort((a, b) => a - b);
+                const newUrl = `${window.location.protocol}//${window.location.host}${window.location.pathname}?code=${sortedCollected.join(',')}`;
+                window.history.replaceState({ path: newUrl }, '', newUrl);
+            } else {
+                // 아무것도 선택 안 했을 때는 깔끔하게 주소창 뒤를 비움
+                const cleanUrl = `${window.location.protocol}//${window.location.host}${window.location.pathname}`;
+                window.history.replaceState({ path: cleanUrl }, '', cleanUrl);
+            }
+        }
+
+        // [링크 복사] 버튼 함수
+        function copyShareLink() {
+            updateURL(); // 최신 상태 반영 확인
+            navigator.clipboard.writeText(window.location.href).then(() => {
+                alert('현재 수집 현황이 담긴 공유 링크가 복사되었습니다! 필요한 곳에 붙여넣기 하세요.');
+            }).catch(err => {
+                alert('링크 복사에 실패했습니다. 주소창의 주소를 직접 복사해주세요.');
+            });
+        }
+
+        // 이미지 다운로드 함수
         function downloadDoc() {
             const target = document.getElementById('capture-area');
-            
-            // 버튼을 누른 시점의 화면 상태 그대로 캡처 시작
             html2canvas(target, {
-                useCORS: true, // 외부 이미지나 다른 경로 이미지 허용
-                backgroundColor: "#1a1a1a", // 배경색 강제 지정 (주변이 투명해지는 것 방지)
-                scale: 2 // 화질을 2배로 깨끗하게 저장
+                useCORS: true,
+                backgroundColor: "#1a1a1a",
+                scale: 2
             }).then(canvas => {
                 const link = document.createElement('a');
-                link.download = '내_2022_할로윈_도감.png'; // 다운로드될 파일명
+                link.download = '내_2022_할로윈_도감.png';
                 link.href = canvas.toDataURL('image/png');
                 link.click();
             });
+        }
+
+        // 최초 접속 시 주소창 뒤에 데이터가 없다면 본인 데이터 기준으로 한 번 주소 생성
+        if (!codeParam && collected.length > 0) {
+            updateURL();
         }
     </script>
 </body>
