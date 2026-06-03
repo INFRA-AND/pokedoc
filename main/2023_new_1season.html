@@ -66,22 +66,15 @@
             margin: 0 auto;
         }
 
-        /* 가로형/세로형 띠부씰 비율 방어용 카드 상자 규격 설정 */
+        /* [★복구] 할로윈 도감과 동일하게 크기 축소 옵션 제거 및 최적화 */
         .sticker-card {
             background: #2a2a2a; border-radius: 10px; padding: 10px;
             cursor: pointer; transition: 0.3s;
             opacity: 0.25;
-            height: 160px; /* 다양한 종횡비의 BIG 사이즈 및 가로/세로형을 담기 위한 최적 고정 높이 */
-            display: flex;
-            align-items: center;
-            justify-content: center;
         }
 
-        /* 어떤 이미지가 들어와도 찌그러지거나 잘리지 않도록 강제 정비율 세팅 */
         .sticker-card img {
-            max-width: 100%;
-            max-height: 100%;
-            object-fit: contain; 
+            width: 100%; height: auto;
             transition: 0.3s;
             display: block;
         }
@@ -119,9 +112,9 @@
     </div>
 
     <script>
-        const total = 139; // 총 139종 설정
+        const total = 139;
         const grid = document.getElementById('grid');
-        const storageKey = 'collected_new_1season_2023'; // 전용 로컬스토리지 키
+        const storageKey = 'collected_new_1season_2023';
 
         const urlParams = new URLSearchParams(window.location.search);
         const codeParam = urlParams.get('code');
@@ -133,14 +126,12 @@
             collected = JSON.parse(localStorage.getItem(storageKey)) || [];
         }
 
-        // 도감 그리드 생성 (폴더 분기 로직 포함)
         for (let i = 1; i <= total; i++) {
             const card = document.createElement('div');
             card.className = 'sticker-card';
             card.setAttribute('data-id', i);
             if (collected.includes(i)) card.classList.add('collected');
 
-            // 100개 단위 폴더 분기 처리 (1~100번은 "1", 101~139번은 "2")
             let folderNum = i <= 100 ? "1" : "2";
 
             const img = document.createElement('img');
