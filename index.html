@@ -4,83 +4,148 @@
     <meta charset="UTF-8">
     <title>포켓몬 띠부실 도감 보관소</title>
     <style>
-        body { font-family: sans-serif; background: #f4f4f9; padding: 50px; text-align: center; }
-        
-        /* [추가] 여러 도감 카드가 생겨도 가로로 예쁘게 정렬해주는 상자 */
-        .menu-container {
-            display: flex;
-            gap: 20px;
-            justify-content: center;
-            flex-wrap: wrap;
-            margin-top: 40px;
+        /* 기본 환경 세팅 */
+        body { 
+            font-family: 'Apple SD Gothic Neo', sans-serif; 
+            background: #f4f4f9; 
+            padding: 50px 20px; 
+            text-align: center; 
+            margin: 0;
         }
 
-        .menu-card {
-            background: white; border-radius: 15px; padding: 30px; width: 250px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1); display: inline-block;
-            cursor: pointer; transition: 0.3s; text-decoration: none; color: #333;
+        h1 {
+            font-size: 2.5rem;
+            color: #1e293b;
+            margin-bottom: 10px;
         }
-        .menu-card:hover { transform: translateY(-5px); box-shadow: 0 8px 25px rgba(0,0,0,0.15); }
+
+        .subtitle {
+            font-size: 1.1rem;
+            color: #64748b;
+            margin-bottom: 40px;
+        }
+        
+        /* 도감 카드들을 가로로 이쁘게 정렬해주는 상자 */
+        .menu-container {
+            display: flex;
+            gap: 25px;
+            justify-content: center;
+            flex-wrap: wrap;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        /* 공통 카드 스타일 */
+        .menu-card {
+            background: white; 
+            border-radius: 15px; 
+            padding: 30px 20px; 
+            width: 260px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.06); 
+            display: inline-block;
+            cursor: pointer; 
+            transition: transform 0.3s, box-shadow 0.3s; 
+            text-decoration: none; 
+            color: #333;
+            text-align: center;
+            border: 1px solid #e2e8f0;
+        }
+
+        /* 마우스를 올렸을 때 살짝 떠오르는 효과 */
+        .menu-card:hover { 
+            transform: translateY(-5px); 
+            box-shadow: 0 12px 25px rgba(0,0,0,0.12); 
+        }
+
+        .menu-card h2 {
+            font-size: 1.4rem;
+            margin: 0 0 10px 0;
+        }
+
+        .menu-card p {
+            font-size: 0.95rem;
+            color: #64748b;
+            margin: 0;
+            line-height: 1.4;
+        }
+
+        /* 각 시즌 카드별 포인트 상단 바 색상 명시 */
+        .card-halloween { border-top: 5px solid #ff7518; }
+        .card-winter { border-top: 5px solid #6ee7b7; }
+        .card-lovely { border-top: 5px solid #ff91a4; }
+        .card-art30y { border-top: 5px solid #facc15; }
+        .card-new2023 { border-top: 5px solid #a78bfa; }
+        .card-season1 { border-top: 5px solid #10b981; }
+        .card-season2 { border-top: 5px solid #f59e0b; }
+        .card-mega { border-top: 5px solid #c084fc; }
+        .card-new-s1 { border-top: 5px solid #6366f1; }
+        .card-id2024 { border-top: 5px solid #38bdf8; }
+        .card-id2025 { border-top: 5px solid #0ea5e9; }
     </style>
 </head>
 <body>
     <h1>나의 띠부실 도감 목록</h1>
+    <p class="subtitle">지금까지 제작한 나만의 커스텀 띠부실 도감 보관소입니다.</p>
     
     <div class="menu-container">
         
-        <a href="main/2022_halloween.html" class="menu-card">
-            <h2>🎃 [띠부씰] 2022 할로윈 도감</h2>
+        <a href="main/2022_halloween.html" class="menu-card card-halloween">
+            <h2>🎃 [띠부씰] 2022 할로윈</h2>
             <p>27종의 특별한 할로윈 스티커</p>
         </a>
 
-        <a href="main/30y_art.html" class="menu-card">
-            <h2>✨ [띠부씰] 30주년 아트윅 도감</h2>
-            <p>100종의 아트윅 스페셜 스티커</p>
-        </a>
-
-        <a href="main/2022_winter.html" class="menu-card">
+        <a href="main/2022_winter.html" class="menu-card card-winter">
             <h2>❄️ [띠부씰] 2022 윈터</h2>
             <p>30종의 특별한 겨울 스티커</p>
         </a>
 
-        <a href="main/2023_lovely.html" class="menu-card">
+        <a href="main/2023_lovely.html" class="menu-card card-lovely">
             <h2>💕 [띠부씰] 2023 러블리</h2>
             <p>30종의 특별한 러블리 스티커</p>
         </a>
 
-        <a href="main/2023_new.html" class="menu-card">
-            <h2>💕 [띠부씰] 2023 NEW</h2>
+        <a href="main/30y_art.html" class="menu-card card-art30y">
+            <h2>✨ [띠부씰] 30주년 아트웍</h2>
+            <p>100종의 아트웍 스페셜 스티커</p>
+        </a>
+
+        <a href="main/2023_new.html" class="menu-card card-new2023">
+            <h2>⚡ [띠부씰] 2023 NEW</h2>
             <p>55종의 NEW 시즌 스티커</p>
         </a>
 
-        <a href="main/2022_1season.html" class="menu-card">
+        <a href="main/2022_1season.html" class="menu-card card-season1">
             <h2>🌿 [띠부씰] 2022 1세대</h2>
             <p>159종의 오리지널 1세대 스티커</p>
         </a>
 
-        <a href="main/2022_2season.html" class="menu-card">
+        <a href="main/2022_2season.html" class="menu-card card-season2">
             <h2>🍯 [띠부씰] 2022 2세대</h2>
             <p>116종의 화려한 2세대 스티커</p>
         </a>
 
-        <a href="main/2024_Mega_evolution.html" class="menu-card">
+        <a href="main/2024_Mega_evolution.html" class="menu-card card-mega">
             <h2>🔮 [띠부씰] 2024 메가진화</h2>
             <p>53종의 한정판 BIG 사이즈 띠부씰</p>
         </a>
 
-        <a href="main/2023_new_1season.html" class="menu-card">
+        <a href="main/2023_new_1season.html" class="menu-card card-new-s1">
             <h2>🍇 [띠부씰] 2023 NEW 시즌1</h2>
-            <p>139종으로 대폭 개편된 뉴 시즌 스티커</p>
+            <p>139종으로 대폭 개편된 뉴 스티커</p>
         </a>
 
-        <a href="main/2024_ID_picture.html" class="menu-card">
+        <a href="main/2024_ID_picture.html" class="menu-card card-id2024">
             <h2>📷 [스티커] 2024 증명사진 1탄</h2>
+            <p>100종의 포켓몬 증명사진 스티커</p>
+        </a>
+
+        <a href="main/2025_ID_picture.html" class="menu-card card-id2025">
+            <h2>📷 [스티커] 2025 증명사진 2탄</h2>
             <p>100종의 포켓몬 증명사진 스티커</p>
         </a>
 
     </div>
 
-    <!-- [★추가] 화면 맨 아래에 들어가는 AND 제작자 표시 -->
     <footer style="margin-top: 100px; font-size: 0.9rem; color: #bbb; letter-spacing: 1px;">
         Designed & Built by <strong style="color: #888; font-weight: bold;">AND</strong>
     </footer>
