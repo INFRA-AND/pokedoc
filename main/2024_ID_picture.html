@@ -66,16 +66,22 @@
             margin: 0 auto;
         }
 
-        /* [★복구] 작게 축소되던 원인인 height와 flex 제한을 지우고 꽉 차게 변경 */
+        /* [★해결] 1~5번 크기 편차 방어를 위해 카드 상자 높이와 여백 완벽 고정 */
         .sticker-card {
             background: #2a2a2a; border-radius: 10px; padding: 10px;
             cursor: pointer; transition: 0.3s;
             opacity: 0.25;
+            height: 150px; /* 고정 크기로 상자 틀을 통일하여 삐져나감 방지 */
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
-        /* 이미지가 상자 너비에 맞춰 큼직하게 꽉 차도록 확장 */
+        /* [★해결] 사진이 크든 작든 찌그러짐 없이 정비율 유지하며 가운데 정렬 */
         .sticker-card img {
-            width: 100%; height: auto;
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain; 
             transition: 0.3s;
             display: block;
         }
@@ -134,8 +140,8 @@
             if (collected.includes(i)) card.classList.add('collected');
 
             const img = document.createElement('img');
-            // 매핑 경로: image/2024_ID_picture/
-            img.src = `../image/2024_ID_picture/${i}.png`;
+            // [★수정] 소문자 .jpg 확장자로 완벽하게 주소 매핑!
+            img.src = `../image/2024_ID_picture/${i}.jpg`;
             img.alt = `증명사진 스티커 ${i}`;
             img.crossOrigin = "anonymous";
 
