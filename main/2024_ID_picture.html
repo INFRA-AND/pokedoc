@@ -21,7 +21,7 @@
         h1 { font-size: 3rem; margin-bottom: 10px; color: var(--accent); text-shadow: 0 0 10px rgba(56, 189, 248, 0.2); }
         .release-date { font-size: 1.2rem; color: #aaa; margin-bottom: 15px; }
         
-        /* 요청하신 포켓몬 팝업스토어 가챠 기계 안내 문구 스타일 */
+        /* 특징 안내 문구 스타일 */
         .info-note { font-size: 0.95rem; color: #94a3b8; margin-bottom: 40px; font-weight: 500; letter-spacing: 0.5px; }
 
         /* 버튼들을 좌우 양끝으로 정렬하는 컨테이너 */
@@ -46,7 +46,7 @@
 
         .download-btn {
             background-color: var(--accent);
-            color: #1a1a1a; /* 밝은 블루 배경에 잘 보이도록 어두운 글씨 */
+            color: #1a1a1a;
             box-shadow: 0 4px 15px rgba(56, 189, 248, 0.3);
         }
         .download-btn:hover { transform: scale(1.05); background-color: #0ea5e9; color: white; }
@@ -57,7 +57,7 @@
         }
         .share-btn:hover { transform: scale(1.05); background-color: #2563eb; }
 
-        /* 한 줄에 6칸 그리드 설정 */
+        /* 6칸 그리드 설정 */
         .grid-container {
             display: grid;
             grid-template-columns: repeat(6, 1fr);
@@ -66,22 +66,16 @@
             margin: 0 auto;
         }
 
-        /* 1~5번의 크기 오차를 방어하기 위해 박스 규격을 완벽하게 픽셀 고정 */
+        /* [★복구] 작게 축소되던 원인인 height와 flex 제한을 지우고 꽉 차게 변경 */
         .sticker-card {
             background: #2a2a2a; border-radius: 10px; padding: 10px;
             cursor: pointer; transition: 0.3s;
             opacity: 0.25;
-            height: 160px; /* 고정 크기로 1~5번의 찌그러짐 현상을 소멸시킴 */
-            display: flex;
-            align-items: center;
-            justify-content: center;
         }
 
-        /* 크기가 다른 사진이 들어와도 정비율 유지 및 상하좌우 정중앙 배치 */
+        /* 이미지가 상자 너비에 맞춰 큼직하게 꽉 차도록 확장 */
         .sticker-card img {
-            max-width: 100%;
-            max-height: 100%;
-            object-fit: contain; 
+            width: 100%; height: auto;
             transition: 0.3s;
             display: block;
         }
@@ -119,9 +113,9 @@
     </div>
 
     <script>
-        const total = 100; // 100종 설정
+        const total = 100;
         const grid = document.getElementById('grid');
-        const storageKey = 'collected_id_picture_2024_1st'; // 증명사진 전용 로컬스토리지 키
+        const storageKey = 'collected_id_picture_2024_1st';
 
         const urlParams = new URLSearchParams(window.location.search);
         const codeParam = urlParams.get('code');
@@ -133,7 +127,6 @@
             collected = JSON.parse(localStorage.getItem(storageKey)) || [];
         }
 
-        // 도감 그리드 생성 (1부터 100까지 자동 매핑)
         for (let i = 1; i <= total; i++) {
             const card = document.createElement('div');
             card.className = 'sticker-card';
@@ -141,7 +134,7 @@
             if (collected.includes(i)) card.classList.add('collected');
 
             const img = document.createElement('img');
-            // 이미지 보관 경로 지정: image/2024_ID_picture/
+            // 매핑 경로: image/2024_ID_picture/
             img.src = `../image/2024_ID_picture/${i}.png`;
             img.alt = `증명사진 스티커 ${i}`;
             img.crossOrigin = "anonymous";
