@@ -2,7 +2,7 @@
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
-    <title>2022년 2세대 띠부씰 도감</title>
+    <title>2022년 2세대 띠부실 도감</title>
     <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
     <style>
         :root { --bg-color: #1a1a1a; --text-color: #ffffff; --accent: #f59e0b; --sub-accent: #3b82f6; }
@@ -99,7 +99,7 @@
     </div>
 
     <div id="capture-area">
-        <h1>2022년 2세대 띠부씰 도감 (119종)</h1>
+        <h1>2022년 2세대 띠부실 도감 (116종)</h1>
         <p class="release-date">2022년 07월 07일 출시</p>
         <p class="info-note">💡 2세대 109종 + 동일 품번의 일러스트 변경씰 7종 = 116종</p>
 
@@ -111,9 +111,9 @@
     </div>
 
     <script>
-        const total = 119; // 총 119종 설정
+        const total = 116; // 119종에서 116종으로 수정 반영
         const grid = document.getElementById('grid');
-        const storageKey = 'collected_2season_2022'; // 2세대 전용 로컬스토리지 키
+        const storageKey = 'collected_2season_2022';
 
         const urlParams = new URLSearchParams(window.location.search);
         const codeParam = urlParams.get('code');
@@ -132,7 +132,7 @@
             card.setAttribute('data-id', i);
             if (collected.includes(i)) card.classList.add('collected');
 
-            // 100개 단위 폴더 분기 처리 (1~100번은 "1", 101~119번은 "2")
+            // 100개 단위 폴더 분기 처리 (1~100번은 "1", 101~116번은 "2")
             let folderNum = i <= 100 ? "1" : "2";
 
             const img = document.createElement('img');
