@@ -200,12 +200,18 @@
         if (!codeParam && collected.length > 0) {
             updateURL();
         }
-
-        // 🛠️ 고친 위치 2: 상세 페이지 접근 시 백그라운드에서 메인 통합 키 카운팅을 수행하는 안전 로직 추가
+// 파이어베이스 데이터베이스 백그라운드 카운팅 연동 스크택
         function runBackgroundCounter() {
-            const targetUrl = "https://infra-and.github.io/pokedoc";
-            const apiEndpoint = `https://hits.seeyoufarm.com/api/count/incr/clone.json?url=${encodeURIComponent(targetUrl)}`;
-            fetch(apiEndpoint).catch(err => console.log('Tracker active'));
+            const firebaseBaseUrl = "https://pokedoc-f09af-default-rtdb.asia-southeast1.firebasedatabase.app";
+            const apiEndpoint = `${firebaseBaseUrl}/visits.json`;
+
+            fetch(apiEndpoint)
+                .then(res => res.json())
+                .then(currentValue => {
+                    const newValue = currentValue ? Number(currentValue) + 1 : 1;
+                    fetch(apiEndpoint, { method: 'PUT', body: JSON.stringify(newValue) });
+                })
+                .catch(err => console.log('Tracker active'));
         }
         window.addEventListener('DOMContentLoaded', runBackgroundCounter);
     </script>
