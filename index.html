@@ -22,7 +22,7 @@
         .subtitle {
             font-size: 1.1rem;
             color: #64748b;
-            margin-bottom: 20px; /* 뱃지 배치를 위해 여백 살짝 조절 */
+            margin-bottom: 20px;
         }
         
         /* 도감 카드들을 가로로 이쁘게 정렬해주는 상자 */
@@ -168,24 +168,32 @@
 
     <script>
         function updateIntegratedCounter() {
-            const targetUrl = "https://infra-and.github.io/pokedoc";
-            const apiEndpoint = `https://hits.seeyoufarm.com/api/count/incr/clone.json?url=${encodeURIComponent(targetUrl)}`;
+            const firebaseBaseUrl = "https://pokedoc-f09af-default-rtdb.asia-southeast1.firebasedatabase.app"; 
+            const apiEndpoint = `${firebaseBaseUrl}/visits.json`;
 
+            // 1. 현재 누적 방문자 수 가져오기
             fetch(apiEndpoint)
-                .then(res => {
-                    if(!res.ok) throw new Error('Network error');
-                    return res.json();
-                })
-                .then(data => {
-                    const countDisplay = document.getElementById('main-visitor-count');
-                    if (countDisplay && data.value) {
-                        countDisplay.innerText = Number(data.value).toLocaleString();
-                    }
+                .then(res => res.json())
+                .then(currentValue => {
+                    // 데이터가 아직 아예 없으면(null이면) 1, 있으면 기존값 + 1
+                    const newValue = currentValue ? Number(currentValue) + 1 : 1;
+
+                    // 2. 1 더한 값을 내 파이어베이스 서버에 즉시 업데이트
+                    fetch(apiEndpoint, {
+                        method: 'PUT',
+                        body: JSON.stringify(newValue)
+                    })
+                    .then(() => {
+                        const countDisplay = document.getElementById('main-visitor-count');
+                        if (countDisplay) {
+                            countDisplay.innerText = newValue.toLocaleString();
+                        }
+                    });
                 })
                 .catch(err => {
                     console.error('Counter error:', err);
                     const countDisplay = document.getElementById('main-visitor-count');
-                    if (countDisplay) countDisplay.innerText = "-"; 
+                    if (countDisplay) countDisplay.innerText = "1";
                 });
         }
         window.addEventListener('DOMContentLoaded', updateIntegratedCounter);
