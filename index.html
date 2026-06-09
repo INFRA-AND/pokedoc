@@ -39,16 +39,19 @@
         .menu-card {
             background: white; 
             border-radius: 15px; 
-            padding: 30px 20px; 
+            padding: 25px 20px; 
             width: 260px;
             box-shadow: 0 4px 15px rgba(0,0,0,0.06); 
-            display: inline-block;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
             cursor: pointer; 
             transition: transform 0.3s, box-shadow 0.3s; 
             text-decoration: none; 
             color: #333;
             text-align: center;
             border: 1px solid #e2e8f0;
+            box-sizing: border-box;
         }
 
         /* 마우스를 올렸을 때 살짝 떠오르는 효과 */
@@ -57,9 +60,18 @@
             box-shadow: 0 12px 25px rgba(0,0,0,0.12); 
         }
 
+        /* 메뉴 카드 내 대표 이미지 스타일 */
+        .menu-card img {
+            max-width: 100%;
+            height: 90px;
+            object-fit: contain;
+            margin-bottom: 15px;
+        }
+
         .menu-card h2 {
-            font-size: 1.4rem;
-            margin: 0 0 10px 0;
+            font-size: 1.3rem;
+            margin: 0 0 8px 0;
+            word-break: keep-all;
         }
 
         .menu-card p {
@@ -67,6 +79,7 @@
             color: #64748b;
             margin: 0;
             line-height: 1.4;
+            word-break: keep-all;
         }
 
         /* 각 시즌 카드별 포인트 상단 바 색상 명시 */
@@ -99,81 +112,97 @@
     <div class="menu-container">
         
         <a href="main/2022_halloween.html" class="menu-card card-halloween">
+            <img src="image/main_image/2022_Halloween_main.png" alt="2022 할로윈">
             <h2>🎃 [띠부씰] 2022 할로윈</h2>
             <p>27종의 특별한 할로윈 스티커</p>
         </a>
 
         <a href="main/2022_winter.html" class="menu-card card-winter">
+            <img src="image/main_image/2022_winter_main.png" alt="2022 윈터">
             <h2>❄️ [띠부씰] 2022 윈터</h2>
             <p>30종의 특별한 겨울 스티커</p>
         </a>
 
         <a href="main/2023_lovely.html" class="menu-card card-lovely">
+            <img src="image/main_image/2023_lovely_main.png" alt="2023 러블리">
             <h2>💕 [띠부씰] 2023 러블리</h2>
             <p>30종의 특별한 러블리 스티커</p>
         </a>
 
         <a href="main/30y_art.html" class="menu-card card-art30y">
+            <img src="image/main_image/30y_art_main.png" alt="30주년 아트웍">
             <h2>✨ [띠부씰] 30주년 아트웍</h2>
             <p>100종의 아트웍 스페셜 스티커</p>
         </a>
 
         <a href="main/2023_new.html" class="menu-card card-new2023">
+            <img src="image/main_image/2023_new_main.png" alt="2023 NEW">
             <h2>⚡ [띠부씰] 2023 NEW</h2>
             <p>55종의 NEW 시즌 스티커</p>
         </a>
 
         <a href="main/2022_1season.html" class="menu-card card-season1">
+            <img src="image/main_image/2022_1season_main.png" alt="2022 1세대">
             <h2>🌿 [띠부씰] 2022 1세대</h2>
             <p>159종의 오리지널 1세대 스티커</p>
         </a>
 
         <a href="main/2022_2season.html" class="menu-card card-season2">
+            <img src="image/main_image/2022_season2_main.png" alt="2022 2세대">
             <h2>🍯 [띠부씰] 2022 2세대</h2>
             <p>116종의 화려한 2세대 스티커</p>
         </a>
 
         <a href="main/2024_Mega_evolution.html" class="menu-card card-mega">
+            <img src="image/main_image/2024_mega_main.png" alt="2024 메가진화">
             <h2>🔮 [띠부씰] 2024 메가진화</h2>
             <p>53종의 한정판 BIG 사이즈 띠부씰</p>
         </a>
 
         <a href="main/2023_new_1season.html" class="menu-card card-new-s1">
+            <img src="image/main_image/2023_new_season1_main.png" alt="2023 NEW 시즌1">
             <h2>🍇 [띠부씰] 2023 NEW 시즌1</h2>
             <p>139종으로 대폭 개편된 뉴 스티커</p>
         </a>
 
         <a href="main/2024_ID_picture.html" class="menu-card card-id2024">
+            <img src="image/main_image/2024_ID_picture_main.png" alt="2024 증명사진 1탄">
             <h2>📷 [스티커] 2024 증명사진 1탄</h2>
             <p>100종의 포켓몬 증명사진 스티커</p>
         </a>
 
         <a href="main/2025_ID_picture.html" class="menu-card card-id2025">
+            <img src="image/main_image/2025_ID_picture_main.jpg" alt="2025 증명사진 2탄">
             <h2>📷 [스티커] 2025 증명사진 2탄</h2>
             <p>100종의 포켓몬 증명사진 스티커</p>
         </a>
 
         <a href="main/2024_new_season2.html" class="menu-card card-season2-2024">
+            <img src="image/main_image/2024_new_season2_main.png" alt="2024 NEW 시즌2">
             <h2>🌊 [띠부씰] 2024 NEW 시즌2</h2>
             <p>163종 (꼬부기 소방대 포함) 시즌2 스티커</p>
         </a>
 
         <a href="main/2024_new_season3.html" class="menu-card card-season3-2024">
+            <img src="image/main_image/2024_new_season3_main.png" alt="2024 NEW 시즌3">
             <h2>🍁 [띠부씰] 2024 NEW 시즌3</h2>
             <p>154종의 풍성한 뉴 시즌3 스티커</p>
         </a>
 
         <a href="main/2025_new_season4.html" class="menu-card card-season4-2025">
+            <img src="image/main_image/2025_new_season4_main.png" alt="2025 NEW 시즌4">
             <h2>❄️ [띠부씰] 2025 NEW 시즌4</h2>
             <p>168종의 특별한 NEW 시즌4 스티커</p>
         </a>
 
         <a href="main/2026_new_season5.html" class="menu-card card-season5-2026">
+            <img src="image/main_image/2026_new_season5_main.png" alt="2026 NEW 시즌5">
             <h2>🌸 [띠부씰] 2026 NEW 시즌5</h2>
             <p>150종의 기념비적인 30주년 스티커</p>
         </a>
 
         <a href="main/baskin_30y.html" class="menu-card card-baskin-30y">
+            <img src="image/main_image/baskin_30y_main.jpg" alt="배스킨라빈스 30주년">
             <h2>🍦 [스티커] 배스킨라빈스 30주년</h2>
             <p>27종의 특별한 포켓몬 3D 스틱바 스티커</p>
         </a>
