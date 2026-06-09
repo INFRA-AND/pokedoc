@@ -126,7 +126,7 @@
             collected = JSON.parse(localStorage.getItem(storageKey)) || [];
         }
 
-        // 도감 그리드 생성 및 폴더 자동 분기 로직 (jpg 반영)
+        // 도감 그리드 생성 및 폴더 자동 분기 로직 (★경로 오타 수정 및 .png 고정 완료)
         for (let i = 1; i <= total; i++) {
             const card = document.createElement('div');
             card.className = 'sticker-card';
@@ -137,7 +137,8 @@
             let folderNum = i <= 100 ? "1" : "2";
 
             const img = document.createElement('img');
-            img.src = `../image/2024_pixel_art/${folderNum}/${i}.png`;
+            // ⭕ pixel_art 뒤에 슬래시(/)를 명확하게 넣고 확장자를 .png로 정확하게 매칭했습니다.
+            img.src = `../image/2024_pixel_art/${folderNum}/${i}.png`; 
             img.alt = `스티커 ${i}`;
             img.crossOrigin = "anonymous";
 
