@@ -2,26 +2,36 @@
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
     <title>30주년 아트윅 스페셜 띠부실 도감</title>
     <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
     <style>
         :root { --bg-color: #1a1a1a; --text-color: #ffffff; --accent: #facc15; --sub-accent: #3b82f6; }
-        body { background-color: var(--bg-color); color: var(--text-color); font-family: 'Apple SD Gothic Neo', sans-serif; padding: 40px; text-align: center; }
+        body { 
+            background-color: var(--bg-color); 
+            color: var(--text-color); 
+            font-family: 'Apple SD Gothic Neo', sans-serif; 
+            padding: 40px 15px; 
+            text-align: center; 
+            margin: 0;
+            -webkit-text-size-adjust: none;
+        }
         
         /* 캡처 구역 설정 */
         #capture-area {
             background-color: #1a1a1a;
-            padding: 30px;
+            padding: 30px 15px;
             border-radius: 15px;
             display: inline-block;
             width: 100%;
             max-width: 1400px;
+            box-sizing: border-box;
         }
 
-        h1 { font-size: 3rem; margin-bottom: 10px; color: var(--accent); text-shadow: 0 0 10px rgba(250, 204, 21, 0.2); }
-        .release-date { font-size: 1.2rem; color: #aaa; margin-bottom: 40px; }
+        h1 { font-size: 2.2rem; margin-bottom: 10px; color: var(--accent); text-shadow: 0 0 10px rgba(250, 204, 21, 0.2); word-break: keep-all; }
+        .release-date { font-size: 1.1rem; color: #aaa; margin-bottom: 40px; }
 
-        /* [수정] 버튼들을 좌우 양끝으로 정렬하는 컨테이너 (12칸 리스트용 와이드 가로폭 반영) */
+        /* 버튼 컨테이너 반응형 설계 */
         .btn-container { 
             margin: 0 auto 30px auto; 
             display: flex; 
@@ -29,12 +39,14 @@
             align-items: center; 
             width: 100%;
             max-width: 1400px; 
+            gap: 15px;
+            flex-wrap: wrap; 
         }
         .btn {
-            color: white; border: none; padding: 12px 25px; font-size: 1.1rem;
+            color: white; border: none; padding: 12px 22px; font-size: 1rem;
             font-weight: bold; border-radius: 25px; cursor: pointer; transition: 0.2s;
+            white-space: nowrap;
         }
-        /* 메인 홈 버튼 스타일 */
         .home-btn {
             background-color: #475569;
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
@@ -46,7 +58,7 @@
             color: #1a1a1a;
             box-shadow: 0 4px 15px rgba(250, 204, 21, 0.3);
         }
-        .download-btn:hover { transform: scale(1.05); background-color: #eab308; }
+        .download-btn:hover { transform: scale(1.05); background-color: #eab308; color: white; }
         
         .share-btn {
             background-color: var(--sub-accent);
@@ -54,10 +66,11 @@
         }
         .share-btn:hover { transform: scale(1.05); background-color: #2563eb; }
 
-        /* 12칸 그리드 설정 */
+        /* 📱 반응형 그리드 설정 (12칸 리스트 대응) */
         .grid-container {
             display: grid;
-            grid-template-columns: repeat(12, 1fr);
+            /* 와이드 도감 대응: 화면 폭이 넓으면 12칸, 좁아지면 자동으로 유연하게 조절 */
+            grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); 
             gap: 12px;
             max-width: 1350px;
             margin: 0 auto;
@@ -67,12 +80,18 @@
             background: #2a2a2a; border-radius: 8px; padding: 6px;
             cursor: pointer; transition: 0.2s;
             opacity: 0.2;
+            aspect-ratio: 1 / 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-sizing: border-box;
         }
 
         .sticker-card img {
-            width: 100%; height: auto;
+            width: 100%; height: 100%;
             transition: 0.2s;
             display: block;
+            object-fit: contain;
         }
 
         .sticker-card.collected {
@@ -81,16 +100,28 @@
             box-shadow: 0 0 12px rgba(250, 204, 21, 0.3);
             border: 1px solid var(--accent);
         }
+
+        /* 📱 스마트폰(초소형 화면) 전용 밀착 반응형 */
+        @media (max-width: 640px) {
+            body { padding: 20px 10px; }
+            h1 { font-size: 1.6rem; }
+            .btn-container { justify-content: center; flex-direction: column; width: 100%; }
+            .btn-container a, .btn-container div { width: 100%; display: flex; gap: 10px; }
+            .btn { flex: 1; font-size: 0.9rem; padding: 10px 15px; text-align: center; justify-content: center; }
+            /* 모바일 세로 화면에서는 촘촘하게 배열 */
+            .grid-container { grid-template-columns: repeat(auto-fill, minmax(75px, 1fr)); gap: 8px; } 
+            .sticker-card { height: 85px; }
+            #capture-area { padding: 20px 10px; }
+        }
     </style>
 </head>
 <body>
 
-    <!-- [수정] 상단 버튼 영역 양끝 정렬 구조 -->
     <div class="btn-container">
         <a href="../index.html" style="text-decoration: none;">
             <button class="btn home-btn">🏠 메인 목록으로</button>
         </a>
-        <div style="display: flex; gap: 15px;">
+        <div style="display: flex; gap: 10px; flex: 1; justify-content: flex-end;">
             <button class="btn download-btn" onclick="downloadDoc()">내 도감 이미지로 저장</button>
             <button class="btn share-btn" onclick="copyShareLink()">현재 도감 링크 복사</button>
         </div>
@@ -131,7 +162,7 @@
             const img = document.createElement('img');
             img.src = `../image/30y_art/${i}.png`;
             img.alt = `스티커 ${i}`;
-            img.crossOrigin = "anonymous"; 
+            img.crossOrigin = "anonymous";
 
             card.appendChild(img);
             
@@ -192,7 +223,7 @@
         if (!codeParam && collected.length > 0) {
             updateURL();
         }
-// 파이어베이스 데이터베이스 백그라운드 카운팅 연동 스크택
+
         function runBackgroundCounter() {
             const firebaseBaseUrl = "https://pokedoc-f09af-default-rtdb.asia-southeast1.firebasedatabase.app";
             const apiEndpoint = `${firebaseBaseUrl}/visits.json`;
