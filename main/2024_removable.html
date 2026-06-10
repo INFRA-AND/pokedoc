@@ -2,29 +2,45 @@
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
     <title>2024년 리무버블 도감</title>
     <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
     <style>
         :root { --bg-color: #1a1a1a; --text-color: #ffffff; --accent: #eab308; --sub-accent: #3b82f6; }
-        body { background-color: var(--bg-color); color: var(--text-color); font-family: 'Apple SD Gothic Neo', sans-serif; padding: 40px; text-align: center; }
+        body { 
+            background-color: var(--bg-color); 
+            color: var(--text-color); 
+            font-family: 'Apple SD Gothic Neo', sans-serif; 
+            padding: 40px 15px; 
+            text-align: center; 
+            margin: 0;
+            -webkit-text-size-adjust: none;
+        }
         
         /* 캡처 구역 설정 */
         #capture-area {
             background-color: #1a1a1a;
-            padding: 30px;
+            padding: 30px 15px;
             border-radius: 15px;
             display: inline-block;
             width: 100%;
             max-width: 1040px;
+            box-sizing: border-box;
         }
 
-        h1 { font-size: 3rem; margin-bottom: 10px; color: var(--accent); text-shadow: 0 0 10px rgba(234, 179, 8, 0.2); }
-        .release-date { font-size: 1.2rem; color: #aaa; margin-bottom: 15px; }
+        h1 { 
+            font-size: 2.2rem; 
+            margin-bottom: 10px; 
+            color: var(--accent); 
+            text-shadow: 0 0 10px rgba(234, 179, 8, 0.2); 
+            word-break: keep-all;
+        }
+        .release-date { font-size: 1.1rem; color: #aaa; margin-bottom: 15px; }
         
         /* 설명 문구 스타일 */
-        .info-note { font-size: 0.95rem; color: #94a3b8; margin-bottom: 40px; font-weight: 500; letter-spacing: 0.5px; }
+        .info-note { font-size: 0.95rem; color: #94a3b8; margin-bottom: 40px; font-weight: 500; letter-spacing: 0.5px; word-break: keep-all; }
 
-        /* 버튼 컨테이너 */
+        /* 버튼 컨테이너 반응형 */
         .btn-container { 
             margin: 0 auto 30px auto; 
             display: flex; 
@@ -32,12 +48,14 @@
             align-items: center; 
             width: 100%;
             max-width: 1040px; 
+            gap: 15px;
+            flex-wrap: wrap; 
         }
         .btn {
-            color: white; border: none; padding: 12px 25px; font-size: 1.1rem;
+            color: white; border: none; padding: 12px 22px; font-size: 1rem;
             font-weight: bold; border-radius: 25px; cursor: pointer; transition: 0.2s;
+            white-space: nowrap;
         }
-        /* 메인 홈 버튼 스타일 */
         .home-btn {
             background-color: #475569;
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
@@ -58,11 +76,11 @@
         }
         .share-btn:hover { transform: scale(1.05); background-color: #2563eb; }
 
-        /* 6칸 그리드 설정 */
+        /* 📱 반응형 스마트 그리드 설정 */
         .grid-container {
             display: grid;
-            grid-template-columns: repeat(6, 1fr);
-            gap: 20px;
+            grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); 
+            gap: 15px;
             max-width: 1000px;
             margin: 0 auto;
         }
@@ -71,6 +89,11 @@
             background: #2a2a2a; border-radius: 10px; padding: 10px;
             cursor: pointer; transition: 0.3s;
             opacity: 0.25;
+            box-sizing: border-box;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 140px;
         }
 
         .sticker-card img {
@@ -86,6 +109,18 @@
             box-shadow: 0 0 12px rgba(234, 179, 8, 0.2);
             border: 1px solid var(--accent);
         }
+
+        /* 📱 모바일 전용 쿼리 */
+        @media (max-width: 640px) {
+            body { padding: 20px 10px; }
+            h1 { font-size: 1.6rem; }
+            .btn-container { justify-content: center; flex-direction: column; width: 100%; }
+            .btn-container a, .btn-container div { width: 100%; display: flex; gap: 10px; }
+            .btn { flex: 1; font-size: 0.9rem; padding: 10px 15px; text-align: center; justify-content: center; }
+            .grid-container { grid-template-columns: repeat(auto-fill, minmax(95px, 1fr)); gap: 10px; } 
+            .sticker-card { height: 105px; padding: 8px; }
+            #capture-area { padding: 20px 10px; }
+        }
     </style>
 </head>
 <body>
@@ -94,7 +129,7 @@
         <a href="../index.html" style="text-decoration: none;">
             <button class="btn home-btn">🏠 메인 목록으로</button>
         </a>
-        <div style="display: flex; gap: 15px;">
+        <div style="display: flex; gap: 10px; flex: 1; justify-content: flex-end;">
             <button class="btn download-btn" onclick="downloadDoc()">내 도감 이미지로 저장</button>
             <button class="btn share-btn" onclick="copyShareLink()">현재 도감 링크 복사</button>
         </div>
@@ -115,7 +150,7 @@
     <script>
         const total = 40;
         const grid = document.getElementById('grid');
-        const storageKey = 'collected_removable_2024'; // 2024 리무버블 전용 로컬스토리지 키
+        const storageKey = 'collected_removable_2024';
 
         const urlParams = new URLSearchParams(window.location.search);
         const codeParam = urlParams.get('code');
@@ -127,7 +162,6 @@
             collected = JSON.parse(localStorage.getItem(storageKey)) || [];
         }
 
-        // 도감 그리드 생성 및 이미지 로드 (.jpg 확장자 설정)
         for (let i = 1; i <= total; i++) {
             const card = document.createElement('div');
             card.className = 'sticker-card';
@@ -135,7 +169,7 @@
             if (collected.includes(i)) card.classList.add('collected');
 
             const img = document.createElement('img');
-            img.src = `../image/2024_removable/${i}.jpg`; // 이미지 경로 및 .jpg 확장자 반영
+            img.src = `../image/2024_removable/${i}.jpg`; 
             img.alt = `스티커 ${i}`;
             img.crossOrigin = "anonymous";
 
@@ -199,7 +233,6 @@
             updateURL();
         }
 
-        // 파이어베이스 데이터베이스 통합 카운팅 연동
         function runBackgroundCounter() {
             const firebaseBaseUrl = "https://pokedoc-f09af-default-rtdb.asia-southeast1.firebasedatabase.app";
             const apiEndpoint = `${firebaseBaseUrl}/visits.json`;
