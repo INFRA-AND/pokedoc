@@ -26,6 +26,7 @@
             --shadow-hover: rgba(0,0,0,0.12);
             --bg-dashboard: #ffffff;
             --input-bg: #ffffff;
+            --admin-item-bg: #f8fafc;
         }
 
         /* 다크모드 활성화 시 변수 변경 */
@@ -39,6 +40,7 @@
             --shadow-hover: rgba(0, 0, 0, 0.5);
             --bg-dashboard: #1f2937;
             --input-bg: #374151;
+            --admin-item-bg: #111827;
         }
 
         /* 기본 환경 세팅 */
@@ -86,15 +88,12 @@
         .control-btn:hover {
             transform: scale(1.05);
         }
-        /* 건의사항 버튼은 포인트 강조 */
-        .suggest-trigger-btn {
-            background: #3b82f6;
-            color: white;
-            border-color: #3b82f6;
-        }
-        .suggest-trigger-btn:hover {
-            background: #2563eb;
-        }
+        /* 건의사항 버튼 포인트 강조 */
+        .suggest-trigger-btn { background: #10b981; color: white; border-color: #10b981; }
+        .suggest-trigger-btn:hover { background: #059669; }
+        /* 관리자 비밀 버튼 스타일 */
+        .admin-trigger-btn { background: #475569; color: white; border-color: #475569; }
+        .admin-trigger-btn:hover { background: #334155; }
 
         /* 📊 종합 대시보드 뱃지 박스 */
         .total-dashboard {
@@ -195,13 +194,11 @@
             box-sizing: border-box;
         }
 
-        /* 마우스를 올렸을 때 살짝 떠오르는 효과 */
         .menu-card:hover { 
             transform: translateY(-5px); 
             box-shadow: var(--shadow-hover); 
         }
 
-        /* 메뉴 카드 내 대표 이미지 스타일 */
         .menu-card img {
             max-width: 100%;
             height: 90px;
@@ -250,7 +247,7 @@
             transition: width 0.5s ease-out;
         }
 
-        /* 각 시즌 카드별 포인트 상단 바 색상 명시 */
+        /* 각 시즌 카드별 포인트 상단 바 색상 */
         .card-halloween { border-top: 5px solid #ff7518; }
         .card-winter { border-top: 5px solid #6ee7b7; }
         .card-lovely { border-top: 5px solid #ff91a4; }
@@ -270,7 +267,6 @@
         .card-pixel2024 { border-top: 5px solid #38bdf8; }
         .card-removable2024 { border-top: 5px solid #10b981; }
 
-        /* 하단 스타일 및 모달 */
         footer {
             margin-top: 100px;
             font-size: 0.85rem;
@@ -280,9 +276,7 @@
             border-top: 1px solid var(--border-card);
             padding-top: 30px;
         }
-        .footer-links {
-            margin-bottom: 15px;
-        }
+        .footer-links { margin-bottom: 15px; }
         .footer-links a {
             color: var(--text-main);
             text-decoration: none;
@@ -290,17 +284,8 @@
             margin: 0 10px;
             cursor: pointer;
         }
-        .footer-links a:hover {
-            color: #3b82f6;
-            text-decoration: underline;
-        }
-        .disclaimer {
-            max-width: 700px;
-            margin: 10px auto 0 auto;
-            font-size: 0.8rem;
-            color: var(--text-sub);
-            word-break: keep-all;
-        }
+        .footer-links a:hover { color: #3b82f6; text-decoration: underline; }
+        .disclaimer { max-width: 700px; margin: 10px auto 0 auto; font-size: 0.8rem; color: var(--text-sub); word-break: keep-all; }
 
         /* 모달 공통 레이아웃 */
         .modal {
@@ -317,10 +302,10 @@
         .modal-content {
             background-color: var(--bg-card);
             color: var(--text-main);
-            margin: 10% auto;
+            margin: 8% auto;
             padding: 30px;
             border: 1px solid var(--border-card);
-            width: 80%;
+            width: 85%;
             max-width: 650px;
             border-radius: 12px;
             text-align: left;
@@ -343,67 +328,44 @@
             white-space: pre-wrap;
         }
         .close-btn {
-            background: #64748b;
-            color: white;
-            border: none;
-            padding: 8px 16px;
-            border-radius: 6px;
-            cursor: pointer;
-            font-weight: bold;
-            float: right;
-            margin-top: 15px;
+            background: #64748b; color: white; border: none; padding: 10px 16px;
+            border-radius: 6px; cursor: pointer; font-weight: bold; float: right; margin-top: 15px;
         }
-        .close-btn:hover {
-            background: #475569;
-        }
+        .close-btn:hover { background: #475569; }
 
-        /* 💡 건의사항 폼 입력창 스타일 */
-        .suggest-form {
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-            margin-top: 10px;
-        }
-        .suggest-form label {
-            font-size: 0.9rem;
-            font-weight: bold;
-            color: var(--text-main);
-        }
+        /* 건의사항 폼 입력창 스타일 */
+        .suggest-form { display: flex; flex-direction: column; gap: 15px; margin-top: 10px; }
+        .suggest-form label { font-size: 0.9rem; font-weight: bold; color: var(--text-main); }
         .suggest-form input, .suggest-form textarea {
-            width: 100%;
-            padding: 10px 14px;
-            font-size: 0.95rem;
-            border-radius: 8px;
-            border: 1px solid var(--border-card);
-            background: var(--input-bg);
-            color: var(--text-main);
-            outline: none;
-            box-sizing: border-box;
+            width: 100%; padding: 10px 14px; font-size: 0.95rem; border-radius: 8px;
+            border: 1px solid var(--border-card); background: var(--input-bg); color: var(--text-main); outline: none; box-sizing: border-box;
         }
-        .suggest-form textarea {
-            height: 120px;
-            resize: none;
+        .suggest-form textarea { height: 120px; resize: none; }
+        .submit-btn { background: #3b82f6; color: white; border: none; padding: 12px; border-radius: 8px; font-weight: bold; font-size: 1rem; cursor: pointer; transition: 0.2s; }
+        .submit-btn:hover { background: #2563eb; }
+
+        /* 📋 관리자 화면 전용 의견 리스트 스타일 */
+        .admin-list-container {
+            max-height: 380px; overflow-y: auto; display: flex; flex-direction: column; gap: 12px; margin-top: 10px;
         }
-        .submit-btn {
-            background: #3b82f6;
-            color: white;
-            border: none;
-            padding: 12px;
-            border-radius: 8px;
-            font-weight: bold;
-            font-size: 1rem;
-            cursor: pointer;
-            transition: 0.2s;
+        .admin-item {
+            background: var(--admin-item-bg); border: 1px solid var(--border-card); padding: 15px; border-radius: 10px; position: relative;
         }
-        .submit-btn:hover {
-            background: #2563eb;
+        .admin-meta { font-size: 0.8rem; color: var(--text-sub); margin-bottom: 6px; font-weight: 500; }
+        .admin-content { font-size: 0.95rem; color: var(--text-main); line-height: 1.5; white-space: pre-wrap; word-break: break-all; }
+        .item-delete-btn {
+            position: absolute; top: 12px; right: 12px; background: #ef4444; color: white; border: none;
+            padding: 4px 8px; font-size: 0.75rem; border-radius: 4px; cursor: pointer; font-weight: bold;
         }
+        .item-delete-btn:hover { background: #dc2626; }
+        .no-data { text-align: center; color: var(--text-sub); padding: 30px; font-weight: 500; }
     </style>
 </head>
 <body>
 
     <div class="top-controls">
         <button class="control-btn suggest-trigger-btn" onclick="openSuggestModal()">💡 건의 및 요구사항 보내기</button>
+        <button class="control-btn admin-trigger-btn" onclick="openAdminModal()">📋 의견 확인(관리자)</button>
         <button class="control-btn" id="theme-btn" onclick="toggleTheme()">🌙 다크 모드 보기</button>
     </div>
 
@@ -601,11 +563,27 @@
         </div>
     </div>
 
+    <div id="adminModal" class="modal">
+        <div class="modal-content" style="max-width: 600px;">
+            <div class="modal-header">📋 관리자 전용 의견 관리 판넬</div>
+            <div style="font-size: 0.85rem; color: var(--text-sub); margin-bottom: 10px;">유저분들이 보낸 비공개 건의사항 리스트입니다. (최신순)</div>
+            
+            <div class="admin-list-container" id="admin-list-target">
+                <div class="no-data">의견을 불러오는 중입니다...</div>
+            </div>
+
+            <button class="close-btn" onclick="closeAdminModal()" style="margin-top: 15px; width: 100%; background:#475569;">판넬 닫기</button>
+        </div>
+    </div>
+
     <script>
         let currentFilterTag = 'all';
         const firebaseBaseUrl = "https://pokedoc-f09af-default-rtdb.asia-southeast1.firebasedatabase.app"; 
+        
+        // 🔥 관리자용 비밀번호 설정 (원하시는 비밀번호 문구로 변경하셔도 됩니다!)
+        const ADMIN_PASSWORD = "Dudehd!@4105"; 
 
-        // 1. 카드별 진행률 바 + 종합 대시보드 계산 스크립트
+        // 1. 카드별 진행률 바 + 종합 대시보드 계산
         function calculateProgress() {
             const cards = document.querySelectorAll('.menu-card');
             let grandTotalCount = 0;
@@ -700,7 +678,7 @@
             }
         }
 
-        // 💡 4. 파이어베이스 비공개 건의사항 전송 엔진 (핵심 추가)
+        // 💡 4. 파이어베이스 유저 건의사항 전송 함수
         function openSuggestModal() {
             document.getElementById('suggestModal').style.display = "block";
             document.body.style.overflow = "hidden";
@@ -713,7 +691,7 @@
         }
 
         function submitSuggestion(event) {
-            event.preventDefault(); // 기본 폼 새로고침 현상 방지
+            event.preventDefault();
 
             const nickname = document.getElementById('suggest-nickname').value.trim();
             const email = document.getElementById('suggest-email').value.trim() || "미기입";
@@ -727,7 +705,6 @@
                 regDate: timestamp
             };
 
-            // 파이어베이스 /suggestions 경로에 POST로 차곡차곡 데이터 푸시
             fetch(`${firebaseBaseUrl}/suggestions.json`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -747,7 +724,84 @@
             });
         }
 
-        // 5. 통합 방문자 수 카운터 로직
+        // 📋 5. 관리자 전용 실시간 데이터 렌더링 & 제어 엔진 (핵심 추가)
+        function openAdminModal() {
+            const inputPw = prompt("🔒 관리자 전용 액세스 비밀번호를 입력하세요:");
+            
+            if (inputPw === null) return; // 취소 버튼 처리
+            
+            if (inputPw === ADMIN_PASSWORD) {
+                document.getElementById('adminModal').style.display = "block";
+                document.body.style.overflow = "hidden";
+                fetchSuggestions(); // 인증 성공 시 실시간 파이어베이스 덤프 호출
+            } else {
+                alert("❌ 비밀번호가 올바르지 않습니다. 관리자 권한이 거부되었습니다.");
+            }
+        }
+
+        function closeAdminModal() {
+            document.getElementById('adminModal').style.display = "none";
+            document.body.style.overflow = "auto";
+            document.getElementById('admin-list-target').innerHTML = '<div class="no-data">의견을 불러오는 중입니다...</div>';
+        }
+
+        // 파이어베이스에서 건의사항 목록 읽어와서 그리기
+        function fetchSuggestions() {
+            const targetContainer = document.getElementById('admin-list-target');
+            
+            fetch(`${firebaseBaseUrl}/suggestions.json`)
+                .then(res => res.json())
+                .then(data => {
+                    if (!data || Object.keys(data).length === 0) {
+                        targetContainer.innerHTML = '<div class="no-data">📭 등록된 건의 및 요구사항이 전혀 없습니다.</div>';
+                        return;
+                    }
+
+                    targetContainer.innerHTML = ''; // 초기화
+
+                    // 파이어베이스 고유 난수 객체 배열화 및 정렬 (최신순 역정렬)
+                    const sortedItems = Object.keys(data).map(key => ({
+                        id: key,
+                        ...data[key]
+                    })).reverse();
+
+                    sortedItems.forEach(item => {
+                        const itemHtml = `
+                            <div class="admin-item" id="msg-${item.id}">
+                                <button class="item-delete-btn" onclick="deleteSuggestion('${item.id}')">삭제</button>
+                                <div class="admin-meta">👤 ${item.nickname} (${item.email}) | 📅 ${item.regDate}</div>
+                                <div class="admin-content">${item.content}</div>
+                            </div>
+                        `;
+                        targetContainer.insertAdjacentHTML('beforeend', itemHtml);
+                    });
+                })
+                .catch(err => {
+                    console.error(err);
+                    targetContainer.innerHTML = '<div class="no-data">❌ 데이터를 정상적으로 로드하지 못했습니다.</div>';
+                });
+        }
+
+        // 특정 건의사항 삭제 처리 기능
+        function deleteSuggestion(id) {
+            if (!confirm("⚠️ 해당 유저의 의견을 데이터베이스에서 영구 삭제하시겠습니까?")) return;
+
+            fetch(`${firebaseBaseUrl}/suggestions/${id}.json`, {
+                method: 'DELETE'
+            })
+            .then(res => {
+                if (res.ok) {
+                    alert("🗑️ 성실하게 삭제 처리가 완료되었습니다.");
+                    // 모달 새로고침 리렌더링
+                    fetchSuggestions();
+                } else {
+                    alert("삭제 요청 처리에 실패했습니다.");
+                }
+            })
+            .catch(err => console.error(err));
+        }
+
+        // 6. 통합 방문자 수 카운터 로직
         function updateIntegratedCounter() {
             const apiEndpoint = `${firebaseBaseUrl}/visits.json`;
 
@@ -773,7 +827,7 @@
             updateIntegratedCounter();
         });
 
-        // 6. 사이트 소개 & 개인정보처리방침 모달 제어
+        // 7. 사이트 소개 & 개인정보처리방침 모달 제어
         const modalTexts = {
             about: {
                 title: "ℹ️ 사이트 소개 (About Us)",
@@ -807,8 +861,10 @@
         window.onclick = function(event) {
             const infoModal = document.getElementById('infoModal');
             const suggestModal = document.getElementById('suggestModal');
+            const adminModal = document.getElementById('adminModal');
             if (event.target == infoModal) closeModal();
             if (event.target == suggestModal) closeSuggestModal();
+            if (event.target == adminModal) closeAdminModal();
         }
     </script>
 </body>
