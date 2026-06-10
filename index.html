@@ -15,28 +15,146 @@
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8715935220766558" crossorigin="anonymous"></script>
 
     <style>
+        /* 테마 시스템 변수 정의 (라이트모드가 기본값) */
+        :root {
+            --bg-body: #f4f4f9;
+            --bg-card: white;
+            --text-main: #1e293b;
+            --text-sub: #64748b;
+            --border-card: #e2e8f0;
+            --shadow-card: rgba(0,0,0,0.06);
+            --shadow-hover: rgba(0,0,0,0.12);
+            --bg-dashboard: #ffffff;
+        }
+
+        /* 다크모드 활성화 시 변수 변경 */
+        [data-theme="dark"] {
+            --bg-body: #111827;
+            --bg-card: #1f2937;
+            --text-main: #f9fafb;
+            --text-sub: #9ca3af;
+            --border-card: #374151;
+            --shadow-card: rgba(0, 0, 0, 0.3);
+            --shadow-hover: rgba(0, 0, 0, 0.5);
+            --bg-dashboard: #1f2937;
+        }
+
         /* 기본 환경 세팅 */
         body { 
             font-family: 'Apple SD Gothic Neo', sans-serif; 
-            background: #f4f4f9; 
+            background: var(--bg-body); 
+            color: var(--text-main);
             padding: 50px 20px; 
             text-align: center; 
             margin: 0;
+            transition: background 0.3s, color 0.3s;
         }
 
         h1 {
             font-size: 2.5rem;
-            color: #1e293b;
+            color: var(--text-main);
             margin-bottom: 10px;
         }
 
         .subtitle {
             font-size: 1.1rem;
-            color: #64748b;
+            color: var(--text-sub);
             margin-bottom: 20px;
         }
+
+        /* 🌙 다크모드 상단 컨트롤바 */
+        .top-controls {
+            max-width: 1200px;
+            margin: 0 auto 20px auto;
+            display: flex;
+            justify-content: flex-end;
+        }
+        .theme-toggle-btn {
+            background: var(--bg-card);
+            color: var(--text-main);
+            border: 1px solid var(--border-card);
+            padding: 10px 18px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: bold;
+            box-shadow: var(--shadow-card);
+            transition: 0.2s;
+        }
+        .theme-toggle-btn:hover {
+            transform: scale(1.05);
+        }
+
+        /* 📊 종합 대시보드 뱃지 박스 */
+        .total-dashboard {
+            background: var(--bg-dashboard);
+            border: 1px solid var(--border-card);
+            max-width: 500px;
+            margin: 0 auto 35px auto;
+            padding: 15px 25px;
+            border-radius: 15px;
+            box-shadow: var(--shadow-card);
+        }
+        .total-dashboard-title {
+            font-size: 0.95rem;
+            font-weight: bold;
+            color: var(--text-sub);
+            margin-bottom: 5px;
+        }
+        .total-dashboard-count {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #3b82f6;
+        }
+
+        /* 🔍 검색 및 필터 컨트롤 존 */
+        .filter-section {
+            max-width: 600px;
+            margin: 0 auto 40px auto;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        .search-input {
+            width: 100%;
+            padding: 14px 20px;
+            font-size: 1.05rem;
+            border-radius: 30px;
+            border: 1px solid var(--border-card);
+            background: var(--bg-card);
+            color: var(--text-main);
+            box-shadow: var(--shadow-card);
+            outline: none;
+            box-sizing: border-box;
+            transition: 0.2s;
+        }
+        .search-input:focus {
+            border-color: #3b82f6;
+            box-shadow: 0 0 10px rgba(59, 130, 246, 0.2);
+        }
+        .tag-container {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        .tag-btn {
+            background: var(--bg-card);
+            color: var(--text-sub);
+            border: 1px solid var(--border-card);
+            padding: 8px 16px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: 0.2s;
+        }
+        .tag-btn.active, .tag-btn:hover {
+            background: #3b82f6;
+            color: white;
+            border-color: #3b82f6;
+        }
         
-        /* 도감 카드들을 가로로 이쁘게 정렬해주는 상자 */
+        /* 도감 카드 가로 정렬 컨테이너 */
         .menu-container {
             display: flex;
             gap: 25px;
@@ -48,27 +166,27 @@
 
         /* 공통 카드 스타일 */
         .menu-card {
-            background: white; 
+            background: var(--bg-card); 
             border-radius: 15px; 
             padding: 25px 20px; 
             width: 260px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.06); 
+            box-shadow: var(--shadow-card); 
             display: flex;
             flex-direction: column;
             align-items: center;
             cursor: pointer; 
-            transition: transform 0.3s, box-shadow 0.3s; 
+            transition: transform 0.3s, box-shadow 0.3s, background 0.3s; 
             text-decoration: none; 
-            color: #333;
+            color: var(--text-main);
             text-align: center;
-            border: 1px solid #e2e8f0;
+            border: 1px solid var(--border-card);
             box-sizing: border-box;
         }
 
         /* 마우스를 올렸을 때 살짝 떠오르는 효과 */
         .menu-card:hover { 
             transform: translateY(-5px); 
-            box-shadow: 0 12px 25px rgba(0,0,0,0.12); 
+            box-shadow: var(--shadow-hover); 
         }
 
         /* 메뉴 카드 내 대표 이미지 스타일 */
@@ -87,10 +205,37 @@
 
         .menu-card p {
             font-size: 0.95rem;
-            color: #64748b;
-            margin: 0;
+            color: var(--text-sub);
+            margin: 0 0 15px 0;
             line-height: 1.4;
             word-break: keep-all;
+        }
+
+        /* 📊 카드 개별 진행률 레이아웃 */
+        .progress-box {
+            width: 100%;
+            margin-top: auto; /* 박스 밑바닥에 딱 고정 */
+        }
+        .progress-text {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.8rem;
+            color: var(--text-sub);
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        .progress-bar-bg {
+            background: var(--border-card);
+            width: 100%;
+            height: 6px;
+            border-radius: 3px;
+            overflow: hidden;
+        }
+        .progress-bar-fill {
+            background: linear-gradient(90deg, #10b981, #3b82f6);
+            height: 100%;
+            width: 0%; /* 자바스크립트로 가변 제어 */
+            transition: width 0.5s ease-out;
         }
 
         /* 각 시즌 카드별 포인트 상단 바 색상 명시 */
@@ -111,24 +256,23 @@
         .card-season5-2026 { border-top: 5px solid #f472b6; }
         .card-baskin-30y { border-top: 5px solid #ff007f; }
         .card-pixel2024 { border-top: 5px solid #38bdf8; }
-        /* 🔥 새로 추가된 2024 리무버블 테마 색상 (에메랄드 그린 계열) */
         .card-removable2024 { border-top: 5px solid #10b981; }
 
-        /* 하단 스타일 및 구글 정책용 모달 팝업 CSS */
+        /* 하단 스타일 및 모달 */
         footer {
             margin-top: 100px;
             font-size: 0.85rem;
-            color: #94a3b8;
+            color: var(--text-sub);
             line-height: 1.6;
             letter-spacing: 0.5px;
-            border-top: 1px solid #e2e8f0;
+            border-top: 1px solid var(--border-card);
             padding-top: 30px;
         }
         .footer-links {
             margin-bottom: 15px;
         }
         .footer-links a {
-            color: #475569;
+            color: var(--text-main);
             text-decoration: none;
             font-weight: 600;
             margin: 0 10px;
@@ -142,7 +286,7 @@
             max-width: 700px;
             margin: 10px auto 0 auto;
             font-size: 0.8rem;
-            color: #94a3b8;
+            color: var(--text-sub);
             word-break: keep-all;
         }
 
@@ -159,10 +303,11 @@
             background-color: rgba(0,0,0,0.4);
         }
         .modal-content {
-            background-color: #f8fafc;
+            background-color: var(--bg-card);
+            color: var(--text-main);
             margin: 10% auto;
             padding: 30px;
-            border: 1px solid #cbd5e1;
+            border: 1px solid var(--border-card);
             width: 80%;
             max-width: 650px;
             border-radius: 12px;
@@ -172,14 +317,14 @@
         .modal-header {
             font-size: 1.3rem;
             font-weight: bold;
-            color: #1e293b;
+            color: var(--text-main);
             margin-bottom: 15px;
-            border-bottom: 2px solid #e2e8f0;
+            border-bottom: 2px solid var(--border-card);
             padding-bottom: 10px;
         }
         .modal-body {
             font-size: 0.95rem;
-            color: #334155;
+            color: var(--text-main);
             line-height: 1.6;
             max-height: 400px;
             overflow-y: auto;
@@ -202,121 +347,158 @@
     </style>
 </head>
 <body>
+
+    <div class="top-controls">
+        <button class="theme-toggle-btn" id="theme-btn" onclick="toggleTheme()">🌙 다크 모드 보기</button>
+    </div>
+
     <h1>나의 띠부실 도감 목록</h1>
     <p class="subtitle">지금까지 제작한 나만의 커스텀 띠부실 도감 보관소입니다.</p>
     
-    <div style="margin-bottom: 40px; text-align: center; font-family: sans-serif; font-weight: bold; color: #1e293b; font-size: 1.1rem; letter-spacing: 1px;">
+    <div class="total-dashboard">
+        <div class="total-dashboard-title">🏆 전 시즌 통합 수집 현황</div>
+        <div class="total-dashboard-count"><span id="grand-collected">0</span> / <span id="grand-total">0</span> <small style="font-size:0.9rem; color:var(--text-sub); font-weight:normal;">종 (<span id="grand-percent">0</span>%)</small></div>
+    </div>
+
+    <div style="margin-bottom: 25px; text-align: center; font-family: sans-serif; font-weight: bold; color: var(--text-main); font-size: 1.1rem; letter-spacing: 1px;">
         VISITORS: <span id="main-visitor-count" style="color: #ffffff; background: #3b82f6; padding: 4px 12px; border-radius: 20px; margin-left: 5px; font-size: 0.95rem;">Loading...</span>
     </div>
+
+    <div class="filter-section">
+        <input type="text" class="search-input" id="search-bar" oninput="filterCards()" placeholder="🔍 도감 이름이나 설명 키워드를 입력해 보세요...">
+        <div class="tag-container">
+            <button class="tag-btn active" data-filter="all" onclick="filterTag('all')">전체보기</button>
+            <button class="tag-btn" data-filter="seal" onclick="filterTag('seal')">띠부씰</button>
+            <button class="tag-btn" data-filter="sticker" onclick="filterTag('sticker')">스티커/기타</button>
+        </div>
+    </div>
     
-    <div class="menu-container">
+    <div class="menu-container" id="menu-grid">
         
-        <a href="main/2022_halloween.html" class="menu-card card-halloween">
+        <a href="main/2022_halloween.html" class="menu-card card-halloween" data-type="seal" data-storage="collected_halloween_2022" data-total="27">
             <img src="image/main_image/2022_Halloween_main.png" alt="2022 할로윈">
             <h2>🎃 [띠부씰] 2022 할로윈</h2>
             <p>27종의 특별한 할로윈 스티커</p>
+            <div class="progress-box"></div>
         </a>
 
-        <a href="main/2022_winter.html" class="menu-card card-winter">
+        <a href="main/2022_winter.html" class="menu-card card-winter" data-type="seal" data-storage="collected_winter_2022" data-total="30">
             <img src="image/main_image/2022_winter_main.png" alt="2022 윈터">
             <h2>❄️ [띠부씰] 2022 윈터</h2>
             <p>30종의 특별한 겨울 스티커</p>
+            <div class="progress-box"></div>
         </a>
 
-        <a href="main/2023_lovely.html" class="menu-card card-lovely">
+        <a href="main/2023_lovely.html" class="menu-card card-lovely" data-type="seal" data-storage="collected_lovely_2023" data-total="30">
             <img src="image/main_image/2023_lovely_main.png" alt="2023 러블리">
             <h2>💕 [띠부씰] 2023 러블리</h2>
             <p>30종의 특별한 러블리 스티커</p>
+            <div class="progress-box"></div>
         </a>
 
-        <a href="main/30y_art.html" class="menu-card card-art30y">
+        <a href="main/30y_art.html" class="menu-card card-art30y" data-type="seal" data-storage="collected_30y_art" data-total="100">
             <img src="image/main_image/30y_art_main.png" alt="30주년 아트웍">
             <h2>✨ [띠부씰] 30주년 아트웍</h2>
             <p>100종의 아트웍 스페셜 스티커</p>
+            <div class="progress-box"></div>
         </a>
 
-        <a href="main/2023_new.html" class="menu-card card-new2023">
+        <a href="main/2023_new.html" class="menu-card card-new2023" data-type="seal" data-storage="collected_new_2023" data-total="55">
             <img src="image/main_image/2023_new_main.png" alt="2023 NEW">
             <h2>⚡ [띠부씰] 2023 NEW</h2>
             <p>55종의 NEW 시즌 스티커</p>
+            <div class="progress-box"></div>
         </a>
 
-        <a href="main/2022_1season.html" class="menu-card card-season1">
+        <a href="main/2022_1season.html" class="menu-card card-season1" data-type="seal" data-storage="collected_1season_2022" data-total="159">
             <img src="image/main_image/2022_1season_main.png" alt="2022 1세대">
             <h2>🌿 [띠부씰] 2022 1세대</h2>
             <p>159종의 오리지널 1세대 스티커</p>
+            <div class="progress-box"></div>
         </a>
 
-        <a href="main/2022_2season.html" class="menu-card card-season2">
+        <a href="main/2022_2season.html" class="menu-card card-season2" data-type="seal" data-storage="collected_2season_2022" data-total="116">
             <img src="image/main_image/2022_season2_main.png" alt="2022 2세대">
             <h2>🍯 [띠부씰] 2022 2세대</h2>
             <p>116종의 화려한 2세대 스티커</p>
+            <div class="progress-box"></div>
         </a>
 
-        <a href="main/2024_Mega_evolution.html" class="menu-card card-mega">
+        <a href="main/2024_Mega_evolution.html" class="menu-card card-mega" data-type="seal" data-storage="collected_mega_2024" data-total="53">
             <img src="image/main_image/2024_mega_main.png" alt="2024 메가진화">
             <h2>🔮 [띠부씰] 2024 메가진화</h2>
             <p>53종의 한정판 BIG 사이즈 띠부씰</p>
+            <div class="progress-box"></div>
         </a>
 
-        <a href="main/2023_new_1season.html" class="menu-card card-new-s1">
+        <a href="main/2023_new_1season.html" class="menu-card card-new-s1" data-type="seal" data-storage="collected_new_1season_2023" data-total="139">
             <img src="image/main_image/2023_new_season1_main.png" alt="2023 NEW 시즌1">
             <h2>🍇 [띠부씰] 2023 NEW 시즌1</h2>
             <p>139종으로 대폭 개편된 뉴 스티커</p>
+            <div class="progress-box"></div>
         </a>
 
-        <a href="main/2024_ID_picture.html" class="menu-card card-id2024">
+        <a href="main/2024_ID_picture.html" class="menu-card card-id2024" data-type="sticker" data-storage="collected_id2024" data-total="100">
             <img src="image/main_image/2024_ID_picture_main.png" alt="2024 증명사진 1탄">
             <h2>📷 [스티커] 2024 증명사진 1탄</h2>
             <p>100종의 포켓몬 증명사진 스티커</p>
+            <div class="progress-box"></div>
         </a>
 
-        <a href="main/2025_ID_picture.html" class="menu-card card-id2025">
+        <a href="main/2025_ID_picture.html" class="menu-card card-id2025" data-type="sticker" data-storage="collected_id2025" data-total="100">
             <img src="image/main_image/2025_ID_picture_main.jpg" alt="2025 증명사진 2탄">
             <h2>📷 [스티커] 2025 증명사진 2탄</h2>
             <p>100종의 포켓몬 증명사진 스티커</p>
+            <div class="progress-box"></div>
         </a>
 
-        <a href="main/2024_new_season2.html" class="menu-card card-season2-2024">
+        <a href="main/2024_new_season2.html" class="menu-card card-season2-2024" data-type="seal" data-storage="collected_season2_2024" data-total="163">
             <img src="image/main_image/2024_new_season2_main.png" alt="2024 NEW 시즌2">
             <h2>🌊 [띠부씰] 2024 NEW 시즌2</h2>
             <p>163종 (꼬부기 소방대 포함) 시즌2 스티커</p>
+            <div class="progress-box"></div>
         </a>
 
-        <a href="main/2024_new_season3.html" class="menu-card card-season3-2024">
+        <a href="main/2024_new_season3.html" class="menu-card card-season3-2024" data-type="seal" data-storage="collected_season3_2024" data-total="154">
             <img src="image/main_image/2024_new_season3_main.png" alt="2024 NEW 시즌3">
             <h2>🍁 [띠부씰] 2024 NEW 시즌3</h2>
             <p>154종의 풍성한 뉴 시즌3 스티커</p>
+            <div class="progress-box"></div>
         </a>
 
-        <a href="main/2025_new_season4.html" class="menu-card card-season4-2025">
+        <a href="main/2025_new_season4.html" class="menu-card card-season4-2025" data-type="seal" data-storage="collected_season4_2025" data-total="168">
             <img src="image/main_image/2025_new_season4_main.png" alt="2025 NEW 시즌4">
             <h2>❄️ [띠부씰] 2025 NEW 시즌4</h2>
             <p>168종의 특별한 NEW 시즌4 스티커</p>
+            <div class="progress-box"></div>
         </a>
 
-        <a href="main/2026_new_season5.html" class="menu-card card-season5-2026">
+        <a href="main/2026_new_season5.html" class="menu-card card-season5-2026" data-type="seal" data-storage="collected_season5_2026" data-total="150">
             <img src="image/main_image/2026_new_season5_main.png" alt="2026 NEW 시즌5">
             <h2>🌸 [띠부씰] 2026 NEW 시즌5</h2>
             <p>150종의 기념비적인 30주년 스티커</p>
+            <div class="progress-box"></div>
         </a>
 
-        <a href="main/baskin_30y.html" class="menu-card card-baskin-30y">
+        <a href="main/baskin_30y.html" class="menu-card card-baskin-30y" data-type="sticker" data-storage="collected_baskin_30y" data-total="27">
             <img src="image/main_image/baskin_30y_main.jpg" alt="배스킨라빈스 30주년">
             <h2>🍦 [스티커] 배스킨라빈스 30주년</h2>
             <p>27종의 특별한 포켓몬 3D 스틱바 스티커</p>
+            <div class="progress-box"></div>
         </a>
 
-        <a href="main/2024_pixel_art.html" class="menu-card card-pixel2024">
+        <a href="main/2024_pixel_art.html" class="menu-card card-pixel2024" data-type="seal" data-storage="collected_pixel2024" data-total="151">
             <img src="image/main_image/2024_pixel_art_main.png" alt="2024 픽셀아트">
             <h2>👾 [띠부씰] 2024 픽셀아트</h2>
             <p>151종의 한정판 픽셀아트 띠부씰 시리즈</p>
+            <div class="progress-box"></div>
         </a>
 
-        <a href="main/2024_removable.html" class="menu-card card-removable2024">
+        <a href="main/2024_removable.html" class="menu-card card-removable2024" data-type="sticker" data-storage="collected_removable_2024" data-total="40">
             <img src="image/main_image/2024_2024_removable_main.jpg" alt="2024 리무버블">
             <h2>✨ [스티커] 2024 리무버블</h2>
             <p>40종의 담터 애사비 젤리 리무버블 시리즈</p>
+            <div class="progress-box"></div>
         </a>
 
     </div>
@@ -341,7 +523,114 @@
     </div>
 
     <script>
-        // 1. 통합 방문자 수 카운터 로직 (Firebase 연동)
+        let currentFilterTag = 'all';
+
+        // 1. 📊 실시간 카드별 수집 진행률 바 + 종합 대시보드 계산 스크립트
+        function calculateProgress() {
+            const cards = document.querySelectorAll('.menu-card');
+            let grandTotalCount = 0;
+            let grandCollectedCount = 0;
+
+            cards.forEach(card => {
+                const storageKey = card.getAttribute('data-storage');
+                const total = parseInt(card.getAttribute('data-total')) || 0;
+                
+                // 각 도감별 저장소 데이터 추출
+                const collectedData = JSON.parse(localStorage.getItem(storageKey)) || [];
+                const collectedCount = collectedData.length;
+
+                grandTotalCount += total;
+                grandCollectedCount += collectedCount;
+
+                // 백분율 환산
+                const percent = total > 0 ? Math.round((collectedCount / total) * 100) : 0;
+
+                // 카드 내부에 진행률 HTML 동적 생성 삽입
+                const progressBox = card.querySelector('.progress-box');
+                if (progressBox) {
+                    progressBox.innerHTML = `
+                        <div class="progress-text">
+                            <span>진행률</span>
+                            <span>${collectedCount}/${total} (${percent}%)</span>
+                        </div>
+                        <div class="progress-bar-bg">
+                            <div class="progress-bar-fill" style="width: ${percent}%"></div>
+                        </div>
+                    `;
+                }
+            });
+
+            // 상단 종합 전 시즌 스코어보드 값 대입
+            document.getElementById('grand-total').innerText = grandTotalCount.toLocaleString();
+            document.getElementById('grand-collected').innerText = grandCollectedCount.toLocaleString();
+            const grandPercent = grandTotalCount > 0 ? Math.round((grandCollectedCount / grandTotalCount) * 100) : 0;
+            document.getElementById('grand-percent').innerText = grandPercent;
+        }
+
+        // 🔍 2. 실시간 검색 및 필터링 기능 통합 엔진
+        function filterCards() {
+            const query = document.getElementById('search-bar').value.toLowerCase().trim();
+            const cards = document.querySelectorAll('.menu-card');
+
+            cards.forEach(card => {
+                const title = card.querySelector('h2').innerText.toLowerCase();
+                const desc = card.querySelector('p').innerText.toLowerCase();
+                const cardType = card.getAttribute('data-type');
+
+                // 조건 비교 (텍스트 매칭 & 카테고리 태그 일치 여부)
+                const matchesSearch = title.includes(query) || desc.includes(query);
+                const matchesTag = (currentFilterTag === 'all') || (cardType === currentFilterTag);
+
+                if (matchesSearch && matchesTag) {
+                    card.style.display = 'flex';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        }
+
+        // 태그 필터링 클릭 핸들러
+        function filterTag(tag) {
+            currentFilterTag = tag;
+            
+            // 태그 활성화 버튼 스타일 토글
+            const tags = document.querySelectorAll('.tag-btn');
+            tags.forEach(btn => btn.classList.remove('active'));
+            document.querySelector(`.tag-btn[data-filter="${tag}"]`).classList.add('active');
+
+            filterCards();
+        }
+
+        // 🌙 3. 다크 모드 (Dark Mode) 토글 시스템
+        function initTheme() {
+            // 이전에 설정한 테마가 세션에 남아있으면 로드
+            const savedTheme = localStorage.getItem('pokedoc_main_theme') || 'light';
+            document.documentElement.setAttribute('data-theme', savedTheme);
+            
+            const themeBtn = document.getElementById('theme-btn');
+            if (savedTheme === 'dark') {
+                themeBtn.innerText = "☀️ 라이트 모드로 보기";
+            } else {
+                themeBtn.innerText = "🌙 다크 모드로 보기";
+            }
+        }
+
+        function toggleTheme() {
+            const currentTheme = document.documentElement.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            
+            document.documentElement.setAttribute('data-theme', newTheme);
+            localStorage.setItem('pokedoc_main_theme', newTheme);
+
+            const themeBtn = document.getElementById('theme-btn');
+            if (newTheme === 'dark') {
+                themeBtn.innerText = "☀️ 라이트 모드로 보기";
+            } else {
+                themeBtn.innerText = "🌙 다크 모드로 보기";
+            }
+        }
+
+        // 4. 통합 방문자 수 카운터 로직 (Firebase 연동)
         function updateIntegratedCounter() {
             const firebaseBaseUrl = "https://pokedoc-f09af-default-rtdb.asia-southeast1.firebasedatabase.app"; 
             const apiEndpoint = `${firebaseBaseUrl}/visits.json`;
@@ -368,9 +657,15 @@
                     if (countDisplay) countDisplay.innerText = "1";
                 });
         }
-        window.addEventListener('DOMContentLoaded', updateIntegratedCounter);
 
-        // 2. 사이트 소개 & 개인정보처리방침 모달 제어 자바스크립트
+        // DOM 로드 완료 후 실행될 함수 패키징
+        window.addEventListener('DOMContentLoaded', () => {
+            initTheme();
+            calculateProgress();
+            updateIntegratedCounter();
+        });
+
+        // 5. 사이트 소개 & 개인정보처리방침 모달 제어
         const modalTexts = {
             about: {
                 title: "ℹ️ 사이트 소개 (About Us)",
@@ -391,17 +686,16 @@
                 header.innerText = modalTexts[type].title;
                 body.innerText = modalTexts[type].content;
                 modal.style.display = "block";
-                document.body.style.overflow = "hidden"; // 배경 스크롤 방지
+                document.body.style.overflow = "hidden";
             }
         }
 
         function closeModal() {
             const modal = document.getElementById('infoModal');
             modal.style.display = "none";
-            document.body.style.overflow = "auto"; // 배경 스크롤 재개
+            document.body.style.overflow = "auto";
         }
 
-        // 모달창 바깥쪽 어두운 배경 클릭 시 닫히는 기능
         window.onclick = function(event) {
             const modal = document.getElementById('infoModal');
             if (event.target == modal) {
