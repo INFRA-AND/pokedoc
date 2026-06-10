@@ -2,38 +2,48 @@
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
     <title>2025 NEW 시즌4 띠부실 도감</title>
     <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
     <style>
         :root { 
             --bg-color: #0f172a; 
             --text-color: #ffffff; 
-            --accent: #38bdf8;       /* 시즌4 시그니처: 청량한 아이스 블루 */
+            --accent: #38bdf8;        /* 시즌4 시그니처: 청량한 아이스 블루 */
             --sub-accent: #3b82f6; 
         }
         body { 
             background-color: var(--bg-color); 
             color: var(--text-color); 
             font-family: 'Apple SD Gothic Neo', sans-serif; 
-            padding: 40px; 
+            padding: 40px 15px; /* 모바일 좌우 여백 확보 */
             text-align: center; 
+            margin: 0;
+            -webkit-text-size-adjust: none;
         }
         
         /* 캡처 구역 설정 */
         #capture-area {
             background-color: var(--bg-color);
-            padding: 30px;
+            padding: 30px 15px;
             border-radius: 15px;
             display: inline-block;
             width: 100%;
             max-width: 1040px;
+            box-sizing: border-box;
         }
 
-        h1 { font-size: 3rem; margin-bottom: 10px; color: var(--accent); text-shadow: 0 0 10px rgba(56, 189, 248, 0.2); }
-        .release-date { font-size: 1.2rem; color: #94a3b8; margin-bottom: 15px; }
+        h1 { 
+            font-size: 2.2rem; /* 모바일 대응 가독성 스케일 조절 */
+            margin-bottom: 10px; 
+            color: var(--accent); 
+            text-shadow: 0 0 10px rgba(56, 189, 248, 0.2); 
+            word-break: keep-all;
+        }
+        .release-date { font-size: 1.1rem; color: #94a3b8; margin-bottom: 15px; }
         
-        /* 특징 안내 문구 스타일 (요청하신 문구 반영) */
-        .info-note { font-size: 0.95rem; color: #cbd5e1; margin-bottom: 40px; font-weight: 500; letter-spacing: 0.5px; }
+        /* 특징 안내 문구 스타일 */
+        .info-note { font-size: 0.95rem; color: #cbd5e1; margin-bottom: 40px; font-weight: 500; letter-spacing: 0.5px; word-break: keep-all; }
 
         /* 버튼들을 좌우 양끝으로 정렬하는 컨테이너 */
         .btn-container { 
@@ -43,10 +53,13 @@
             align-items: center; 
             width: 100%;
             max-width: 1040px; 
+            gap: 15px;
+            flex-wrap: wrap; /* 모바일에서 좁아지면 버튼이 아래로 자연스럽게 줄바꿈 */
         }
         .btn {
-            color: white; border: none; padding: 12px 25px; font-size: 1.1rem;
+            color: white; border: none; padding: 12px 22px; font-size: 1rem;
             font-weight: bold; border-radius: 25px; cursor: pointer; transition: 0.2s;
+            white-space: nowrap;
         }
         /* 메인 홈 버튼 스타일 */
         .home-btn {
@@ -68,19 +81,18 @@
         }
         .share-btn:hover { transform: scale(1.05); background-color: #2563eb; }
 
-        /* 6칸 그리드 설정 */
+        /* 📱 반응형 스마트 그리드 설정 */
         .grid-container {
             display: grid;
-            grid-template-columns: repeat(6, 1fr);
-            gap: 20px;
+            grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); 
+            gap: 15px;
             max-width: 1000px;
             margin: 0 auto;
         }
 
-        /* [핵심] 상시 흰색 배경 보장 및 object-fit 비율 방어 기법 탑재 */
         .sticker-card {
-            background: #ffffff; /* 흰색 배경 상시 유지 */
-            border: 1px solid #111111; /* 검은색 테두리 박스 고정 */
+            background: #ffffff; 
+            border: 1px solid #111111; 
             border-radius: 8px; 
             padding: 8px;
             cursor: pointer; 
@@ -89,25 +101,39 @@
             display: flex;
             align-items: center;
             justify-content: center;
+            box-sizing: border-box;
+            opacity: 0.25;
         }
 
         .sticker-card img {
             width: 100%; 
             height: 100%;
-            object-fit: contain; /* 가로/세로 비율 찌그러짐 원천 차단 */
+            object-fit: contain; 
             transition: 0.3s;
             display: block;
-            opacity: 0.25; /* 미수집 상태: 캐릭터만 흐리게 처리 */
+            opacity: 0.25;
         }
 
         /* 수집 완료(클릭됨) 상태 */
         .sticker-card.collected {
             box-shadow: 0 0 15px rgba(56, 189, 248, 0.4);
-            border: 2px solid var(--accent); /* 수집 시 테두리 하이라이트 */
+            border: 2px solid var(--accent);
+            opacity: 1 !important;
+        }
+        .sticker-card.collected img {
+            opacity: 1 !important;
         }
 
-        .sticker-card.collected img {
-            opacity: 1 !important; /* 수집 시 본래 캐릭터 색감 복원 */
+        /* 📱 스마트폰 전용 밀착 반응형 미디어 쿼리 */
+        @media (max-width: 640px) {
+            body { padding: 20px 10px; }
+            h1 { font-size: 1.5rem; }
+            .btn-container { justify-content: center; flex-direction: column; width: 100%; }
+            .btn-container a, .btn-container div { width: 100%; display: flex; gap: 10px; }
+            .btn { flex: 1; font-size: 0.9rem; padding: 10px 15px; text-align: center; justify-content: center; }
+            .grid-container { grid-template-columns: repeat(auto-fill, minmax(90px, 1fr)); gap: 10px; } 
+            .sticker-card { height: 105px; padding: 6px; }
+            #capture-area { padding: 20px 10px; }
         }
     </style>
 </head>
@@ -117,7 +143,7 @@
         <a href="../index.html" style="text-decoration: none;">
             <button class="btn home-btn">🏠 메인 목록으로</button>
         </a>
-        <div style="display: flex; gap: 15px;">
+        <div style="display: flex; gap: 10px; flex: 1; justify-content: flex-end;">
             <button class="btn download-btn" onclick="downloadDoc()">내 도감 이미지로 저장</button>
             <button class="btn share-btn" onclick="copyShareLink()">현재 도감 링크 복사</button>
         </div>
@@ -136,9 +162,9 @@
     </div>
 
     <script>
-        const total = 168; // 총 168종 설정
+        const total = 168; 
         const grid = document.getElementById('grid');
-        const storageKey = 'collected_new_season4_2025'; // 시즌4 전용 고유 로컬스토리지 키
+        const storageKey = 'collected_new_season4_2025'; 
 
         const urlParams = new URLSearchParams(window.location.search);
         const codeParam = urlParams.get('code');
@@ -150,18 +176,16 @@
             collected = JSON.parse(localStorage.getItem(storageKey)) || [];
         }
 
-        // 도감 그리드 생성 (폴더 자동 분기 및 .png 확장자 처리)
+        // 도감 그리드 생성 (폴더 분기 및 .png 확장자 처리)
         for (let i = 1; i <= total; i++) {
             const card = document.createElement('div');
             card.className = 'sticker-card';
             card.setAttribute('data-id', i);
             if (collected.includes(i)) card.classList.add('collected');
 
-            // [자동 분기] 100개 단위 폴더 분기 처리 (1~100번은 "1", 101~168번은 "2")
             let folderNum = i <= 100 ? "1" : "2";
 
             const img = document.createElement('img');
-            // 요청 요건(png 확장자 및 분할 경로 폴더 트리 구조) 완벽 연동
             img.src = `../image/2025_new_season4/${folderNum}/${i}.png`;
             img.alt = `스티커 ${i}`;
             img.crossOrigin = "anonymous";
@@ -226,7 +250,6 @@
             updateURL();
         }
 
-        // [최신 표준 규격] 파이어베이스 데이터베이스 백그라운드 카운팅 연동 스택
         function runBackgroundCounter() {
             const firebaseBaseUrl = "https://pokedoc-f09af-default-rtdb.asia-southeast1.firebasedatabase.app";
             const apiEndpoint = `${firebaseBaseUrl}/visits.json`;
