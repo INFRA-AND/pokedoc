@@ -108,6 +108,92 @@
         .card-season5-2026 { border-top: 5px solid #f472b6; }
         .card-baskin-30y { border-top: 5px solid #ff007f; }
         .card-pixel2024 { border-top: 5px solid #38bdf8; }
+
+        /* 하단 스타일 및 구글 정책용 모달 팝업 CSS */
+        footer {
+            margin-top: 100px;
+            font-size: 0.85rem;
+            color: #94a3b8;
+            line-height: 1.6;
+            letter-spacing: 0.5px;
+            border-top: 1px solid #e2e8f0;
+            padding-top: 30px;
+        }
+        .footer-links {
+            margin-bottom: 15px;
+        }
+        .footer-links a {
+            color: #475569;
+            text-decoration: none;
+            font-weight: 600;
+            margin: 0 10px;
+            cursor: pointer;
+        }
+        .footer-links a:hover {
+            color: #3b82f6;
+            text-decoration: underline;
+        }
+        .disclaimer {
+            max-width: 700px;
+            margin: 10px auto 0 auto;
+            font-size: 0.8rem;
+            color: #94a3b8;
+            word-break: keep-all;
+        }
+
+        /* 모달 레이아웃 */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 9999;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.4);
+        }
+        .modal-content {
+            background-color: #f8fafc;
+            margin: 10% auto;
+            padding: 30px;
+            border: 1px solid #cbd5e1;
+            width: 80%;
+            max-width: 650px;
+            border-radius: 12px;
+            text-align: left;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+        }
+        .modal-header {
+            font-size: 1.3rem;
+            font-weight: bold;
+            color: #1e293b;
+            margin-bottom: 15px;
+            border-bottom: 2px solid #e2e8f0;
+            padding-bottom: 10px;
+        }
+        .modal-body {
+            font-size: 0.95rem;
+            color: #334155;
+            line-height: 1.6;
+            max-height: 400px;
+            overflow-y: auto;
+            white-space: pre-wrap;
+        }
+        .close-btn {
+            background: #3b82f6;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+            float: right;
+            margin-top: 15px;
+        }
+        .close-btn:hover {
+            background: #2563eb;
+        }
     </style>
 </head>
 <body>
@@ -224,23 +310,36 @@
 
     </div>
 
-    <footer style="margin-top: 100px; font-size: 0.9rem; color: #bbb; letter-spacing: 1px;">
-        Designed & Built by <strong style="color: #888; font-weight: bold;">AND</strong>
+    <footer>
+        <div class="footer-links">
+            <a onclick="openModal('about')">사이트 소개</a> | 
+            <a onclick="openModal('privacy')">개인정보처리방침</a>
+        </div>
+        <div>Designed & Built by <strong style="color: #64748b; font-weight: bold;">AND</strong></div>
+        <div class="disclaimer">
+            본 사이트는 개인이 운영하는 비영리 팬 페이지입니다. 서비스 내에 사용된 모든 포켓몬 캐릭터 이미지, 일러스트 및 명칭 등 정보 자산의 저작권과 상표권은 원저작권자인 Nintendo, Creatures Inc., GAME FREAK inc., (주)포켓몬코리아에 귀속되어 있으며 이를 침해할 의도가 없습니다.
+        </div>
     </footer>
 
+    <div id="infoModal" class="modal">
+        <div class="modal-content">
+            <div id="modalHeader" class="modal-header">제목</div>
+            <div id="modalBody" class="modal-body">내용</div>
+            <button class="close-btn" onclick="closeModal()">닫기</button>
+        </div>
+    </div>
+
     <script>
+        // 1. 통합 방문자 수 카운터 로직 (Firebase 연동)
         function updateIntegratedCounter() {
             const firebaseBaseUrl = "https://pokedoc-f09af-default-rtdb.asia-southeast1.firebasedatabase.app"; 
             const apiEndpoint = `${firebaseBaseUrl}/visits.json`;
 
-            // 1. 현재 누적 방문자 수 가져오기
             fetch(apiEndpoint)
                 .then(res => res.json())
                 .then(currentValue => {
-                    // 데이터가 아직 아예 없으면(null이면) 1, 있으면 기존값 + 1
                     const newValue = currentValue ? Number(currentValue) + 1 : 1;
 
-                    // 2. 1 더한 값을 내 파이어베이스 서버에 즉시 업데이트
                     fetch(apiEndpoint, {
                         method: 'PUT',
                         body: JSON.stringify(newValue)
@@ -259,6 +358,45 @@
                 });
         }
         window.addEventListener('DOMContentLoaded', updateIntegratedCounter);
+
+        // 2. 사이트 소개 & 개인정보처리방침 모달 제어 자바스크립트
+        const modalTexts = {
+            about: {
+                title: "ℹ️ 사이트 소개 (About Us)",
+                content: "안녕하세요! '포켓몬 띠부실 도감 보관소'에 오신 것을 환영합니다.\n\n본 사이트는 수집가분들이 다양한 시즌의 포켓몬 띠부씰 및 스티커 수집 현황을 직관적이고 편리하게 기록하고 관리할 수 있도록 지원하는 개인 수집용 대시보드 허브 공간입니다.\n\n[주요 기능]\n- 역대 시즌별 포켓몬 띠부씰 도감 리스트 대시보드 제공\n- 실시간 클릭 수집 현황 체크 및 자동 진행률 바 저장 시스템\n- 브라우저 로컬 저장소(localStorage) 기반 무서버 내역 유지 기술 적용\n\n앞으로도 깔끔한 수집 편의성을 제공하기 위해 지속적으로 보완해 나갈 예정입니다. 이용해 주셔서 감사합니다!"
+            },
+            privacy: {
+                title: "🔒 개인정보처리방침 (Privacy Policy)",
+                content: "본 '포켓몬 띠부실 도감 보관소'는 이용자의 개인정보를 매우 소중하게 생각하며, 관련된 법령을 준수합니다.\n\n1. 개인정보의 수집 항목 및 목적\n본 사이트는 회원가입 시스템이 없는 완전 개방형 사이트로, 이용자의 이름, 전화번호, 비밀번호 등 어떠한 민감 개인정보도 서버에 수집하거나 요구하지 않습니다.\n\n2. 데이터의 저장 (웹 로컬스토리지 활용)\n사용자가 도감에서 체크하는 수집 진행 내역은 이용자 본인의 PC/모바일 브라우저 임시 저장소인 'localStorage'에만 안전하게 기록됩니다. 이 데이터는 외부 서버로 전송되지 않으며 브라우저 쿠키 삭제 시 초기화될 수 있습니다.\n\n3. 쿠키 및 서드파티 분석 툴 활용\n본 사이트는 통합 방문자 수 카운팅 및 향후 구글 애드센스(Google AdSense) 광고 게재 등을 위하여 무인성 비식별 로그/쿠키 데이터를 활용할 수 있습니다. 구글은 쿠키를 사용하여 사용자의 이전 방문을 기반으로 광고를 게재하며, 사용자는 구글 광고 설정에서 맞춤설정 광고를 해제할 수 있습니다."
+            }
+        };
+
+        function openModal(type) {
+            const modal = document.getElementById('infoModal');
+            const header = document.getElementById('modalHeader');
+            const body = document.getElementById('modalBody');
+            
+            if(modalTexts[type]) {
+                header.innerText = modalTexts[type].title;
+                body.innerText = modalTexts[type].content;
+                modal.style.display = "block";
+                document.body.style.overflow = "hidden"; // 배경 스크롤 방지
+            }
+        }
+
+        function closeModal() {
+            const modal = document.getElementById('infoModal');
+            modal.style.display = "none";
+            document.body.style.overflow = "auto"; // 배경 스크롤 재개
+        }
+
+        // 모달창 바깥쪽 어두운 배경 클릭 시 닫히는 기능
+        window.onclick = function(event) {
+            const modal = document.getElementById('infoModal');
+            if (event.target == modal) {
+                closeModal();
+            }
+        }
     </script>
 </body>
 </html>
