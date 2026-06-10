@@ -25,6 +25,7 @@
             --shadow-card: rgba(0,0,0,0.06);
             --shadow-hover: rgba(0,0,0,0.12);
             --bg-dashboard: #ffffff;
+            --input-bg: #ffffff;
         }
 
         /* 다크모드 활성화 시 변수 변경 */
@@ -37,6 +38,7 @@
             --shadow-card: rgba(0, 0, 0, 0.3);
             --shadow-hover: rgba(0, 0, 0, 0.5);
             --bg-dashboard: #1f2937;
+            --input-bg: #374151;
         }
 
         /* 기본 환경 세팅 */
@@ -68,8 +70,9 @@
             margin: 0 auto 20px auto;
             display: flex;
             justify-content: flex-end;
+            gap: 10px;
         }
-        .theme-toggle-btn {
+        .control-btn {
             background: var(--bg-card);
             color: var(--text-main);
             border: 1px solid var(--border-card);
@@ -80,8 +83,17 @@
             box-shadow: var(--shadow-card);
             transition: 0.2s;
         }
-        .theme-toggle-btn:hover {
+        .control-btn:hover {
             transform: scale(1.05);
+        }
+        /* 건의사항 버튼은 포인트 강조 */
+        .suggest-trigger-btn {
+            background: #3b82f6;
+            color: white;
+            border-color: #3b82f6;
+        }
+        .suggest-trigger-btn:hover {
+            background: #2563eb;
         }
 
         /* 📊 종합 대시보드 뱃지 박스 */
@@ -214,7 +226,7 @@
         /* 📊 카드 개별 진행률 레이아웃 */
         .progress-box {
             width: 100%;
-            margin-top: auto; /* 박스 밑바닥에 딱 고정 */
+            margin-top: auto;
         }
         .progress-text {
             display: flex;
@@ -234,7 +246,7 @@
         .progress-bar-fill {
             background: linear-gradient(90deg, #10b981, #3b82f6);
             height: 100%;
-            width: 0%; /* 자바스크립트로 가변 제어 */
+            width: 0%;
             transition: width 0.5s ease-out;
         }
 
@@ -290,7 +302,7 @@
             word-break: keep-all;
         }
 
-        /* 모달 레이아웃 */
+        /* 모달 공통 레이아웃 */
         .modal {
             display: none;
             position: fixed;
@@ -331,7 +343,7 @@
             white-space: pre-wrap;
         }
         .close-btn {
-            background: #3b82f6;
+            background: #64748b;
             color: white;
             border: none;
             padding: 8px 16px;
@@ -342,6 +354,48 @@
             margin-top: 15px;
         }
         .close-btn:hover {
+            background: #475569;
+        }
+
+        /* 💡 건의사항 폼 입력창 스타일 */
+        .suggest-form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-top: 10px;
+        }
+        .suggest-form label {
+            font-size: 0.9rem;
+            font-weight: bold;
+            color: var(--text-main);
+        }
+        .suggest-form input, .suggest-form textarea {
+            width: 100%;
+            padding: 10px 14px;
+            font-size: 0.95rem;
+            border-radius: 8px;
+            border: 1px solid var(--border-card);
+            background: var(--input-bg);
+            color: var(--text-main);
+            outline: none;
+            box-sizing: border-box;
+        }
+        .suggest-form textarea {
+            height: 120px;
+            resize: none;
+        }
+        .submit-btn {
+            background: #3b82f6;
+            color: white;
+            border: none;
+            padding: 12px;
+            border-radius: 8px;
+            font-weight: bold;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .submit-btn:hover {
             background: #2563eb;
         }
     </style>
@@ -349,7 +403,8 @@
 <body>
 
     <div class="top-controls">
-        <button class="theme-toggle-btn" id="theme-btn" onclick="toggleTheme()">🌙 다크 모드 보기</button>
+        <button class="control-btn suggest-trigger-btn" onclick="openSuggestModal()">💡 건의 및 요구사항 보내기</button>
+        <button class="control-btn" id="theme-btn" onclick="toggleTheme()">🌙 다크 모드 보기</button>
     </div>
 
     <h1>나의 띠부실 도감 목록</h1>
@@ -522,10 +577,35 @@
         </div>
     </div>
 
+    <div id="suggestModal" class="modal">
+        <div class="modal-content" style="max-width: 500px;">
+            <div class="modal-header">💡 건의 및 요구사항 보내기</div>
+            <div style="font-size: 0.85rem; color: var(--text-sub); margin-bottom: 10px;">남겨주신 소중한 의견은 관리자만 비공개로 안전하게 열람합니다.</div>
+            
+            <form class="suggest-form" id="suggestion-form" onsubmit="submitSuggestion(event)">
+                <div>
+                    <label>닉네임 (필수)</label>
+                    <input type="text" id="suggest-nickname" placeholder="닉네임을 입력하세요" required>
+                </div>
+                <div>
+                    <label>이메일 주소 (선택사항)</label>
+                    <input type="email" id="suggest-email" placeholder="답변을 받으실 분은 적어주세요">
+                </div>
+                <div>
+                    <label>요구사항 및 의견 내용 (필수)</label>
+                    <textarea id="suggest-content" placeholder="추가되었으면 하는 도감이나 개선 사항을 자유롭게 적어주세요!" required></textarea>
+                </div>
+                <button type="submit" class="submit-btn">제출하기</button>
+            </form>
+            <button class="close-btn" onclick="closeSuggestModal()" style="margin-top: 10px; width: 100%;">취소하고 닫기</button>
+        </div>
+    </div>
+
     <script>
         let currentFilterTag = 'all';
+        const firebaseBaseUrl = "https://pokedoc-f09af-default-rtdb.asia-southeast1.firebasedatabase.app"; 
 
-        // 1. 📊 실시간 카드별 수집 진행률 바 + 종합 대시보드 계산 스크립트
+        // 1. 카드별 진행률 바 + 종합 대시보드 계산 스크립트
         function calculateProgress() {
             const cards = document.querySelectorAll('.menu-card');
             let grandTotalCount = 0;
@@ -535,17 +615,14 @@
                 const storageKey = card.getAttribute('data-storage');
                 const total = parseInt(card.getAttribute('data-total')) || 0;
                 
-                // 각 도감별 저장소 데이터 추출
                 const collectedData = JSON.parse(localStorage.getItem(storageKey)) || [];
                 const collectedCount = collectedData.length;
 
                 grandTotalCount += total;
                 grandCollectedCount += collectedCount;
 
-                // 백분율 환산
                 const percent = total > 0 ? Math.round((collectedCount / total) * 100) : 0;
 
-                // 카드 내부에 진행률 HTML 동적 생성 삽입
                 const progressBox = card.querySelector('.progress-box');
                 if (progressBox) {
                     progressBox.innerHTML = `
@@ -560,14 +637,13 @@
                 }
             });
 
-            // 상단 종합 전 시즌 스코어보드 값 대입
             document.getElementById('grand-total').innerText = grandTotalCount.toLocaleString();
             document.getElementById('grand-collected').innerText = grandCollectedCount.toLocaleString();
             const grandPercent = grandTotalCount > 0 ? Math.round((grandCollectedCount / grandTotalCount) * 100) : 0;
             document.getElementById('grand-percent').innerText = grandPercent;
         }
 
-        // 🔍 2. 실시간 검색 및 필터링 기능 통합 엔진
+        // 🔍 2. 실시간 검색 및 필터링 기능
         function filterCards() {
             const query = document.getElementById('search-bar').value.toLowerCase().trim();
             const cards = document.querySelectorAll('.menu-card');
@@ -577,7 +653,6 @@
                 const desc = card.querySelector('p').innerText.toLowerCase();
                 const cardType = card.getAttribute('data-type');
 
-                // 조건 비교 (텍스트 매칭 & 카테고리 태그 일치 여부)
                 const matchesSearch = title.includes(query) || desc.includes(query);
                 const matchesTag = (currentFilterTag === 'all') || (cardType === currentFilterTag);
 
@@ -589,21 +664,16 @@
             });
         }
 
-        // 태그 필터링 클릭 핸들러
         function filterTag(tag) {
             currentFilterTag = tag;
-            
-            // 태그 활성화 버튼 스타일 토글
             const tags = document.querySelectorAll('.tag-btn');
             tags.forEach(btn => btn.classList.remove('active'));
             document.querySelector(`.tag-btn[data-filter="${tag}"]`).classList.add('active');
-
             filterCards();
         }
 
         // 🌙 3. 다크 모드 (Dark Mode) 토글 시스템
         function initTheme() {
-            // 이전에 설정한 테마가 세션에 남아있으면 로드
             const savedTheme = localStorage.getItem('pokedoc_main_theme') || 'light';
             document.documentElement.setAttribute('data-theme', savedTheme);
             
@@ -630,42 +700,80 @@
             }
         }
 
-        // 4. 통합 방문자 수 카운터 로직 (Firebase 연동)
+        // 💡 4. 파이어베이스 비공개 건의사항 전송 엔진 (핵심 추가)
+        function openSuggestModal() {
+            document.getElementById('suggestModal').style.display = "block";
+            document.body.style.overflow = "hidden";
+        }
+
+        function closeSuggestModal() {
+            document.getElementById('suggestModal').style.display = "none";
+            document.body.style.overflow = "auto";
+            document.getElementById('suggestion-form').reset();
+        }
+
+        function submitSuggestion(event) {
+            event.preventDefault(); // 기본 폼 새로고침 현상 방지
+
+            const nickname = document.getElementById('suggest-nickname').value.trim();
+            const email = document.getElementById('suggest-email').value.trim() || "미기입";
+            const content = document.getElementById('suggest-content').value.trim();
+            const timestamp = new Date().toLocaleString('ko-KR');
+
+            const payload = {
+                nickname: nickname,
+                email: email,
+                content: content,
+                regDate: timestamp
+            };
+
+            // 파이어베이스 /suggestions 경로에 POST로 차곡차곡 데이터 푸시
+            fetch(`${firebaseBaseUrl}/suggestions.json`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            })
+            .then(res => {
+                if(res.ok) {
+                    alert('🎉 의견이 성공적으로 발송되었습니다! 소중한 요구사항 감사합니다.');
+                    closeSuggestModal();
+                } else {
+                    alert('서버 오류로 전송에 실패했습니다. 잠시 후 다시 시도해 주세요.');
+                }
+            })
+            .catch(err => {
+                console.error(err);
+                alert('네트워크 연결이 불안정합니다.');
+            });
+        }
+
+        // 5. 통합 방문자 수 카운터 로직
         function updateIntegratedCounter() {
-            const firebaseBaseUrl = "https://pokedoc-f09af-default-rtdb.asia-southeast1.firebasedatabase.app"; 
             const apiEndpoint = `${firebaseBaseUrl}/visits.json`;
 
             fetch(apiEndpoint)
                 .then(res => res.json())
                 .then(currentValue => {
                     const newValue = currentValue ? Number(currentValue) + 1 : 1;
-
-                    fetch(apiEndpoint, {
-                        method: 'PUT',
-                        body: JSON.stringify(newValue)
-                    })
+                    fetch(apiEndpoint, { method: 'PUT', body: JSON.stringify(newValue) })
                     .then(() => {
                         const countDisplay = document.getElementById('main-visitor-count');
-                        if (countDisplay) {
-                            countDisplay.innerText = newValue.toLocaleString();
-                        }
+                        if (countDisplay) countDisplay.innerText = newValue.toLocaleString();
                     });
                 })
                 .catch(err => {
-                    console.error('Counter error:', err);
                     const countDisplay = document.getElementById('main-visitor-count');
                     if (countDisplay) countDisplay.innerText = "1";
                 });
         }
 
-        // DOM 로드 완료 후 실행될 함수 패키징
         window.addEventListener('DOMContentLoaded', () => {
             initTheme();
             calculateProgress();
             updateIntegratedCounter();
         });
 
-        // 5. 사이트 소개 & 개인정보처리방침 모달 제어
+        // 6. 사이트 소개 & 개인정보처리방침 모달 제어
         const modalTexts = {
             about: {
                 title: "ℹ️ 사이트 소개 (About Us)",
@@ -697,10 +805,10 @@
         }
 
         window.onclick = function(event) {
-            const modal = document.getElementById('infoModal');
-            if (event.target == modal) {
-                closeModal();
-            }
+            const infoModal = document.getElementById('infoModal');
+            const suggestModal = document.getElementById('suggestModal');
+            if (event.target == infoModal) closeModal();
+            if (event.target == suggestModal) closeSuggestModal();
         }
     </script>
 </body>
