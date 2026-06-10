@@ -580,8 +580,16 @@
         let currentFilterTag = 'all';
         const firebaseBaseUrl = "https://pokedoc-f09af-default-rtdb.asia-southeast1.firebasedatabase.app"; 
         
-        // 🔥 관리자용 비밀번호 설정 (원하시는 비밀번호 문구로 변경하셔도 됩니다!)
-        const ADMIN_PASSWORD = "Dudehd!@4105"; 
+        // 관리자가 변경해둔 대문자 고유 SHA-256 암호문 등록 완료!
+        const ADMIN_HASH = "C6941E071034DF57CF2AF1C6D9983F7EB706711A416B00DCCBE0B029D5332D6F";
+
+        // 입력받은 단어를 SHA-256 복합 외계어로 바꾸는 자체 연산 서브루틴
+        async function sha256(message) {
+            const msgBuffer = new TextEncoder().encode(message);                    
+            const hashBuffer = await crypto.subtle.digest('SHA-256', msgBuffer);
+            const hashArray = Array.from(new Uint8Array(hashBuffer));
+            return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+        }
 
         // 1. 카드별 진행률 바 + 종합 대시보드 계산
         function calculateProgress() {
@@ -724,16 +732,21 @@
             });
         }
 
-        // 📋 5. 관리자 전용 실시간 데이터 렌더링 & 제어 엔진 (핵심 추가)
-        function openAdminModal() {
+        // 📋 5. 관리자 전용 암호 보안 우회차단 렌더링 엔진
+        async function openAdminModal() {
             const inputPw = prompt("🔒 관리자 전용 액세스 비밀번호를 입력하세요:");
             
-            if (inputPw === null) return; // 취소 버튼 처리
+            if (inputPw === null) return; // 취소 버튼 작동 예외 처리
             
-            if (inputPw === ADMIN_PASSWORD) {
+            // 입력받은 비밀번호 단어를 즉시 SHA-256 비공개 외계어로 인코딩 가공
+            const rawHash = await sha256(inputPw.trim());
+            // 비교값 대소문자 매칭 에러 방지를 위해 대문자로 통합 치환
+            const inputHash = rawHash.toUpperCase();
+            
+            if (inputHash === ADMIN_HASH) {
                 document.getElementById('adminModal').style.display = "block";
                 document.body.style.overflow = "hidden";
-                fetchSuggestions(); // 인증 성공 시 실시간 파이어베이스 덤프 호출
+                fetchSuggestions(); // 실시간 파이어베이스 덤프 호출
             } else {
                 alert("❌ 비밀번호가 올바르지 않습니다. 관리자 권한이 거부되었습니다.");
             }
@@ -792,8 +805,7 @@
             .then(res => {
                 if (res.ok) {
                     alert("🗑️ 성실하게 삭제 처리가 완료되었습니다.");
-                    // 모달 새로고침 리렌더링
-                    fetchSuggestions();
+                    fetchSuggestions(); // 새로고침 리렌더링
                 } else {
                     alert("삭제 요청 처리에 실패했습니다.");
                 }
