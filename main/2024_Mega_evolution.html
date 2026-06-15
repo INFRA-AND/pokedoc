@@ -51,8 +51,15 @@
             white-space: nowrap;
         }
         .home-btn { background-color: #475569; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3); }
+        .home-btn:hover { transform: scale(1.05); background-color: #334155; }
         .download-btn { background-color: var(--accent); color: #1a1a1a; box-shadow: 0 4px 15px rgba(192, 132, 252, 0.3); }
+        .download-btn:hover { transform: scale(1.05); background-color: #a855f7; color: white; }
         .share-btn { background-color: var(--sub-accent); box-shadow: 0 4px 15px rgba(59, 130, 246, 0.4); }
+        .share-btn:hover { transform: scale(1.05); background-color: #2563eb; }
+        
+        /* 👇 초기화 버튼 스타일 추가 */
+        .reset-btn { background-color: #ef4444; box-shadow: 0 4px 15px rgba(239, 68, 68, 0.4); }
+        .reset-btn:hover { transform: scale(1.05); background-color: #dc2626; }
 
         .grid-container {
             display: grid;
@@ -77,8 +84,14 @@
         .sticker-card.collected { background: #3a3a3a; opacity: 1 !important; box-shadow: 0 0 12px rgba(192, 132, 252, 0.2); border: 1px solid var(--accent); }
 
         @media (max-width: 640px) {
+            body { padding: 20px 10px; }
+            h1 { font-size: 1.5rem; }
+            .btn-container { justify-content: center; flex-direction: column; width: 100%; }
+            .btn-container a, .btn-container div { width: 100%; display: flex; gap: 10px; }
+            .btn { flex: 1; font-size: 0.9rem; padding: 10px 15px; text-align: center; justify-content: center; }
             .grid-container { grid-template-columns: repeat(auto-fill, minmax(95px, 1fr)); gap: 10px; } 
-            .sticker-card { height: 110px; }
+            .sticker-card { height: 110px; padding: 8px; }
+            #capture-area { padding: 20px 10px; }
         }
     </style>
 </head>
@@ -88,9 +101,10 @@
         <a href="../index.html" style="text-decoration: none;">
             <button class="btn home-btn">🏠 메인 목록으로</button>
         </a>
-        <div style="display: flex; gap: 10px; flex: 1; justify-content: flex-end;">
+        <div style="display: flex; gap: 10px; flex: 1; justify-content: flex-end; flex-wrap: wrap;">
             <button class="btn download-btn" onclick="downloadDoc()">내 도감 이미지로 저장</button>
             <button class="btn share-btn" onclick="copyShareLink()">현재 도감 링크 복사</button>
+            <button class="btn reset-btn" onclick="resetProgress()">🔄 초기화</button>
         </div>
     </div>
 
@@ -111,6 +125,7 @@
         const total = 53; 
         const grid = document.getElementById('grid');
         const progressText = document.getElementById('progress-text');
+        // 👇 index.html에 등록해야 할 키값입니다.
         const storageKey = 'collected_mega_evolution_2024'; 
 
         const urlParams = new URLSearchParams(window.location.search);
@@ -175,17 +190,33 @@
             updateURL();
             navigator.clipboard.writeText(window.location.href).then(() => {
                 alert('메가진화 도감 수집 현황이 담긴 공유 링크가 복사되었습니다!');
-            });
+            }).catch(() => alert('링크 복사에 실패했습니다. 주소창의 주소를 직접 복사해주세요.'));
         }
 
         function downloadDoc() {
-            html2canvas(document.getElementById('capture-area'), { useCORS: true, backgroundColor: "#1a1a1a", scale: 2 })
+            html2canvas(document.getElementById('capture-area'), { useCORS: true, allowTaint: true, backgroundColor: "#1a1a1a", scale: 2 })
             .then(canvas => {
                 const link = document.createElement('a');
                 link.download = '내_메가진화_도감.png';
                 link.href = canvas.toDataURL('image/png');
                 link.click();
             });
+        }
+
+        // 👇 새롭게 추가된 초기화 함수
+        function resetProgress() {
+            if(confirm("정말로 수집 내역을 초기화하시겠습니까? (이 작업은 되돌릴 수 없습니다)")) {
+                collected = []; 
+                localStorage.removeItem(storageKey); 
+                
+                document.querySelectorAll('.sticker-card').forEach(card => {
+                    card.classList.remove('collected');
+                });
+                
+                updateProgress();
+                updateURL();
+                alert("초기화되었습니다.");
+            }
         }
 
         // 초기 실행
