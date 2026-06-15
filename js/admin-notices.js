@@ -1,14 +1,14 @@
-let adminCurrentTab = 'notice';
+var adminCurrentTab = 'notice';
 
 function openAdminNoticeModal() {
-    document.getElementById('adminModal').style.display = "none"; 
+    document.getElementById('adminModal').style.display = "none"; // 기존 의견관리 창 숨기기
     document.getElementById('adminNoticeModal').style.display = "block";
     loadAdminNotices('notice');
 }
 
 function closeAdminNoticeModal() {
     document.getElementById('adminNoticeModal').style.display = "none";
-    document.getElementById('adminModal').style.display = "block"; 
+    document.getElementById('adminModal').style.display = "block"; // 다시 의견관리 창으로 복귀
 }
 
 function switchAdminNoticeTab(tab) {
@@ -27,13 +27,13 @@ function switchAdminNoticeTab(tab) {
 function loadAdminNotices(type) {
     const container = document.getElementById(`admin-${type}-list`);
     if(!container) return;
-    container.innerHTML = '<div class="loading">데이터를 불러오는 중입니다...</div>';
+    container.innerHTML = '<div class="loading" style="padding:20px; text-align:center; color:#64748b;">데이터를 불러오는 중입니다...</div>';
 
     fetch(`${firebaseBaseUrl}/${type}s.json`)
         .then(res => res.json())
         .then(data => {
             if (!data || Object.keys(data).length === 0) {
-                container.innerHTML = '<div class="no-data">📭 등록된 항목이 없습니다.</div>';
+                container.innerHTML = '<div class="no-data" style="padding:20px; text-align:center; color:#64748b;">📭 등록된 항목이 없습니다.</div>';
                 return;
             }
             container.innerHTML = '';
@@ -58,7 +58,7 @@ function loadAdminNotices(type) {
         })
         .catch(err => {
             console.error(err);
-            container.innerHTML = '<div class="no-data">❌ 데이터를 불러오지 못했습니다.</div>';
+            container.innerHTML = '<div class="no-data" style="padding:20px; text-align:center; color:red;">❌ 데이터를 불러오지 못했습니다.</div>';
         });
 }
 
