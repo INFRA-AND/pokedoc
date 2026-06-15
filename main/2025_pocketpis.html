@@ -35,6 +35,10 @@
             text-shadow: 0 0 10px rgba(56, 189, 248, 0.2); 
             word-break: keep-all;
         }
+        
+        /* 👇 진행률 표시 스타일 추가 */
+        #progress-container { margin-bottom: 25px; font-size: 1.3rem; font-weight: bold; color: var(--accent); }
+        
         .release-date { font-size: 1.1rem; color: #aaa; margin-bottom: 15px; }
         
         /* 안내 문구 */
@@ -75,6 +79,10 @@
             box-shadow: 0 4px 15px rgba(59, 130, 246, 0.4);
         }
         .share-btn:hover { transform: scale(1.05); background-color: #2563eb; }
+
+        /* 👇 초기화 버튼 스타일 추가 */
+        .reset-btn { background-color: #ef4444; box-shadow: 0 4px 15px rgba(239, 68, 68, 0.4); }
+        .reset-btn:hover { transform: scale(1.05); background-color: #dc2626; }
 
         /* 📱 반응형 스마트 그리드 설정 */
         .grid-container {
@@ -130,14 +138,16 @@
         <a href="../index.html" style="text-decoration: none;">
             <button class="btn home-btn">🏠 메인 목록으로</button>
         </a>
-        <div style="display: flex; gap: 10px; flex: 1; justify-content: flex-end;">
+        <div style="display: flex; gap: 10px; flex: 1; justify-content: flex-end; flex-wrap: wrap;">
             <button class="btn download-btn" onclick="downloadDoc()">내 도감 이미지로 저장</button>
             <button class="btn share-btn" onclick="copyShareLink()">현재 도감 링크 복사</button>
+            <button class="btn reset-btn" onclick="resetProgress()">🔄 초기화</button>
         </div>
     </div>
 
     <div id="capture-area">
         <h1>2025 포켓피스 띠부실 도감 (114종)</h1>
+        <div id="progress-container">수집 현황: <span id="progress-text">0 / 114 (0%)</span></div>
         <p class="release-date">2025년 2월 21일 출시</p>
         <p class="info-note">💡 한정판 포켓몬 포켓피스 띠부씰 시리즈</p>
 
@@ -151,6 +161,8 @@
     <script>
         const total = 114;
         const grid = document.getElementById('grid');
+        const progressText = document.getElementById('progress-text'); // 추가
+        // 👇 index.html에 등록해야 할 키값입니다.
         const storageKey = 'collected_pocketpis_2025'; 
 
         const urlParams = new URLSearchParams(window.location.search);
@@ -161,6 +173,13 @@
             collected = codeParam.split(',').map(Number).filter(n => n > 0 && n <= total);
         } else {
             collected = JSON.parse(localStorage.getItem(storageKey)) || [];
+        }
+
+        // 👇 진행률 업데이트 함수
+        function updateProgress() {
+            const current = collected.length;
+            const percent = ((current / total) * 100).toFixed(1);
+            progressText.innerText = `${current} / ${total} (${percent}%)`;
         }
 
         for (let i = 1; i <= total; i++) {
@@ -183,6 +202,7 @@
                 card.classList.toggle('collected');
                 updateStorage(i);
                 updateURL();
+                updateProgress(); // 👇 클릭 시 갱신 추가
             };
 
             grid.appendChild(card);
@@ -233,6 +253,24 @@
             });
         }
 
+        // 👇 새롭게 추가된 초기화 함수
+        function resetProgress() {
+            if(confirm("정말로 수집 내역을 초기화하시겠습니까? (이 작업은 되돌릴 수 없습니다)")) {
+                collected = []; 
+                localStorage.removeItem(storageKey); 
+                
+                document.querySelectorAll('.sticker-card').forEach(card => {
+                    card.classList.remove('collected');
+                });
+                
+                updateProgress();
+                updateURL();
+                alert("초기화되었습니다.");
+            }
+        }
+
+        // 👇 초기 실행 시 진행률 계산
+        updateProgress();
         if (!codeParam && collected.length > 0) {
             updateURL();
         }
