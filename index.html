@@ -3,11 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    
     <meta name="google-site-verification" content="7MQ4fKyi9MBSKjsBNTwDhwsxV6f06ayBjynLig0htxs" />
     <meta name="naver-site-verification" content="22a28d4def381f0b4303eec125b4ecdc3a8b73a8" />
-    <meta name="description" content="나만의 포켓몬 띠부씰 수집 현황을 기록하고 관리하는 온라인 도감 보관소.">
+    <meta name="description" content="나만의 포켓몬 띠부씰 수집 현황을 기록하고 관리하는 온라인 도감 보관소. 1세대부터 최신 시즌, 증명사진 스티커까지 한눈에 확인하세요.">
+    <meta name="keywords" content="포켓몬도감, 포켓몬띠부씰, 띠부실, 포켓몬스티커, 포켓몬도감사이트, 띠부씰수집, 포켓몬증명사진, 메가진화띠부씰, 픽셀아트스티커, 포켓몬굿즈, 띠부씰보관소, 포켓몬수집, 띠부씰리스트, 포켓피스, 포켓몬가챠, 30주년포켓몬, 포켓몬시즌별도감">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="포켓몬 띠부실 도감 보관소 by AND">
+    <meta property="og:description" content="다양한 포켓몬 띠부씰 시즌별 수집 현황을 실시간으로 체크하고 나만의 도감으로 관리하세요!">
+    <meta property="og:url" content="https://infra-and.github.io/pokedoc/">
+    <meta property="og:site_name" content="포켓몬 띠부실 도감 보관소 by AND">
+    
     <title>포켓몬 띠부 도감 보관소 by AND</title>
+
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8715935220766558" crossorigin="anonymous"></script>
+
     <style>
         :root { --bg-body: #f4f4f9; --bg-card: white; --text-main: #1e293b; --text-sub: #64748b; --border-card: #e2e8f0; --shadow-card: rgba(0,0,0,0.06); --bg-dashboard: #ffffff; --admin-item-bg: #f8fafc; }
         [data-theme="dark"] { --bg-body: #111827; --bg-card: #1f2937; --text-main: #f9fafb; --text-sub: #9ca3af; --border-card: #374151; --shadow-card: rgba(0, 0, 0, 0.3); --bg-dashboard: #1f2937; --admin-item-bg: #111827; }
@@ -17,14 +27,8 @@
         .control-btn { background: var(--bg-card); color: var(--text-main); border: 1px solid var(--border-card); padding: 10px 16px; border-radius: 20px; cursor: pointer; font-weight: bold; }
         .total-dashboard { background: var(--bg-dashboard); border: 1px solid var(--border-card); max-width: 460px; margin: 20px auto; padding: 20px; border-radius: 15px; box-shadow: var(--shadow-card); }
         .total-dashboard-count { font-size: 1.5rem; font-weight: bold; color: #3b82f6; }
-        .filter-section { max-width: 600px; margin: 0 auto 35px auto; display: flex; flex-direction: column; gap: 12px; }
-        .search-input { width: 100%; padding: 12px 18px; border-radius: 30px; border: 1px solid var(--border-card); background: var(--bg-card); color: var(--text-main); outline: none; box-sizing: border-box; }
-        .tag-container { display: flex; justify-content: center; gap: 8px; flex-wrap: wrap; }
-        .tag-btn { background: var(--bg-card); color: var(--text-sub); border: 1px solid var(--border-card); padding: 6px 14px; border-radius: 20px; cursor: pointer; }
-        .tag-btn.active { background: #3b82f6; color: white; border-color: #3b82f6; }
-        .menu-container { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 20px; max-width: 1200px; margin: 0 auto; }
+        .menu-container { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 20px; max-width: 1200px; margin: 30px auto; }
         .menu-card { background: var(--bg-card); border-radius: 15px; padding: 20px 15px; box-shadow: var(--shadow-card); border: 1px solid var(--border-card); text-decoration: none; color: var(--text-main); transition: 0.3s; display: flex; flex-direction: column; align-items: center; min-height: 250px; }
-        .menu-card:hover { transform: translateY(-5px); box-shadow: 0 10px 20px rgba(0,0,0,0.1); }
         .progress-box { width: 100%; margin-top: auto; }
         .progress-bar-bg { background: var(--border-card); width: 100%; height: 6px; border-radius: 3px; overflow: hidden; margin-top: 5px; }
         .progress-bar-fill { background: linear-gradient(90deg, #10b981, #3b82f6); height: 100%; width: 0%; transition: 0.5s; }
@@ -36,6 +40,7 @@
 
     <div class="top-controls">
         <button class="control-btn" onclick="openSuggestModal()">💡 건의사항</button>
+        <button class="control-btn" onclick="addAnnouncement()">📢 공지작성</button>
         <button class="control-btn" id="theme-btn" onclick="toggleTheme()">🌙 다크 모드</button>
     </div>
 
@@ -45,99 +50,92 @@
         <div>🏆 전 시즌 통합 수집 현황</div>
         <div class="total-dashboard-count">
             <span id="grand-collected">0</span> / <span id="grand-total">0</span> 
-            <small style="font-size:0.9rem;">(<span id="grand-percent">0</span>%)</small>
+            <small>(<span id="grand-percent">0</span>%)</small>
         </div>
     </div>
 
-    <div class="filter-section">
-        <input type="text" class="search-input" id="search-bar" oninput="filterCards()" placeholder="🔍 도감 이름 검색...">
-        <div class="tag-container">
-            <button class="tag-btn active" data-filter="all" onclick="filterTag('all')">전체보기</button>
-            <button class="tag-btn" data-filter="seal" onclick="filterTag('seal')">띠부씰</button>
-            <button class="tag-btn" data-filter="sticker" onclick="filterTag('sticker')">스티커</button>
-        </div>
-    </div>
+    <section style="max-width: 800px; margin: 20px auto; padding: 20px; background: var(--bg-card); border-radius: 15px; border: 1px solid var(--border-card);">
+        <h3 style="margin-top:0;">📢 업데이트 공지</h3>
+        <div id="announcement-list">로딩 중...</div>
+    </section>
 
     <div class="menu-container" id="menu-grid">
-        <a href="main/2022_halloween.html" class="menu-card" data-type="seal" data-storage="collected_halloween_2022" data-total="27"><h2>🎃 2022 할로윈</h2><div class="progress-box"></div></a>
-        <a href="main/2022_winter.html" class="menu-card" data-type="seal" data-storage="collected_winter_2022" data-total="30"><h2>❄️ 2022 윈터</h2><div class="progress-box"></div></a>
-        <a href="main/2023_lovely.html" class="menu-card" data-type="seal" data-storage="collected_lovely_2023" data-total="30"><h2>💕 2023 러블리</h2><div class="progress-box"></div></a>
-        <a href="main/30y_art.html" class="menu-card" data-type="seal" data-storage="collected_art_30y" data-total="100"><h2>✨ 30주년 아트웍</h2><div class="progress-box"></div></a>
-        <a href="main/2023_new.html" class="menu-card" data-type="seal" data-storage="collected_new_2023" data-total="55"><h2>⚡ 2023 NEW</h2><div class="progress-box"></div></a>
-        <a href="main/2022_1season.html" class="menu-card" data-type="seal" data-storage="collected_1season_2022" data-total="159"><h2>🌿 2022 1세대</h2><div class="progress-box"></div></a>
-        <a href="main/2022_2season.html" class="menu-card" data-type="seal" data-storage="collected_2season_2022" data-total="116"><h2>🍯 2022 2세대</h2><div class="progress-box"></div></a>
-        <a href="main/2024_Mega_evolution.html" class="menu-card" data-type="seal" data-storage="collected_mega_evolution_2024" data-total="53"><h2>🔮 2024 메가진화</h2><div class="progress-box"></div></a>
-        <a href="main/2023_new_1season.html" class="menu-card" data-type="seal" data-storage="collected_new_1season_2023" data-total="139"><h2>🍇 2023 NEW 시즌1</h2><div class="progress-box"></div></a>
-        <a href="main/2024_ID_picture.html" class="menu-card" data-type="sticker" data-storage="collected_id_picture_2024_1st" data-total="100"><h2>📷 2024 증명사진 1탄</h2><div class="progress-box"></div></a>
-        <a href="main/2025_ID_picture.html" class="menu-card" data-type="sticker" data-storage="collected_id_picture_2025_2nd" data-total="100"><h2>📷 2025 증명사진 2탄</h2><div class="progress-box"></div></a>
-        <a href="main/2024_new_season2.html" class="menu-card" data-type="seal" data-storage="collected_new_season2_2024" data-total="163"><h2>🌊 2024 NEW 시즌2</h2><div class="progress-box"></div></a>
-        <a href="main/2024_new_season3.html" class="menu-card" data-type="seal" data-storage="collected_new_season3_2024" data-total="154"><h2>🍁 2024 NEW 시즌3</h2><div class="progress-box"></div></a>
-        <a href="main/2025_new_season4.html" class="menu-card" data-type="seal" data-storage="collected_new_season4_2025" data-total="168"><h2>❄️ 2025 NEW 시즌4</h2><div class="progress-box"></div></a>
-        <a href="main/2026_new_season5.html" class="menu-card" data-type="seal" data-storage="collected_season5_2026" data-total="150"><h2>🌸 2026 NEW 시즌5</h2><div class="progress-box"></div></a>
-        <a href="main/baskin_30y.html" class="menu-card" data-type="sticker" data-storage="collected_baskin_30y_2026" data-total="27"><h2>🍦 배스킨 30주년</h2><div class="progress-box"></div></a>
-        <a href="main/2024_pixel_art.html" class="menu-card" data-type="seal" data-storage="collected_pixel_art_2024" data-total="151"><h2>👾 2024 픽셀아트</h2><div class="progress-box"></div></a>
-        <a href="main/2024_removable.html" class="menu-card" data-type="sticker" data-storage="collected_removable_2024" data-total="40"><h2>✨ 2024 리무버블</h2><div class="progress-box"></div></a>
-        <a href="main/2025_pocketpis.html" class="menu-card" data-type="seal" data-storage="collected_pocketpis_2025" data-total="114"><h2>📷 포켓피스 도감</h2><div class="progress-box"></div></a>
+        <a href="main/2022_halloween.html" class="menu-card" data-storage="collected_halloween_2022" data-total="27"><h2>🎃 2022 할로윈</h2><div class="progress-box"></div></a>
+        <a href="main/2022_winter.html" class="menu-card" data-storage="collected_winter_2022" data-total="30"><h2>❄️ 2022 윈터</h2><div class="progress-box"></div></a>
+        <a href="main/2023_lovely.html" class="menu-card" data-storage="collected_lovely_2023" data-total="30"><h2>💕 2023 러블리</h2><div class="progress-box"></div></a>
+        <a href="main/30y_art.html" class="menu-card" data-storage="collected_art_30y" data-total="100"><h2>✨ 30주년 아트웍</h2><div class="progress-box"></div></a>
+        <a href="main/2023_new.html" class="menu-card" data-storage="collected_new_2023" data-total="55"><h2>⚡ 2023 NEW</h2><div class="progress-box"></div></a>
+        <a href="main/2022_1season.html" class="menu-card" data-storage="collected_1season_2022" data-total="159"><h2>🌿 2022 1세대</h2><div class="progress-box"></div></a>
+        <a href="main/2022_2season.html" class="menu-card" data-storage="collected_2season_2022" data-total="116"><h2>🍯 2022 2세대</h2><div class="progress-box"></div></a>
+        <a href="main/2024_Mega_evolution.html" class="menu-card" data-storage="collected_mega_evolution_2024" data-total="53"><h2>🔮 2024 메가진화</h2><div class="progress-box"></div></a>
+        <a href="main/2023_new_1season.html" class="menu-card" data-storage="collected_new_1season_2023" data-total="139"><h2>🍇 2023 NEW 시즌1</h2><div class="progress-box"></div></a>
+        <a href="main/2024_ID_picture.html" class="menu-card" data-storage="collected_id_picture_2024_1st" data-total="100"><h2>📷 2024 증명사진 1탄</h2><div class="progress-box"></div></a>
+        <a href="main/2025_ID_picture.html" class="menu-card" data-storage="collected_id_picture_2025_2nd" data-total="100"><h2>📷 2025 증명사진 2탄</h2><div class="progress-box"></div></a>
+        <a href="main/2024_new_season2.html" class="menu-card" data-storage="collected_new_season2_2024" data-total="163"><h2>🌊 2024 NEW 시즌2</h2><div class="progress-box"></div></a>
+        <a href="main/2024_new_season3.html" class="menu-card" data-storage="collected_new_season3_2024" data-total="154"><h2>🍁 2024 NEW 시즌3</h2><div class="progress-box"></div></a>
+        <a href="main/2025_new_season4.html" class="menu-card" data-storage="collected_new_season4_2025" data-total="168"><h2>❄️ 2025 NEW 시즌4</h2><div class="progress-box"></div></a>
+        <a href="main/2026_new_season5.html" class="menu-card" data-storage="collected_season5_2026" data-total="150"><h2>🌸 2026 NEW 시즌5</h2><div class="progress-box"></div></a>
+        <a href="main/baskin_30y.html" class="menu-card" data-storage="collected_baskin_30y_2026" data-total="27"><h2>🍦 배스킨 30주년</h2><div class="progress-box"></div></a>
+        <a href="main/2024_pixel_art.html" class="menu-card" data-storage="collected_pixel_art_2024" data-total="151"><h2>👾 2024 픽셀아트</h2><div class="progress-box"></div></a>
+        <a href="main/2024_removable.html" class="menu-card" data-storage="collected_removable_2024" data-total="40"><h2>✨ 2024 리무버블</h2><div class="progress-box"></div></a>
+        <a href="main/2025_pocketpis.html" class="menu-card" data-storage="collected_pocketpis_2025" data-total="114"><h2>📷 포켓피스 도감</h2><div class="progress-box"></div></a>
     </div>
 
     <script>
+        const firebaseBaseUrl = "https://pokedoc-f09af-default-rtdb.asia-southeast1.firebasedatabase.app";
+        const ADMIN_HASH = "C6941E071034DF57CF2AF1C6D9983F7EB706711A416B00DCCBE0B029D5332D6F";
+        
+        async function sha256(msg) { const b = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(msg)); return Array.from(new Uint8Array(b)).map(b => b.toString(16).padStart(2, '0')).join('').toUpperCase(); }
+
+        function loadAnnouncements() {
+            fetch(`${firebaseBaseUrl}/announcements.json`).then(res => res.json()).then(data => {
+                const list = document.getElementById('announcement-list');
+                if(!data) { list.innerHTML = "등록된 공지가 없습니다."; return; }
+                list.innerHTML = Object.keys(data).reverse().map(k => `<div><strong>${data[k].title}</strong><p>${data[k].content}</p></div>`).join('');
+            });
+        }
+
+        async function addAnnouncement() {
+            const pw = prompt("관리자 비밀번호:");
+            if(await sha256(pw||"") !== ADMIN_HASH) { alert("비밀번호 불일치"); return; }
+            const title = prompt("제목:"); const content = prompt("내용:");
+            if(title && content) { fetch(`${firebaseBaseUrl}/announcements.json`, { method:'POST', body: JSON.stringify({title, content, date: new Date().toLocaleDateString()}) }).then(() => loadAnnouncements()); }
+        }
+
         const pokedexList = [
-            { key: "collected_halloween_2022", max: 27 },
-            { key: "collected_winter_2022", max: 30 },
-            { key: "collected_lovely_2023", max: 30 },
-            { key: "collected_art_30y", max: 100 },
-            { key: "collected_new_2023", max: 55 },
-            { key: "collected_1season_2022", max: 159 },
-            { key: "collected_2season_2022", max: 116 },
-            { key: "collected_mega_evolution_2024", max: 53 },
-            { key: "collected_new_1season_2023", max: 139 },
-            { key: "collected_id_picture_2024_1st", max: 100 },
-            { key: "collected_id_picture_2025_2nd", max: 100 },
-            { key: "collected_new_season2_2024", max: 163 },
-            { key: "collected_new_season3_2024", max: 154 },
-            { key: "collected_new_season4_2025", max: 168 },
-            { key: "collected_season5_2026", max: 150 },
-            { key: "collected_baskin_30y_2026", max: 27 },
-            { key: "collected_pixel_art_2024", max: 151 },
-            { key: "collected_removable_2024", max: 40 },
+            { key: "collected_halloween_2022", max: 27 }, { key: "collected_winter_2022", max: 30 },
+            { key: "collected_lovely_2023", max: 30 }, { key: "collected_art_30y", max: 100 },
+            { key: "collected_new_2023", max: 55 }, { key: "collected_1season_2022", max: 159 },
+            { key: "collected_2season_2022", max: 116 }, { key: "collected_mega_evolution_2024", max: 53 },
+            { key: "collected_new_1season_2023", max: 139 }, { key: "collected_id_picture_2024_1st", max: 100 },
+            { key: "collected_id_picture_2025_2nd", max: 100 }, { key: "collected_new_season2_2024", max: 163 },
+            { key: "collected_new_season3_2024", max: 154 }, { key: "collected_new_season4_2025", max: 168 },
+            { key: "collected_season5_2026", max: 150 }, { key: "collected_baskin_30y_2026", max: 27 },
+            { key: "collected_pixel_art_2024", max: 151 }, { key: "collected_removable_2024", max: 40 },
             { key: "collected_pocketpis_2025", max: 114 }
         ];
 
         function calculateProgress() {
-            let grandTotalCount = 0, grandCollectedCount = 0;
+            let gTotal = 0, gCol = 0;
             pokedexList.forEach(dex => {
                 const data = JSON.parse(localStorage.getItem(dex.key)) || [];
-                const count = data.length;
-                grandTotalCount += dex.max;
-                grandCollectedCount += count;
+                gTotal += dex.max; gCol += data.length;
                 const card = document.querySelector(`.menu-card[data-storage="${dex.key}"]`);
-                if (card) {
-                    const percent = dex.max > 0 ? Math.round((count / dex.max) * 100) : 0;
-                    card.querySelector('.progress-box').innerHTML = `
-                        <div class="progress-text"><span>진행률</span><span>${count}/${dex.max} (${percent}%)</span></div>
-                        <div class="progress-bar-bg"><div class="progress-bar-fill" style="width: ${percent}%"></div></div>
-                    `;
+                if(card) {
+                    const p = dex.max > 0 ? Math.round((data.length/dex.max)*100) : 0;
+                    card.querySelector('.progress-box').innerHTML = `<div class="progress-text"><span>${data.length}/${dex.max} (${p}%)</span></div><div class="progress-bar-bg"><div class="progress-bar-fill" style="width:${p}%"></div></div>`;
                 }
             });
-            document.getElementById('grand-total').innerText = grandTotalCount.toLocaleString();
-            document.getElementById('grand-collected').innerText = grandCollectedCount.toLocaleString();
-            document.getElementById('grand-percent').innerText = grandTotalCount > 0 ? Math.round((grandCollectedCount / grandTotalCount) * 100) : 0;
+            document.getElementById('grand-total').innerText = gTotal;
+            document.getElementById('grand-collected').innerText = gCol;
+            document.getElementById('grand-percent').innerText = gTotal > 0 ? Math.round((gCol/gTotal)*100) : 0;
         }
 
-        function filterCards() {
-            const query = document.getElementById('search-bar').value.toLowerCase();
-            document.querySelectorAll('.menu-card').forEach(card => {
-                const title = card.querySelector('h2').innerText.toLowerCase();
-                const matches = title.includes(query) && (currentFilterTag === 'all' || card.dataset.type === currentFilterTag);
-                card.style.display = matches ? 'flex' : 'none';
-            });
-        }
-
-        function filterTag(tag) {
-            currentFilterTag = tag;
-            document.querySelectorAll('.tag-btn').forEach(b => b.classList.toggle('active', b.dataset.filter === tag));
-            filterCards();
-        }
+        window.addEventListener('DOMContentLoaded', () => {
+            loadAnnouncements();
+            calculateProgress();
+            document.documentElement.setAttribute('data-theme', localStorage.getItem('pokedoc_main_theme') || 'light');
+        });
 
         function toggleTheme() {
             const newTheme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
@@ -145,11 +143,7 @@
             localStorage.setItem('pokedoc_main_theme', newTheme);
             document.getElementById('theme-btn').innerText = newTheme === 'dark' ? "☀️ 라이트 모드" : "🌙 다크 모드";
         }
-
-        window.addEventListener('DOMContentLoaded', () => {
-            document.documentElement.setAttribute('data-theme', localStorage.getItem('pokedoc_main_theme') || 'light');
-            calculateProgress();
-        });
+        function openSuggestModal() { alert("건의사항 모달 구현 예정"); }
     </script>
 </body>
 </html>
