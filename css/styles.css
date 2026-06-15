@@ -472,3 +472,247 @@ footer {
     .control-btn { font-size: 0.8rem; padding: 8px 14px; flex: 1; min-width: 100px; text-align: center; }
     .modal-content { margin: 25% auto; width: 95%; }
 }
+
+/* 공지사항/업데이트 탭 스타일 */
+.notice-tabs {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 20px;
+    border-bottom: 2px solid var(--border-card);
+    padding-bottom: 10px;
+}
+
+.notice-tab {
+    padding: 8px 20px;
+    background: var(--bg-card);
+    border: 1px solid var(--border-card);
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 500;
+    color: var(--text-sub);
+    transition: 0.2s;
+}
+
+.notice-tab.active {
+    background: #3b82f6;
+    color: white;
+    border-color: #3b82f6;
+}
+
+.notice-tab:hover {
+    transform: scale(1.05);
+}
+
+/* 공지사항 리스트 */
+.notice-list-container {
+    max-height: 400px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.notice-item {
+    background: var(--bg-card);
+    border: 1px solid var(--border-card);
+    border-left: 4px solid #3b82f6;
+    padding: 15px;
+    border-radius: 8px;
+    transition: 0.2s;
+}
+
+.notice-item:hover {
+    box-shadow: var(--shadow-hover);
+}
+
+.notice-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.notice-header h3 {
+    margin: 0;
+    font-size: 1.1rem;
+    color: var(--text-main);
+    word-break: keep-all;
+}
+
+.notice-date {
+    font-size: 0.85rem;
+    color: var(--text-sub);
+    white-space: nowrap;
+}
+
+.notice-content {
+    font-size: 0.95rem;
+    color: var(--text-main);
+    line-height: 1.6;
+    white-space: pre-wrap;
+    word-break: break-word;
+}
+
+/* 관리자 공지사항 관리 */
+.admin-notice-tabs {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+    border-bottom: 2px solid var(--border-card);
+    padding-bottom: 10px;
+}
+
+.admin-notice-tab {
+    padding: 8px 16px;
+    background: var(--bg-card);
+    border: 1px solid var(--border-card);
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 500;
+    color: var(--text-sub);
+    transition: 0.2s;
+}
+
+.admin-notice-tab.active {
+    background: #10b981;
+    color: white;
+    border-color: #10b981;
+}
+
+.admin-notice-form {
+    background: var(--admin-item-bg);
+    border: 1px solid var(--border-card);
+    padding: 15px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.admin-notice-form input,
+.admin-notice-form textarea {
+    width: 100%;
+    padding: 10px;
+    font-size: 0.9rem;
+    border: 1px solid var(--border-card);
+    border-radius: 6px;
+    background: var(--input-bg);
+    color: var(--text-main);
+    outline: none;
+    box-sizing: border-box;
+}
+
+.admin-notice-form textarea {
+    height: 120px;
+    resize: none;
+}
+
+.btn-submit-notice {
+    background: #10b981;
+    color: white;
+    border: none;
+    padding: 10px;
+    border-radius: 6px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.btn-submit-notice:hover {
+    background: #059669;
+}
+
+/* 관리자 공지사항 리스트 */
+.admin-notice-list {
+    max-height: 300px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.admin-notice-item {
+    background: var(--admin-item-bg);
+    border: 1px solid var(--border-card);
+    padding: 12px;
+    border-radius: 6px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.admin-notice-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 10px;
+}
+
+.admin-notice-header h4 {
+    margin: 0;
+    color: var(--text-main);
+    word-break: keep-all;
+    flex: 1;
+}
+
+.admin-notice-actions {
+    display: flex;
+    gap: 5px;
+    white-space: nowrap;
+}
+
+.btn-edit,
+.btn-delete {
+    padding: 4px 10px;
+    font-size: 0.8rem;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: 0.2s;
+}
+
+.btn-edit {
+    background: #3b82f6;
+    color: white;
+}
+
+.btn-edit:hover {
+    background: #2563eb;
+}
+
+.btn-delete {
+    background: #ef4444;
+    color: white;
+}
+
+.btn-delete:hover {
+    background: #dc2626;
+}
+
+.admin-notice-info {
+    font-size: 0.8rem;
+    color: var(--text-sub);
+}
+
+.admin-notice-preview {
+    font-size: 0.9rem;
+    color: var(--text-main);
+    line-height: 1.4;
+}
+
+.loading {
+    text-align: center;
+    color: var(--text-sub);
+    padding: 20px;
+    font-weight: 500;
+}
+
+.no-data {
+    text-align: center;
+    color: var(--text-sub);
+    padding: 20px;
+    font-weight: 500;
+}
