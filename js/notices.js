@@ -1,5 +1,4 @@
-// const 대신 var를 사용하여 다른 파일과의 충돌을 완벽 방지합니다.
-var firebaseBaseUrl = "https://pokedoc-f09af-default-rtdb.asia-southeast1.firebasedatabase.app";
+// 전역 변수 충돌 방지를 위해 const firebaseBaseUrl 제거
 var currentNoticeTab = 'notice'; 
 
 function openNoticeModal() {
@@ -25,7 +24,10 @@ function fetchNotices(type) {
     const container = document.getElementById('notice-list-container');
     container.innerHTML = '<div class="loading" style="padding:20px; text-align:center; color:#64748b;">데이터를 불러오는 중입니다...</div>';
 
-    fetch(`${firebaseBaseUrl}/${type}s.json`)
+    // 변수 충돌을 완벽 방지하기 위해 함수 내부 지역변수로 선언
+    const dbUrl = "https://pokedoc-f09af-default-rtdb.asia-southeast1.firebasedatabase.app";
+
+    fetch(`${dbUrl}/${type}s.json`)
         .then(res => res.json())
         .then(data => {
             if (!data || Object.keys(data).length === 0) {
