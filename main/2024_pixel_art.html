@@ -21,10 +21,15 @@
         .download-btn:hover { transform: scale(1.05); background-color: #0ea5e9; color: white; }
         .share-btn { background-color: var(--sub-accent); box-shadow: 0 4px 15px rgba(59,130,246,0.4); }
         .share-btn:hover { transform: scale(1.05); background-color: #2563eb; }
+        /* 👇 초기화 버튼 스타일 추가 */
+        .reset-btn { background-color: #ef4444; box-shadow: 0 4px 15px rgba(239, 68, 68, 0.4); }
+        .reset-btn:hover { transform: scale(1.05); background-color: #dc2626; }
+
         .grid-container { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 15px; max-width: 1000px; margin: 0 auto; }
         .sticker-card { background: #2a2a2a; border-radius: 10px; padding: 10px; cursor: pointer; transition: 0.3s; opacity: 0.25; box-sizing: border-box; display: flex; align-items: center; justify-content: center; }
         .sticker-card img { width: 100%; height: auto; transition: 0.3s; display: block; object-fit: contain; image-rendering: pixelated; }
         .sticker-card.collected { background: #3a3a3a; opacity: 1 !important; box-shadow: 0 0 12px rgba(56,189,248,0.2); border: 1px solid var(--accent); }
+        
         @media (max-width: 640px) {
             body { padding: 20px 10px; }
             h1 { font-size: 1.6rem; }
@@ -39,9 +44,10 @@
 <body>
     <div class="btn-container">
         <a href="../index.html" style="text-decoration: none;"><button class="btn home-btn">🏠 메인 목록으로</button></a>
-        <div style="display: flex; gap: 10px; flex: 1; justify-content: flex-end;">
+        <div style="display: flex; gap: 10px; flex: 1; justify-content: flex-end; flex-wrap: wrap;">
             <button class="btn download-btn" onclick="downloadDoc()">내 도감 이미지로 저장</button>
             <button class="btn share-btn" onclick="copyShareLink()">현재 도감 링크 복사</button>
+            <button class="btn reset-btn" onclick="resetProgress()">🔄 초기화</button>
         </div>
     </div>
     <div id="capture-area">
@@ -58,6 +64,7 @@
         const total = 151;
         const grid = document.getElementById('grid');
         const progressText = document.getElementById('progress-text');
+        // 👇 index.html에 등록해야 할 키값입니다.
         const storageKey = 'collected_pixel_art_2024';
 
         const urlParams = new URLSearchParams(window.location.search);
@@ -127,6 +134,22 @@
                 link.href = canvas.toDataURL('image/png');
                 link.click();
             });
+        }
+
+        // 👇 새롭게 추가된 초기화 함수
+        function resetProgress() {
+            if(confirm("정말로 수집 내역을 초기화하시겠습니까? (이 작업은 되돌릴 수 없습니다)")) {
+                collected = []; 
+                localStorage.removeItem(storageKey); 
+                
+                document.querySelectorAll('.sticker-card').forEach(card => {
+                    card.classList.remove('collected');
+                });
+                
+                updateProgress();
+                updateURL();
+                alert("초기화되었습니다.");
+            }
         }
 
         updateProgress();
