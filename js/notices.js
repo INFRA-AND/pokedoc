@@ -1,5 +1,6 @@
-let currentNoticeTab = 'notice'; // 'notice' 또는 'update'
-const firebaseBaseUrl = "https://pokedoc-f09af-default-rtdb.asia-southeast1.firebasedatabase.app";
+// const 대신 var를 사용하여 다른 파일과의 충돌을 완벽 방지합니다.
+var firebaseBaseUrl = "https://pokedoc-f09af-default-rtdb.asia-southeast1.firebasedatabase.app";
+var currentNoticeTab = 'notice'; 
 
 function openNoticeModal() {
     document.getElementById('noticeModal').style.display = "block";
@@ -22,17 +23,18 @@ function switchNoticeTab(tab) {
 
 function fetchNotices(type) {
     const container = document.getElementById('notice-list-container');
-    container.innerHTML = '<div class="loading">데이터를 불러오는 중입니다...</div>';
+    container.innerHTML = '<div class="loading" style="padding:20px; text-align:center; color:#64748b;">데이터를 불러오는 중입니다...</div>';
 
     fetch(`${firebaseBaseUrl}/${type}s.json`)
         .then(res => res.json())
         .then(data => {
             if (!data || Object.keys(data).length === 0) {
-                container.innerHTML = `<div class="no-data">📭 아직 등록된 ${type === 'notice' ? '공지사항' : '업데이트'} 내역이 없습니다.</div>`;
+                container.innerHTML = `<div class="no-data" style="padding:20px; text-align:center; color:#64748b;">📭 아직 등록된 ${type === 'notice' ? '공지사항' : '업데이트'} 내역이 없습니다.</div>`;
                 return;
             }
             container.innerHTML = '';
-            // 최신순 정렬
+            
+            // 최신 글이 맨 위로 오도록 정렬
             const sortedItems = Object.keys(data).map(key => ({
                 id: key,
                 ...data[key]
@@ -45,7 +47,7 @@ function fetchNotices(type) {
                             <h3>${item.title}</h3>
                             <span class="notice-date">${item.date}</span>
                         </div>
-                        <div class="notice-content">${item.content}</div>
+                        <div class="notice-content">${item.content.replace(/\n/g, '<br>')}</div>
                     </div>
                 `;
                 container.insertAdjacentHTML('beforeend', itemHtml);
@@ -53,6 +55,6 @@ function fetchNotices(type) {
         })
         .catch(err => {
             console.error(err);
-            container.innerHTML = '<div class="no-data">❌ 서버와 연결할 수 없습니다.</div>';
+            container.innerHTML = '<div class="no-data" style="padding:20px; text-align:center; color:red;">❌ 서버와 연결할 수 없습니다.</div>';
         });
 }
