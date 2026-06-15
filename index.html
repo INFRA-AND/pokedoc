@@ -37,6 +37,7 @@
         VISITORS: <span id="main-visitor-count" style="color: #ffffff; background: #3b82f6; padding: 4px 12px; border-radius: 20px; margin-left: 5px; font-size: 0.85rem;">Loading...</span>
     </div>
 
+    <!-- ✅ 공지사항 버튼 -->
     <div style="margin-bottom: 30px;">
         <button class="control-btn" onclick="openNoticeModal()" style="background: #f59e0b; color: white; border-color: #f59e0b; margin: 10px auto; display: block;">📢 공지사항 & 업데이트</button>
     </div>
@@ -63,7 +64,9 @@
         </div>
     </footer>
 
-    <!-- 모달들 -->
+    <!-- ========== 모달 섹션 ========== -->
+    
+    <!-- 정보 모달 -->
     <div id="infoModal" class="modal">
         <div class="modal-content">
             <div id="modalHeader" class="modal-header">제목</div>
@@ -72,6 +75,7 @@
         </div>
     </div>
 
+    <!-- 건의사항 모달 -->
     <div id="suggestModal" class="modal">
         <div class="modal-content" style="max-width: 500px;">
             <div class="modal-header">💡 건의 및 요구사항 보내기</div>
@@ -96,6 +100,7 @@
         </div>
     </div>
 
+    <!-- 관리자 의견 관리 모달 -->
     <div id="adminModal" class="modal">
         <div class="modal-content" style="max-width: 600px;">
             <div class="modal-header">📋 관리자 전용 의견 관리 판넬</div>
@@ -105,72 +110,80 @@
                 <div class="no-data">의견을 불러오는 중입니다...</div>
             </div>
 
+            <!-- ✅ 공지사항/업데이트 관리 버튼 (관리자 인증 후 표시) -->
+            <button id="admin-notice-btn" class="btn" style="display: none; background: #f59e0b; color: white; margin-top: 10px; width: 100%; border-radius: 6px; padding: 10px; font-weight: bold; cursor: pointer; border: none;" onclick="openAdminNoticeModal()">📋 공지사항/업데이트 관리</button>
+
             <button class="close-btn" onclick="closeAdminModal()" style="margin-top: 15px; width: 100%; background:#475569;">판넬 닫기</button>
         </div>
     </div>
 
-    <!-- 스크립트 로드 -->
+    <!-- 공지사항/업데이트 조회 모달 (사용자용) -->
+    <div id="noticeModal" class="modal">
+        <div class="modal-content" style="max-width: 700px; max-height: 90vh; overflow-y: auto;">
+            <div class="modal-header">📢 공지사항 & 업데이트</div>
+            
+            <div class="notice-tabs">
+                <button class="notice-tab active" data-tab="notice" onclick="switchNoticeTab('notice')">📌 공지사항</button>
+                <button class="notice-tab" data-tab="update" onclick="switchNoticeTab('update')">⚡ 업데이트</button>
+            </div>
+
+            <div class="notice-list-container" id="notice-list-container">
+                <div class="loading">로딩 중...</div>
+            </div>
+
+            <button class="close-btn" onclick="closeNoticeModal()" style="width: 100%; margin-top: 15px;">닫기</button>
+        </div>
+    </div>
+
+    <!-- 공지사항/업데이트 관리 모달 (관리자용) -->
+    <div id="adminNoticeModal" class="modal" style="display: none;">
+        <div class="modal-content" style="max-width: 800px; max-height: 90vh; overflow-y: auto;">
+            <div class="modal-header">📋 공지사항 & 업데이트 관리 (관리자)</div>
+
+            <div class="admin-notice-tabs">
+                <button class="admin-notice-tab active" data-tab="notice" onclick="switchAdminNoticeTab('notice')">📌 공지사항</button>
+                <button class="admin-notice-tab" data-tab="update" onclick="switchAdminNoticeTab('update')">⚡ 업데이트</button>
+            </div>
+
+            <!-- 공지사항 탭 -->
+            <div id="admin-notice-content" class="admin-notice-content">
+                <div class="admin-notice-form">
+                    <input type="text" id="notice-title" placeholder="제목을 입력하세요">
+                    <textarea id="notice-content" placeholder="내용을 입력하세요"></textarea>
+                    <button class="btn-submit-notice" onclick="submitNotice('notice')">공지사항 작성</button>
+                </div>
+                <div class="admin-notice-list" id="admin-notice-list">
+                    <div class="loading">로딩 중...</div>
+                </div>
+            </div>
+
+            <!-- 업데이트 탭 -->
+            <div id="admin-update-content" class="admin-notice-content" style="display: none;">
+                <div class="admin-notice-form">
+                    <input type="text" id="update-title" placeholder="제목을 입력하세요">
+                    <textarea id="update-content" placeholder="내용을 입력하세요"></textarea>
+                    <button class="btn-submit-notice" onclick="submitNotice('update')">업데이트 작성</button>
+                </div>
+                <div class="admin-notice-list" id="admin-update-list">
+                    <div class="loading">로딩 중...</div>
+                </div>
+            </div>
+
+            <button class="close-btn" onclick="closeAdminNoticeModal()" style="width: 100%; margin-top: 15px; background: #475569;">닫기</button>
+        </div>
+    </div>
+
+    <!-- ========== 스크립트 로드 ========== -->
+    <!-- 순서가 중요합니다! -->
     <script src="data/cards.js"></script>
     <script src="js/theme.js"></script>
     <script src="js/progress.js"></script>
     <script src="js/filter.js"></script>
     <script src="js/suggestions.js"></script>
     <script src="js/admin.js"></script>
+    <script src="js/notices.js"></script>
+    <script src="js/admin-notices.js"></script>
     <script src="js/main.js"></script>
-<div id="noticeModal" class="modal">
-    <div class="modal-content" style="max-width: 700px; max-height: 90vh; overflow-y: auto;">
-        <div class="modal-header">📢 공지사항 & 업데이트</div>
-        
-        <div class="notice-tabs">
-            <button class="notice-tab active" data-tab="notice" onclick="switchNoticeTab('notice')">📌 공지사항</button>
-            <button class="notice-tab" data-tab="update" onclick="switchNoticeTab('update')">⚡ 업데이트</button>
-        </div>
 
-        <div class="notice-list-container" id="notice-list-container">
-            <div class="loading">로딩 중...</div>
-        </div>
-
-        <button class="close-btn" onclick="closeNoticeModal()" style="width: 100%; margin-top: 15px;">닫기</button>
-    </div>
-</div>
-
-
-<div id="adminNoticeModal" class="modal" style="display: none;">
-    <div class="modal-content" style="max-width: 800px; max-height: 90vh; overflow-y: auto;">
-        <div class="modal-header">📋 공지사항 & 업데이트 관리 (관리자)</div>
-
-        <div class="admin-notice-tabs">
-            <button class="admin-notice-tab active" data-tab="notice" onclick="switchAdminNoticeTab('notice')">📌 공지사항</button>
-            <button class="admin-notice-tab" data-tab="update" onclick="switchAdminNoticeTab('update')">⚡ 업데이트</button>
-        </div>
-
-        <!-- 공지사항 탭 -->
-        <div id="admin-notice-content" class="admin-notice-content">
-            <div class="admin-notice-form">
-                <input type="text" id="notice-title" placeholder="제목을 입력하세요">
-                <textarea id="notice-content" placeholder="내용을 입력하세요"></textarea>
-                <button class="btn-submit-notice" onclick="submitNotice('notice')">공지사항 작성</button>
-            </div>
-            <div class="admin-notice-list" id="admin-notice-list">
-                <div class="loading">로딩 중...</div>
-            </div>
-        </div>
-
-        <!-- 업데이트 탭 -->
-        <div id="admin-update-content" class="admin-notice-content" style="display: none;">
-            <div class="admin-notice-form">
-                <input type="text" id="update-title" placeholder="제목을 입력하세요">
-                <textarea id="update-content" placeholder="내용을 입력하세요"></textarea>
-                <button class="btn-submit-notice" onclick="submitNotice('update')">업데이트 작성</button>
-            </div>
-            <div class="admin-notice-list" id="admin-update-list">
-                <div class="loading">로딩 중...</div>
-            </div>
-        </div>
-
-        <button class="close-btn" onclick="closeAdminNoticeModal()" style="width: 100%; margin-top: 15px; background: #475569;">닫기</button>
-    </div>
-</div>
-    
 </body>
 </html>
