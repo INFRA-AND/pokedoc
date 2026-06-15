@@ -32,8 +32,13 @@
             font-size: 2.2rem; /* 모바일 대응 가독성 스케일 조절 */
             margin-bottom: 10px; 
             color: var(--accent); 
+            text-shadow: 0 0 10px rgba(255, 117, 24, 0.2); 
             word-break: keep-all;
         }
+
+        /* 👇 진행률 표시 스타일 추가 */
+        #progress-container { margin-bottom: 25px; font-size: 1.3rem; font-weight: bold; color: var(--accent); }
+
         .release-date { font-size: 1.1rem; color: #aaa; margin-bottom: 40px; }
 
         /* 📋 버튼 정렬 컨테이너 반응형 설계 (Flex wrap 도입) */
@@ -52,6 +57,7 @@
             font-weight: bold; border-radius: 25px; cursor: pointer; transition: 0.2s;
             white-space: nowrap; /* 텍스트 줄바꿈 방지 */
         }
+        
         /* 메인 홈 버튼 스타일 */
         .home-btn {
             background-color: #475569;
@@ -61,15 +67,21 @@
 
         .download-btn {
             background-color: var(--accent);
+            color: #1a1a1a;
             box-shadow: 0 4px 15px rgba(255, 117, 24, 0.4);
+            font-weight: bold;
         }
-        .download-btn:hover { transform: scale(1.05); background-color: #e06413; }
+        .download-btn:hover { transform: scale(1.05); background-color: #e06413; color: white; }
         
         .share-btn {
             background-color: var(--sub-accent);
             box-shadow: 0 4px 15px rgba(59, 130, 246, 0.4);
         }
         .share-btn:hover { transform: scale(1.05); background-color: #2563eb; }
+
+        /* 👇 초기화 버튼 스타일 추가 */
+        .reset-btn { background-color: #ef4444; box-shadow: 0 4px 15px rgba(239, 68, 68, 0.4); }
+        .reset-btn:hover { transform: scale(1.05); background-color: #dc2626; }
 
         /* 📱 반응형 스마트 그리드 설정 (기존 6열 고정에서 스마트 자동 조정으로 변경!) */
         .grid-container {
@@ -102,6 +114,7 @@
             background: #3a3a3a;
             opacity: 1 !important;
             box-shadow: 0 0 10px rgba(255, 117, 24, 0.2);
+            border: 1px solid var(--accent);
         }
 
         /* 📱 스마트폰(초소형 화면) 전용 밀착 반응형 미디어 쿼리 규칙 */
@@ -123,14 +136,18 @@
         <a href="../index.html" style="text-decoration: none;">
             <button class="btn home-btn">🏠 메인 목록으로</button>
         </a>
-        <div style="display: flex; gap: 10px; flex: 1; justify-content: flex-end;">
+        <div style="display: flex; gap: 10px; flex: 1; justify-content: flex-end; flex-wrap: wrap;">
             <button class="btn download-btn" onclick="downloadDoc()">내 도감 이미지로 저장</button>
             <button class="btn share-btn" onclick="copyShareLink()">현재 도감 링크 복사</button>
+            <button class="btn reset-btn" onclick="resetProgress()">🔄 초기화</button>
         </div>
     </div>
 
     <div id="capture-area">
         <h1>2022년 할로윈 띠부실 도감 (27종)</h1>
+        
+        <div id="progress-container">수집 현황: <span id="progress-text">0 / 27 (0%)</span></div>
+
         <p class="release-date">2022년 09월 29일 출시</p>
 
         <div class="grid-container" id="grid"></div>
@@ -143,6 +160,8 @@
     <script>
         const total = 27;
         const grid = document.getElementById('grid');
+        const progressText = document.getElementById('progress-text'); // 👇 추가됨
+        // 👇 index.html에 등록해야 할 키값입니다.
         const storageKey = 'collected_halloween_2022';
 
         const urlParams = new URLSearchParams(window.location.search);
@@ -153,6 +172,13 @@
             collected = codeParam.split(',').map(Number).filter(n => n > 0 && n <= total);
         } else {
             collected = JSON.parse(localStorage.getItem(storageKey)) || [];
+        }
+
+        // 👇 진행률 업데이트 함수
+        function updateProgress() {
+            const current = collected.length;
+            const percent = ((current / total) * 100).toFixed(1);
+            progressText.innerText = `${current} / ${total} (${percent}%)`;
         }
 
         for (let i = 1; i <= total; i++) {
@@ -172,6 +198,7 @@
                 card.classList.toggle('collected');
                 updateStorage(i);
                 updateURL();
+                updateProgress(); // 👇 클릭 시 진행률 갱신
             };
 
             grid.appendChild(card);
@@ -201,7 +228,7 @@
         function copyShareLink() {
             updateURL();
             navigator.clipboard.writeText(window.location.href).then(() => {
-                alert('현재 수집 현황이 담긴 공유 링크가 복사되었습니다!');
+                alert('할로윈 도감 수집 현황이 담긴 공유 링크가 복사되었습니다!');
             }).catch(err => {
                 alert('링크 복사에 실패했습니다. 주소창의 주소를 직접 복사해주세요.');
             });
@@ -221,6 +248,25 @@
                 link.click();
             });
         }
+
+        // 👇 새롭게 추가된 초기화 함수
+        function resetProgress() {
+            if(confirm("정말로 수집 내역을 초기화하시겠습니까? (이 작업은 되돌릴 수 없습니다)")) {
+                collected = []; 
+                localStorage.removeItem(storageKey); 
+                
+                document.querySelectorAll('.sticker-card').forEach(card => {
+                    card.classList.remove('collected');
+                });
+                
+                updateProgress();
+                updateURL();
+                alert("초기화되었습니다.");
+            }
+        }
+
+        // 👇 초기 실행 시 진행률 계산
+        updateProgress();
 
         if (!codeParam && collected.length > 0) {
             updateURL();
