@@ -17,7 +17,6 @@
             -webkit-text-size-adjust: none;
         }
         
-        /* 캡처 구역 설정 */
         #capture-area {
             background-color: #1a1a1a;
             padding: 30px 15px;
@@ -29,9 +28,12 @@
         }
 
         h1 { font-size: 2.2rem; margin-bottom: 10px; color: var(--accent); text-shadow: 0 0 10px rgba(250, 204, 21, 0.2); word-break: keep-all; }
+        
+        /* 진행률 표시 스타일 */
+        #progress-container { margin-bottom: 25px; font-size: 1.3rem; font-weight: bold; color: var(--accent); }
+        
         .release-date { font-size: 1.1rem; color: #aaa; margin-bottom: 40px; }
 
-        /* 버튼 컨테이너 반응형 설계 */
         .btn-container { 
             margin: 0 auto 30px auto; 
             display: flex; 
@@ -47,29 +49,12 @@
             font-weight: bold; border-radius: 25px; cursor: pointer; transition: 0.2s;
             white-space: nowrap;
         }
-        .home-btn {
-            background-color: #475569;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
-        }
-        .home-btn:hover { transform: scale(1.05); background-color: #334155; }
+        .home-btn { background-color: #475569; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3); }
+        .download-btn { background-color: var(--accent); color: #1a1a1a; box-shadow: 0 4px 15px rgba(250, 204, 21, 0.3); }
+        .share-btn { background-color: var(--sub-accent); box-shadow: 0 4px 15px rgba(59, 130, 246, 0.4); }
 
-        .download-btn {
-            background-color: var(--accent);
-            color: #1a1a1a;
-            box-shadow: 0 4px 15px rgba(250, 204, 21, 0.3);
-        }
-        .download-btn:hover { transform: scale(1.05); background-color: #eab308; color: white; }
-        
-        .share-btn {
-            background-color: var(--sub-accent);
-            box-shadow: 0 4px 15px rgba(59, 130, 246, 0.4);
-        }
-        .share-btn:hover { transform: scale(1.05); background-color: #2563eb; }
-
-        /* 📱 반응형 그리드 설정 (12칸 리스트 대응) */
         .grid-container {
             display: grid;
-            /* 와이드 도감 대응: 화면 폭이 넓으면 12칸, 좁아지면 자동으로 유연하게 조절 */
             grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); 
             gap: 12px;
             max-width: 1350px;
@@ -87,31 +72,12 @@
             box-sizing: border-box;
         }
 
-        .sticker-card img {
-            width: 100%; height: 100%;
-            transition: 0.2s;
-            display: block;
-            object-fit: contain;
-        }
+        .sticker-card img { width: 100%; height: 100%; transition: 0.2s; display: block; object-fit: contain; }
+        .sticker-card.collected { background: #3e3e3e; opacity: 1 !important; box-shadow: 0 0 12px rgba(250, 204, 21, 0.3); border: 1px solid var(--accent); }
 
-        .sticker-card.collected {
-            background: #3e3e3e; 
-            opacity: 1 !important;
-            box-shadow: 0 0 12px rgba(250, 204, 21, 0.3);
-            border: 1px solid var(--accent);
-        }
-
-        /* 📱 스마트폰(초소형 화면) 전용 밀착 반응형 */
         @media (max-width: 640px) {
-            body { padding: 20px 10px; }
-            h1 { font-size: 1.6rem; }
-            .btn-container { justify-content: center; flex-direction: column; width: 100%; }
-            .btn-container a, .btn-container div { width: 100%; display: flex; gap: 10px; }
-            .btn { flex: 1; font-size: 0.9rem; padding: 10px 15px; text-align: center; justify-content: center; }
-            /* 모바일 세로 화면에서는 촘촘하게 배열 */
             .grid-container { grid-template-columns: repeat(auto-fill, minmax(75px, 1fr)); gap: 8px; } 
             .sticker-card { height: 85px; }
-            #capture-area { padding: 20px 10px; }
         }
     </style>
 </head>
@@ -129,18 +95,20 @@
 
     <div id="capture-area">
         <h1>30주년 아트윅 스페셜 띠부실 도감 (100종)</h1>
+        <div id="progress-container">수집 현황: <span id="progress-text">0 / 100 (0%)</span></div>
         <p class="release-date">2026년 05월 07일 출시</p>
 
         <div class="grid-container" id="grid"></div>
 
         <div style="text-align: right; margin-top: 40px; padding-right: 10px; font-size: 0.9rem; color: #555; letter-spacing: 2px;">
-            CREATED BY <strong style="color: var(--accent); text-shadow: 0 0 5px rgba(250,204,21,0.3);">AND</strong>
+            CREATED BY <strong style="color: var(--accent);">AND</strong>
         </div>
     </div>
 
     <script>
         const total = 100;
         const grid = document.getElementById('grid');
+        const progressText = document.getElementById('progress-text');
         const storageKey = 'collected_art_30y';
 
         const urlParams = new URLSearchParams(window.location.search);
@@ -151,6 +119,13 @@
             collected = codeParam.split(',').map(Number).filter(n => n > 0 && n <= total);
         } else {
             collected = JSON.parse(localStorage.getItem(storageKey)) || [];
+        }
+
+        // 진행률 업데이트 함수
+        function updateProgress() {
+            const current = collected.length;
+            const percent = ((current / total) * 100).toFixed(1);
+            progressText.innerText = `${current} / ${total} (${percent}%)`;
         }
 
         for (let i = 1; i <= total; i++) {
@@ -170,6 +145,7 @@
                 card.classList.toggle('collected');
                 updateStorage(i);
                 updateURL();
+                updateProgress(); // 클릭 시마다 갱신
             };
 
             grid.appendChild(card);
@@ -186,33 +162,23 @@
         }
 
         function updateURL() {
-            if (collected.length > 0) {
-                const sortedCollected = [...collected].sort((a, b) => a - b);
-                const newUrl = `${window.location.protocol}//${window.location.host}${window.location.pathname}?code=${sortedCollected.join(',')}`;
-                window.history.replaceState({ path: newUrl }, '', newUrl);
-            } else {
-                const cleanUrl = `${window.location.protocol}//${window.location.host}${window.location.pathname}`;
-                window.history.replaceState({ path: cleanUrl }, '', cleanUrl);
-            }
+            const sorted = [...collected].sort((a, b) => a - b);
+            const newUrl = sorted.length > 0 
+                ? `${window.location.protocol}//${window.location.host}${window.location.pathname}?code=${sorted.join(',')}`
+                : `${window.location.protocol}//${window.location.host}${window.location.pathname}`;
+            window.history.replaceState({ path: newUrl }, '', newUrl);
         }
 
         function copyShareLink() {
             updateURL();
             navigator.clipboard.writeText(window.location.href).then(() => {
-                alert('30주년 도감 수집 현황이 담긴 공유 링크가 복사되었습니다!');
-            }).catch(err => {
-                alert('링크 복사에 실패했습니다. 주소창의 주소를 직접 복사해주세요.');
+                alert('공유 링크가 복사되었습니다!');
             });
         }
 
         function downloadDoc() {
-            const target = document.getElementById('capture-area');
-            html2canvas(target, {
-                useCORS: true,
-                allowTaint: true,
-                backgroundColor: "#1a1a1a",
-                scale: 2
-            }).then(canvas => {
+            html2canvas(document.getElementById('capture-area'), { useCORS: true, backgroundColor: "#1a1a1a", scale: 2 })
+            .then(canvas => {
                 const link = document.createElement('a');
                 link.download = '내_30주년_아트윅_도감.png';
                 link.href = canvas.toDataURL('image/png');
@@ -220,21 +186,17 @@
             });
         }
 
-        if (!codeParam && collected.length > 0) {
-            updateURL();
-        }
+        // 초기 실행
+        updateProgress();
+        if (!codeParam && collected.length > 0) updateURL();
 
+        // 방문자 추적
         function runBackgroundCounter() {
-            const firebaseBaseUrl = "https://pokedoc-f09af-default-rtdb.asia-southeast1.firebasedatabase.app";
-            const apiEndpoint = `${firebaseBaseUrl}/visits.json`;
-
-            fetch(apiEndpoint)
-                .then(res => res.json())
-                .then(currentValue => {
-                    const newValue = currentValue ? Number(currentValue) + 1 : 1;
-                    fetch(apiEndpoint, { method: 'PUT', body: JSON.stringify(newValue) });
-                })
-                .catch(err => console.log('Tracker active'));
+            const apiEndpoint = "https://pokedoc-f09af-default-rtdb.asia-southeast1.firebasedatabase.app/visits.json";
+            fetch(apiEndpoint).then(res => res.json()).then(currentValue => {
+                const newValue = currentValue ? Number(currentValue) + 1 : 1;
+                fetch(apiEndpoint, { method: 'PUT', body: JSON.stringify(newValue) });
+            }).catch(err => console.log('Tracker active'));
         }
         window.addEventListener('DOMContentLoaded', runBackgroundCounter);
     </script>
