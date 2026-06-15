@@ -6,168 +6,75 @@
     <title>배스킨라빈스 30주년 포켓몬 도감</title>
     <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
     <style>
-        :root { 
-            --bg-color: #0f172a; 
-            --text-color: #ffffff; 
-            --accent: #ff007f;        /* 배스킨라빈스 시그니처: 핫 핑크 */
-            --sub-accent: #00a0e9;    /* 배스킨라빈스 시그니처: 시원한 스카이 블루 */
-        }
-        body { 
-            background-color: var(--bg-color); 
-            color: var(--text-color); 
-            font-family: 'Apple SD Gothic Neo', sans-serif; 
-            padding: 40px 15px; /* 모바일 좌우 여백 확보 */
-            text-align: center; 
-            margin: 0;
-            -webkit-text-size-adjust: none;
-        }
-        
-        /* 캡처 구역 설정 */
-        #capture-area {
-            background-color: var(--bg-color);
-            padding: 30px 15px;
-            border-radius: 15px;
-            display: inline-block;
-            width: 100%;
-            max-width: 1400px;
-            box-sizing: border-box;
-        }
-
-        h1 { 
-            font-size: 2.2rem; /* 모바일 가독성 조절 */
-            margin-bottom: 10px; 
-            color: var(--accent); 
-            text-shadow: 0 0 10px rgba(255, 0, 127, 0.2); 
-            word-break: keep-all;
-        }
+        :root { --bg-color: #0f172a; --text-color: #ffffff; --accent: #ff007f; --sub-accent: #00a0e9; }
+        body { background-color: var(--bg-color); color: var(--text-color); font-family: 'Apple SD Gothic Neo', sans-serif; padding: 40px 15px; text-align: center; margin: 0; -webkit-text-size-adjust: none; }
+        #capture-area { background-color: var(--bg-color); padding: 30px 15px; border-radius: 15px; display: inline-block; width: 100%; max-width: 1400px; box-sizing: border-box; }
+        h1 { font-size: 2.2rem; margin-bottom: 10px; color: var(--accent); text-shadow: 0 0 10px rgba(255,0,127,0.2); word-break: keep-all; }
+        #progress-container { margin-bottom: 25px; font-size: 1.3rem; font-weight: bold; color: var(--accent); }
         .release-date { font-size: 1.1rem; color: #94a3b8; margin-bottom: 15px; }
-        
-        /* 안내 문구 */
         .info-note { font-size: 0.95rem; color: #cbd5e1; margin-bottom: 40px; font-weight: 500; letter-spacing: 0.5px; word-break: keep-all; }
-
-        /* 버튼 컨테이너 반응형 설계 */
-        .btn-container { 
-            margin: 0 auto 30px auto; 
-            display: flex; 
-            justify-content: space-between; 
-            align-items: center; 
-            width: 100%;
-            max-width: 1400px; 
-            gap: 15px;
-            flex-wrap: wrap; 
-        }
-        .btn {
-            color: white; border: none; padding: 12px 22px; font-size: 1rem;
-            font-weight: bold; border-radius: 25px; cursor: pointer; transition: 0.2s;
-            white-space: nowrap;
-        }
-        .home-btn {
-            background-color: #475569;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
-        }
+        .btn-container { margin: 0 auto 30px auto; display: flex; justify-content: space-between; align-items: center; width: 100%; max-width: 1400px; gap: 15px; flex-wrap: wrap; }
+        .btn { color: white; border: none; padding: 12px 22px; font-size: 1rem; font-weight: bold; border-radius: 25px; cursor: pointer; transition: 0.2s; white-space: nowrap; }
+        .home-btn { background-color: #475569; box-shadow: 0 4px 15px rgba(0,0,0,0.3); }
         .home-btn:hover { transform: scale(1.05); background-color: #334155; }
-
-        .download-btn {
-            background-color: var(--accent);
-            color: white;
-            box-shadow: 0 4px 15px rgba(255, 0, 127, 0.3);
-        }
+        .download-btn { background-color: var(--accent); color: white; box-shadow: 0 4px 15px rgba(255,0,127,0.3); }
         .download-btn:hover { transform: scale(1.05); background-color: #e60072; }
-        
-        .share-btn {
-            background-color: var(--sub-accent);
-            box-shadow: 0 4px 15px rgba(0, 160, 233, 0.4);
-        }
+        .share-btn { background-color: var(--sub-accent); box-shadow: 0 4px 15px rgba(0,160,233,0.4); }
         .share-btn:hover { transform: scale(1.05); background-color: #008bd4; }
-
-        /* 📱 반응형 스마트 그리드 설정 */
-        .grid-container {
-            display: grid;
-            /* 가로 너비에 맞춰 최적의 스티커 수량(최소 가로폭 120px)이 자동으로 꽉 채워지도록 설정 */
-            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); 
-            gap: 12px;
-            max-width: 1350px;
-            margin: 0 auto;
-        }
-
-        .sticker-card {
-            background: #ffffff; 
-            border: 1px solid #111111; 
-            border-radius: 8px; 
-            padding: 8px;
-            cursor: pointer; 
-            transition: 0.3s;
-            aspect-ratio: 1 / 1;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-sizing: border-box;
-            opacity: 0.25;
-        }
-
-        .sticker-card img {
-            width: 100%; height: 100%;
-            object-fit: contain; 
-            transition: 0.3s;
-            display: block;
-        }
-
-        .sticker-card.collected {
-            box-shadow: 0 0 12px rgba(255, 0, 127, 0.3);
-            border: 2px solid var(--accent);
-            opacity: 1 !important;
-        }
-
-        /* 📱 스마트폰(초소형 화면) 전용 밀착 반응형 미디어 쿼리 */
+        .grid-container { display: grid; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: 12px; max-width: 1350px; margin: 0 auto; }
+        .sticker-card { background: #ffffff; border: 1px solid #111111; border-radius: 8px; padding: 8px; cursor: pointer; transition: 0.3s; aspect-ratio: 1 / 1; display: flex; align-items: center; justify-content: center; box-sizing: border-box; opacity: 0.25; }
+        .sticker-card img { width: 100%; height: 100%; object-fit: contain; transition: 0.3s; display: block; }
+        .sticker-card.collected { box-shadow: 0 0 12px rgba(255,0,127,0.3); border: 2px solid var(--accent); opacity: 1 !important; }
         @media (max-width: 640px) {
             body { padding: 20px 10px; }
             h1 { font-size: 1.5rem; }
             .btn-container { justify-content: center; flex-direction: column; width: 100%; }
             .btn-container a, .btn-container div { width: 100%; display: flex; gap: 10px; }
             .btn { flex: 1; font-size: 0.9rem; padding: 10px 15px; text-align: center; justify-content: center; }
-            .grid-container { grid-template-columns: repeat(auto-fill, minmax(85px, 1fr)); gap: 8px; } 
+            .grid-container { grid-template-columns: repeat(auto-fill, minmax(85px, 1fr)); gap: 8px; }
             .sticker-card { height: 95px; padding: 6px; }
             #capture-area { padding: 20px 10px; }
         }
     </style>
 </head>
 <body>
-
     <div class="btn-container">
-        <a href="../index.html" style="text-decoration: none;">
-            <button class="btn home-btn">🏠 메인 목록으로</button>
-        </a>
+        <a href="../index.html" style="text-decoration: none;"><button class="btn home-btn">🏠 메인 목록으로</button></a>
         <div style="display: flex; gap: 10px; flex: 1; justify-content: flex-end;">
             <button class="btn download-btn" onclick="downloadDoc()">내 도감 이미지로 저장</button>
             <button class="btn share-btn" onclick="copyShareLink()">현재 도감 링크 복사</button>
         </div>
     </div>
-
     <div id="capture-area">
         <h1>배스킨라빈스 30주년 포켓몬 도감 (27종)</h1>
+        <div id="progress-container">수집 현황: <span id="progress-text">0 / 27 (0%)</span></div>
         <p class="release-date">2026년 05월 01일 출시</p>
         <p class="info-note">💡 2026년 5월 1일 출시 포켓몬 3D 스틱바 27종 (30주년 기념)</p>
-
         <div class="grid-container" id="grid"></div>
-
         <div style="text-align: right; margin-top: 40px; padding-right: 10px; font-size: 0.9rem; color: #475569; letter-spacing: 2px;">
-            CREATED BY <strong style="color: var(--accent); text-shadow: 0 0 5px rgba(255, 0, 127, 0.3);">AND</strong>
+            CREATED BY <strong style="color: var(--accent); text-shadow: 0 0 5px rgba(255,0,127,0.3);">AND</strong>
         </div>
     </div>
-
     <script>
         const total = 27;
         const grid = document.getElementById('grid');
+        const progressText = document.getElementById('progress-text');
         const storageKey = 'collected_baskin_30y_2026';
 
         const urlParams = new URLSearchParams(window.location.search);
         const codeParam = urlParams.get('code');
-        
+
         let collected = [];
         if (codeParam) {
             collected = codeParam.split(',').map(Number).filter(n => n > 0 && n <= total);
         } else {
             collected = JSON.parse(localStorage.getItem(storageKey)) || [];
+        }
+
+        function updateProgress() {
+            const current = collected.length;
+            const percent = ((current / total) * 100).toFixed(1);
+            progressText.innerText = `${current} / ${total} (${percent}%)`;
         }
 
         for (let i = 1; i <= total; i++) {
@@ -180,56 +87,42 @@
             img.src = `../image/baskin_30y/${i}.jpg`;
             img.alt = `스틱바 스티커 ${i}`;
             img.crossOrigin = "anonymous";
-
             card.appendChild(img);
-            
-            card.onclick = () => {
-                card.classList.toggle('collected');
-                updateStorage(i);
+
+            card.addEventListener('click', () => {
+                const index = collected.indexOf(i);
+                if (index > -1) {
+                    collected.splice(index, 1);
+                    card.classList.remove('collected');
+                } else {
+                    collected.push(i);
+                    card.classList.add('collected');
+                }
+                localStorage.setItem(storageKey, JSON.stringify(collected));
                 updateURL();
-            };
+                updateProgress();
+            });
 
             grid.appendChild(card);
         }
 
-        function updateStorage(id) {
-            const index = collected.indexOf(id);
-            if (index > -1) {
-                collected.splice(index, 1);
-            } else {
-                collected.push(id);
-            }
-            localStorage.setItem(storageKey, JSON.stringify(collected));
-        }
-
         function updateURL() {
-            if (collected.length > 0) {
-                const sortedCollected = [...collected].sort((a, b) => a - b);
-                const newUrl = `${window.location.protocol}//${window.location.host}${window.location.pathname}?code=${sortedCollected.join(',')}`;
-                window.history.replaceState({ path: newUrl }, '', newUrl);
-            } else {
-                const cleanUrl = `${window.location.protocol}//${window.location.host}${window.location.pathname}`;
-                window.history.replaceState({ path: cleanUrl }, '', cleanUrl);
-            }
+            const sorted = [...collected].sort((a, b) => a - b);
+            const newUrl = sorted.length > 0
+                ? `${location.protocol}//${location.host}${location.pathname}?code=${sorted.join(',')}`
+                : `${location.protocol}//${location.host}${location.pathname}`;
+            window.history.replaceState({ path: newUrl }, '', newUrl);
         }
 
         function copyShareLink() {
             updateURL();
             navigator.clipboard.writeText(window.location.href).then(() => {
                 alert('배스킨라빈스 30주년 도감 수집 현황이 담긴 공유 링크가 복사되었습니다!');
-            }).catch(err => {
-                alert('링크 복사에 실패했습니다. 주소창의 주소를 직접 복사해주세요.');
-            });
+            }).catch(() => alert('링크 복사에 실패했습니다. 주소창의 주소를 직접 복사해주세요.'));
         }
 
         function downloadDoc() {
-            const target = document.getElementById('capture-area');
-            html2canvas(target, {
-                useCORS: true,
-                allowTaint: true,
-                backgroundColor: "#0f172a",
-                scale: 2
-            }).then(canvas => {
+            html2canvas(document.getElementById('capture-area'), { useCORS: true, allowTaint: true, backgroundColor: "#0f172a", scale: 2 }).then(canvas => {
                 const link = document.createElement('a');
                 link.download = '내_배스킨라빈스_30주년_도감.png';
                 link.href = canvas.toDataURL('image/png');
@@ -237,21 +130,14 @@
             });
         }
 
-        if (!codeParam && collected.length > 0) {
-            updateURL();
-        }
+        updateProgress();
+        if (!codeParam && collected.length > 0) updateURL();
 
         function runBackgroundCounter() {
-            const firebaseBaseUrl = "https://pokedoc-f09af-default-rtdb.asia-southeast1.firebasedatabase.app";
-            const apiEndpoint = `${firebaseBaseUrl}/visits.json`;
-
-            fetch(apiEndpoint)
-                .then(res => res.json())
-                .then(currentValue => {
-                    const newValue = currentValue ? Number(currentValue) + 1 : 1;
-                    fetch(apiEndpoint, { method: 'PUT', body: JSON.stringify(newValue) });
-                })
-                .catch(err => console.log('Tracker active'));
+            const apiEndpoint = "https://pokedoc-f09af-default-rtdb.asia-southeast1.firebasedatabase.app/visits.json";
+            fetch(apiEndpoint).then(res => res.json()).then(v => {
+                fetch(apiEndpoint, { method: 'PUT', body: JSON.stringify(v ? Number(v) + 1 : 1) });
+            }).catch(() => {});
         }
         window.addEventListener('DOMContentLoaded', runBackgroundCounter);
     </script>
