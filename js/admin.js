@@ -18,7 +18,10 @@ async function openAdminModal() {
     if (inputHash === ADMIN_HASH) {
         document.getElementById('adminModal').style.display = "block";
         document.body.style.overflow = "hidden";
-        fetchSuggestions(); 
+        fetchSuggestions();
+        
+        // ✅ 공지사항 관리 버튼 표시
+        document.getElementById('admin-notice-btn').style.display = 'block';
     } else {
         alert("❌ 비밀번호가 올바르지 않습니다. 관리자 권한이 거부되었습니다.");
     }
@@ -28,6 +31,9 @@ function closeAdminModal() {
     document.getElementById('adminModal').style.display = "none";
     document.body.style.overflow = "auto";
     document.getElementById('admin-list-target').innerHTML = '<div class="no-data">의견을 불러오는 중입니다...</div>';
+    
+    // ✅ 버튼 숨기기
+    document.getElementById('admin-notice-btn').style.display = 'none';
 }
 
 function fetchSuggestions() {
