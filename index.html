@@ -16,174 +16,45 @@
 
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8715935220766558" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="css/styles.css">
-
+    
     <style>
-        /* 테마 시스템 변수 정의 (라이트모드가 기본값) */
-        :root {
-            --bg-body: #f4f4f9;
-            --bg-card: white;
-            --text-main: #1e293b;
-            --text-sub: #64748b;
-            --border-card: #e2e8f0;
-            --shadow-card: rgba(0,0,0,0.06);
-            --shadow-hover: rgba(0,0,0,0.12);
-            --bg-dashboard: #ffffff;
-            --input-bg: #ffffff;
-            --admin-item-bg: #f8fafc;
-        }
-
-        /* 다크모드 활성화 시 변수 변경 */
-        [data-theme="dark"] {
-            --bg-body: #111827;
-            --bg-card: #1f2937;
-            --text-main: #f9fafb;
-            --text-sub: #9ca3af;
-            --border-card: #374151;
-            --shadow-card: rgba(0, 0, 0, 0.3);
-            --shadow-hover: rgba(0, 0, 0, 0.5);
-            --bg-dashboard: #1f2937;
-            --input-bg: #374151;
-            --admin-item-bg: #111827;
-        }
-
-        /* 기본 환경 세팅 */
-        body { 
-            font-family: 'Apple SD Gothic Neo', sans-serif; 
-            background: var(--bg-body); 
-            color: var(--text-main);
-            padding: 40px 15px; 
-            text-align: center; 
-            margin: 0;
-            transition: background 0.3s, color 0.3s;
-            -webkit-text-size-adjust: none; 
-        }
-
-        h1 {
-            font-size: 2.2rem;
-            color: var(--text-main);
-            margin-bottom: 10px;
-            word-break: keep-all;
-        }
-
-        .subtitle {
-            font-size: 1rem;
-            color: var(--text-sub);
-            margin-bottom: 25px;
-            word-break: keep-all;
-            padding: 0 10px;
-        }
-
-        /* 🌙 다크모드 상단 컨트롤바 */
-        .top-controls {
-            max-width: 1200px;
-            margin: 0 auto 20px auto;
-            display: flex;
-            justify-content: flex-end;
-            gap: 10px;
-            flex-wrap: wrap; 
-        }
-        .control-btn {
-            background: var(--bg-card);
-            color: var(--text-main);
-            border: 1px solid var(--border-card);
-            padding: 10px 16px;
-            border-radius: 20px;
-            cursor: pointer;
-            font-weight: bold;
-            font-size: 0.9rem;
-            box-shadow: var(--shadow-card);
-            transition: 0.2s;
-        }
+        :root { --bg-body: #f4f4f9; --bg-card: white; --text-main: #1e293b; --text-sub: #64748b; --border-card: #e2e8f0; --shadow-card: rgba(0,0,0,0.06); --shadow-hover: rgba(0,0,0,0.12); --bg-dashboard: #ffffff; --input-bg: #ffffff; --admin-item-bg: #f8fafc; }
+        [data-theme="dark"] { --bg-body: #111827; --bg-card: #1f2937; --text-main: #f9fafb; --text-sub: #9ca3af; --border-card: #374151; --shadow-card: rgba(0, 0, 0, 0.3); --shadow-hover: rgba(0, 0, 0, 0.5); --bg-dashboard: #1f2937; --input-bg: #374151; --admin-item-bg: #111827; }
+        body { font-family: 'Apple SD Gothic Neo', sans-serif; background: var(--bg-body); color: var(--text-main); padding: 40px 15px; text-align: center; margin: 0; transition: background 0.3s, color 0.3s; -webkit-text-size-adjust: none; }
+        h1 { font-size: 2.2rem; color: var(--text-main); margin-bottom: 10px; word-break: keep-all; }
+        .subtitle { font-size: 1rem; color: var(--text-sub); margin-bottom: 25px; word-break: keep-all; padding: 0 10px; }
+        .top-controls { max-width: 1200px; margin: 0 auto 20px auto; display: flex; justify-content: flex-end; gap: 10px; flex-wrap: wrap; }
+        .control-btn { background: var(--bg-card); color: var(--text-main); border: 1px solid var(--border-card); padding: 10px 16px; border-radius: 20px; cursor: pointer; font-weight: bold; font-size: 0.9rem; box-shadow: var(--shadow-card); transition: 0.2s; }
         .control-btn:hover { transform: scale(1.03); }
         .suggest-trigger-btn { background: #10b981; color: white; border-color: #10b981; }
         .suggest-trigger-btn:hover { background: #059669; }
         .admin-trigger-btn { background: #475569; color: white; border-color: #475569; }
         .admin-trigger-btn:hover { background: #334155; }
 
-        /* 📊 종합 대시보드 뱃지 박스 */
-        .total-dashboard {
-            background: var(--bg-dashboard);
-            border: 1px solid var(--border-card);
-            max-width: 460px;
-            margin: 0 auto 30px auto;
-            padding: 15px 20px;
-            border-radius: 15px;
-            box-shadow: var(--shadow-card);
-            box-sizing: border-box;
-        }
+        .total-dashboard { background: var(--bg-dashboard); border: 1px solid var(--border-card); max-width: 460px; margin: 0 auto 30px auto; padding: 15px 20px; border-radius: 15px; box-shadow: var(--shadow-card); box-sizing: border-box; }
         .total-dashboard-title { font-size: 0.9rem; font-weight: bold; color: var(--text-sub); margin-bottom: 5px; }
         .total-dashboard-count { font-size: 1.4rem; font-weight: bold; color: #3b82f6; }
 
-        /* 🔍 검색 및 필터 컨트롤 존 */
-        .filter-section {
-            max-width: 600px;
-            margin: 0 auto 35px auto;
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-            padding: 0 5px;
-        }
-        .search-input {
-            width: 100%; padding: 12px 18px; font-size: 1rem; border-radius: 30px;
-            border: 1px solid var(--border-card); background: var(--bg-card); color: var(--text-main);
-            box-shadow: var(--shadow-card); outline: none; box-sizing: border-box; transition: 0.2s;
-        }
+        .filter-section { max-width: 600px; margin: 0 auto 35px auto; display: flex; flex-direction: column; gap: 12px; padding: 0 5px; }
+        .search-input { width: 100%; padding: 12px 18px; font-size: 1rem; border-radius: 30px; border: 1px solid var(--border-card); background: var(--bg-card); color: var(--text-main); box-shadow: var(--shadow-card); outline: none; box-sizing: border-box; transition: 0.2s; }
         .search-input:focus { border-color: #3b82f6; box-shadow: 0 0 10px rgba(59, 130, 246, 0.2); }
         .tag-container { display: flex; justify-content: center; gap: 8px; flex-wrap: wrap; }
         .tag-btn { background: var(--bg-card); color: var(--text-sub); border: 1px solid var(--border-card); padding: 6px 14px; border-radius: 20px; cursor: pointer; font-size: 0.85rem; font-weight: 500; transition: 0.2s; }
         .tag-btn.active, .tag-btn:hover { background: #3b82f6; color: white; border-color: #3b82f6; }
         
-        /* 📱 반응형 플렉스/그리드 카드 상자 설정 */
-        .menu-container {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); 
-            gap: 20px;
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 5px;
-        }
-
-        .menu-card {
-            background: var(--bg-card); 
-            border-radius: 15px; 
-            padding: 20px 15px; 
-            box-shadow: var(--shadow-card); 
-            display: flex; flex-direction: column; align-items: center; cursor: pointer; 
-            transition: transform 0.3s, box-shadow 0.3s, background 0.3s; 
-            text-decoration: none; color: var(--text-main); text-align: center;
-            border: 1px solid var(--border-card); box-sizing: border-box; min-height: 250px; 
-        }
+        .menu-container { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 20px; max-width: 1200px; margin: 0 auto; padding: 0 5px; }
+        .menu-card { background: var(--bg-card); border-radius: 15px; padding: 20px 15px; box-shadow: var(--shadow-card); display: flex; flex-direction: column; align-items: center; cursor: pointer; transition: transform 0.3s, box-shadow 0.3s, background 0.3s; text-decoration: none; color: var(--text-main); text-align: center; border: 1px solid var(--border-card); box-sizing: border-box; min-height: 250px; }
         .menu-card:hover { transform: translateY(-5px); box-shadow: var(--shadow-hover); }
         .menu-card img { max-width: 100%; height: 85px; object-fit: contain; margin-bottom: 12px; }
         .menu-card h2 { font-size: 1.15rem; margin: 0 0 6px 0; word-break: keep-all; }
         .menu-card p { font-size: 0.88rem; color: var(--text-sub); margin: 0 0 15px 0; line-height: 1.4; word-break: keep-all; }
 
-        /* 📊 카드 개별 진행률 레이아웃 */
         .progress-box { width: 100%; margin-top: auto; }
         .progress-text { display: flex; justify-content: space-between; font-size: 0.78rem; color: var(--text-sub); margin-bottom: 4px; font-weight: bold; }
         .progress-bar-bg { background: var(--border-card); width: 100%; height: 6px; border-radius: 3px; overflow: hidden; }
         .progress-bar-fill { background: linear-gradient(90deg, #10b981, #3b82f6); height: 100%; width: 0%; transition: width 0.5s ease-out; }
 
-        /* 각 시즌 카드별 포인트 상단 바 색상 */
-        .card-halloween { border-top: 5px solid #ff7518; }
-        .card-winter { border-top: 5px solid #6ee7b7; }
-        .card-lovely { border-top: 5px solid #ff91a4; }
-        .card-art30y { border-top: 5px solid #facc15; }
-        .card-new2023 { border-top: 5px solid #a78bfa; }
-        .card-season1 { border-top: 5px solid #10b981; }
-        .card-season2 { border-top: 5px solid #f59e0b; }
-        .card-mega { border-top: 5px solid #c084fc; }
-        .card-new-s1 { border-top: 5px solid #6366f1; }
-        .card-id2024 { border-top: 5px solid #38bdf8; }
-        .card-id2025 { border-top: 5px solid #0ea5e9; }
-        .card-season2-2024 { border-top: 5px solid #38bdf8; }
-        .card-season3-2024 { border-top: 5px solid #f43f5e; }
-        .card-season4-2025 { border-top: 5px solid #38bdf8; }
-        .card-season5-2026 { border-top: 5px solid #f472b6; }
-        .card-baskin-30y { border-top: 5px solid #ff007f; }
-        .card-pixel2024 { border-top: 5px solid #38bdf8; }
-        .card-removable2024 { border-top: 5px solid #10b981; }
-        .card-pocketpis { border-top: 5px solid #38bdf8; }
+        .card-halloween { border-top: 5px solid #ff7518; } .card-winter { border-top: 5px solid #6ee7b7; } .card-lovely { border-top: 5px solid #ff91a4; } .card-art30y { border-top: 5px solid #facc15; } .card-new2023 { border-top: 5px solid #a78bfa; } .card-season1 { border-top: 5px solid #10b981; } .card-season2 { border-top: 5px solid #f59e0b; } .card-mega { border-top: 5px solid #c084fc; } .card-new-s1 { border-top: 5px solid #6366f1; } .card-id2024 { border-top: 5px solid #38bdf8; } .card-id2025 { border-top: 5px solid #0ea5e9; } .card-season2-2024 { border-top: 5px solid #38bdf8; } .card-season3-2024 { border-top: 5px solid #f43f5e; } .card-season4-2025 { border-top: 5px solid #38bdf8; } .card-season5-2026 { border-top: 5px solid #f472b6; } .card-baskin-30y { border-top: 5px solid #ff007f; } .card-pixel2024 { border-top: 5px solid #38bdf8; } .card-removable2024 { border-top: 5px solid #10b981; } .card-pocketpis { border-top: 5px solid #38bdf8; }
 
         footer { margin-top: 80px; font-size: 0.8rem; color: var(--text-sub); line-height: 1.6; letter-spacing: 0.5px; border-top: 1px solid var(--border-card); padding-top: 25px; }
         .footer-links { margin-bottom: 12px; }
@@ -191,7 +62,6 @@
         .footer-links a:hover { color: #3b82f6; text-decoration: underline; }
         .disclaimer { max-width: 700px; margin: 10px auto 0 auto; font-size: 0.75rem; color: var(--text-sub); word-break: keep-all; padding: 0 10px; }
 
-        /* 모달 공통 레이아웃 */
         .modal { display: none; position: fixed; z-index: 9999; left: 0; top: 0; width: 100%; height: 100%; overflow: auto; background-color: rgba(0,0,0,0.4); }
         .modal-content { background-color: var(--bg-card); color: var(--text-main); margin: 15% auto; padding: 25px 20px; border: 1px solid var(--border-card); width: 90%; max-width: 550px; border-radius: 12px; text-align: left; box-shadow: 0 4px 20px rgba(0,0,0,0.15); box-sizing: border-box; }
         .modal-header { font-size: 1.2rem; font-weight: bold; color: var(--text-main); margin-bottom: 15px; border-bottom: 2px solid var(--border-card); padding-bottom: 8px; }
@@ -199,7 +69,6 @@
         .close-btn { background: #64748b; color: white; border: none; padding: 10px 16px; border-radius: 6px; cursor: pointer; font-weight: bold; float: right; margin-top: 15px; }
         .close-btn:hover { background: #475569; }
 
-        /* 공지사항 탭 및 리스트 스타일 (이번에 추가된 부분 CSS) */
         .notice-tabs, .admin-notice-tabs { display: flex; gap: 10px; margin-bottom: 15px; border-bottom: 1px solid var(--border-card); padding-bottom: 5px; }
         .notice-tab, .admin-notice-tab { background: none; border: none; color: var(--text-sub); font-size: 1rem; font-weight: bold; padding: 8px 12px; cursor: pointer; }
         .notice-tab.active, .admin-notice-tab.active { color: #f59e0b; border-bottom: 3px solid #f59e0b; }
@@ -213,12 +82,10 @@
         .admin-notice-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px; }
         .admin-notice-header h4 { margin: 0; font-size: 1rem; color: var(--text-main); }
         .btn-delete { background: #ef4444; color: white; border: none; padding: 4px 8px; border-radius: 4px; font-size: 0.75rem; cursor: pointer; }
-        
         .admin-notice-form input, .admin-notice-form textarea { width: 100%; margin-bottom: 10px; padding: 10px; border-radius: 6px; border: 1px solid var(--border-card); background: var(--input-bg); color: var(--text-main); box-sizing: border-box;}
         .admin-notice-form textarea { height: 100px; resize: vertical; }
         .btn-submit-notice { width: 100%; background: #3b82f6; color: white; font-weight: bold; border: none; padding: 10px; border-radius: 6px; cursor: pointer; margin-bottom: 20px;}
 
-        /* 건의사항 폼 입력창 스타일 */
         .suggest-form { display: flex; flex-direction: column; gap: 12px; margin-top: 10px; }
         .suggest-form label { font-size: 0.85rem; font-weight: bold; color: var(--text-main); }
         .suggest-form input, .suggest-form textarea { width: 100%; padding: 10px 12px; font-size: 0.9rem; border-radius: 8px; border: 1px solid var(--border-card); background: var(--input-bg); color: var(--text-main); outline: none; box-sizing: border-box; }
@@ -226,7 +93,6 @@
         .submit-btn { background: #3b82f6; color: white; border: none; padding: 12px; border-radius: 8px; font-weight: bold; font-size: 0.95rem; cursor: pointer; transition: 0.2s; }
         .submit-btn:hover { background: #2563eb; }
 
-        /* 📋 관리자 화면 전용 의견 리스트 스타일 */
         .admin-list-container { max-height: 320px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; margin-top: 10px; }
         .admin-item { background: var(--admin-item-bg); border: 1px solid var(--border-card); padding: 12px; border-radius: 10px; position: relative; }
         .admin-meta { font-size: 0.75rem; color: var(--text-sub); margin-bottom: 6px; font-weight: 500; }
@@ -264,7 +130,7 @@
     </div>
 
     <div style="margin-bottom: 30px;">
-        <button class="control-btn" onclick="openNoticeModal()" style="background: #f59e0b; color: white; border-color: #f59e0b; margin: 10px auto; display: block; width: 100%; max-width: 600px; padding: 15px; font-size: 1.05rem;">📢 공지사항 & 업데이트 확인하기</button>
+        <button class="control-btn" onclick="openNoticeModal()" style="background: #f59e0b; color: white; border-color: #f59e0b; margin: 10px auto; display: block;">📢 공지사항 & 업데이트</button>
     </div>
 
     <div class="filter-section">
@@ -315,9 +181,11 @@
         <div class="modal-content" style="max-width: 600px;">
             <div class="modal-header">📋 관리자 전용 의견 관리 판넬</div>
             <div style="font-size: 0.85rem; color: var(--text-sub); margin-bottom: 10px;">유저분들이 보낸 비공개 건의사항 리스트입니다. (최신순)</div>
-            <div class="admin-list-container" id="admin-list-target"><div class="no-data">의견을 불러오는 중입니다...</div></div>
-            <button id="admin-notice-btn" class="btn" style="display: none; background: #f59e0b; color: white; margin-top: 15px; width: 100%; border-radius: 6px; padding: 12px; font-weight: bold; cursor: pointer; border: none;" onclick="openAdminNoticeModal()">📢 공지사항/업데이트 작성 및 관리</button>
-            <button class="close-btn" onclick="closeAdminModal()" style="margin-top: 10px; width: 100%; background:#475569;">판넬 닫기</button>
+            <div class="admin-list-container" id="admin-list-target">
+                <div class="no-data">의견을 불러오는 중입니다...</div>
+            </div>
+            <button id="admin-notice-btn" class="btn" style="display: none; background: #f59e0b; color: white; margin-top: 10px; width: 100%; border-radius: 6px; padding: 10px; font-weight: bold; cursor: pointer; border: none;" onclick="openAdminNoticeModal()">📋 공지사항/업데이트 관리</button>
+            <button class="close-btn" onclick="closeAdminModal()" style="margin-top: 15px; width: 100%; background:#475569;">판넬 닫기</button>
         </div>
     </div>
 
@@ -326,10 +194,10 @@
             <div class="modal-header">📢 공지사항 & 업데이트</div>
             <div class="notice-tabs">
                 <button class="notice-tab active" data-tab="notice" onclick="switchNoticeTab('notice')">📌 공지사항</button>
-                <button class="notice-tab" data-tab="update" onclick="switchNoticeTab('update')">⚡ 업데이트 내역</button>
+                <button class="notice-tab" data-tab="update" onclick="switchNoticeTab('update')">⚡ 업데이트</button>
             </div>
-            <div id="notice-list-container" style="min-height: 150px;">
-                <div class="no-data">로딩 중...</div>
+            <div class="notice-list-container" id="notice-list-container">
+                <div class="loading">로딩 중...</div>
             </div>
             <button class="close-btn" onclick="closeNoticeModal()" style="width: 100%; margin-top: 15px;">닫기</button>
         </div>
@@ -337,315 +205,44 @@
 
     <div id="adminNoticeModal" class="modal">
         <div class="modal-content" style="max-width: 800px; max-height: 90vh; overflow-y: auto;">
-            <div class="modal-header">📋 공지사항 & 업데이트 게시 관리 (관리자)</div>
+            <div class="modal-header">📋 공지사항 & 업데이트 관리 (관리자)</div>
             <div class="admin-notice-tabs">
-                <button class="admin-notice-tab active" data-tab="notice" onclick="switchAdminNoticeTab('notice')">📌 공지사항 작성</button>
-                <button class="admin-notice-tab" data-tab="update" onclick="switchAdminNoticeTab('update')">⚡ 업데이트 작성</button>
+                <button class="admin-notice-tab active" data-tab="notice" onclick="switchAdminNoticeTab('notice')">📌 공지사항</button>
+                <button class="admin-notice-tab" data-tab="update" onclick="switchAdminNoticeTab('update')">⚡ 업데이트</button>
             </div>
             <div id="admin-notice-content" class="admin-notice-content">
                 <div class="admin-notice-form">
-                    <input type="text" id="notice-title" placeholder="게시물 제목을 입력하세요">
-                    <textarea id="notice-content" placeholder="게시물 내용을 입력하세요"></textarea>
-                    <button class="btn-submit-notice" onclick="submitNotice()">등록하기</button>
+                    <input type="text" id="notice-title" placeholder="제목을 입력하세요">
+                    <textarea id="notice-content" placeholder="내용을 입력하세요"></textarea>
+                    <button class="btn-submit-notice" onclick="submitNotice('notice')">공지사항 작성</button>
                 </div>
-                <div id="admin-notice-list" style="margin-top: 20px;"></div>
+                <div class="admin-notice-list" id="admin-notice-list">
+                    <div class="loading">로딩 중...</div>
+                </div>
             </div>
-            <button class="close-btn" onclick="closeAdminNoticeModal()" style="width: 100%; margin-top: 15px; background: #475569;">뒤로 가기</button>
+            <div id="admin-update-content" class="admin-notice-content" style="display: none;">
+                <div class="admin-notice-form">
+                    <input type="text" id="update-title" placeholder="제목을 입력하세요">
+                    <textarea id="update-content" placeholder="내용을 입력하세요"></textarea>
+                    <button class="btn-submit-notice" onclick="submitNotice('update')">업데이트 작성</button>
+                </div>
+                <div class="admin-notice-list" id="admin-update-list">
+                    <div class="loading">로딩 중...</div>
+                </div>
+            </div>
+            <button class="close-btn" onclick="closeAdminNoticeModal()" style="width: 100%; margin-top: 15px; background: #475569;">닫기</button>
         </div>
     </div>
 
-    <script>
-        const firebaseBaseUrl = "https://pokedoc-f09af-default-rtdb.asia-southeast1.firebasedatabase.app"; 
-        const ADMIN_HASH = "C6941E071034DF57CF2AF1C6D9983F7EB706711A416B00DCCBE0B029D5332D6F";
-        let currentFilterTag = 'all';
-        let currentNoticeTab = 'notice'; // 공지사항 탭 추적용
-        let adminCurrentTab = 'notice'; // 관리자 탭 추적용
+    <script src="data/cards.js"></script>
+    <script src="js/theme.js"></script>
+    <script src="js/progress.js"></script>
+    <script src="js/filter.js"></script>
+    <script src="js/suggestions.js"></script>
+    <script src="js/admin.js"></script>
+    <script src="js/notices.js"></script>
+    <script src="js/admin-notices.js"></script>
+    <script src="js/main.js"></script>
 
-        // 해시 변환 함수
-        async function sha256(message) {
-            const msgBuffer = new TextEncoder().encode(message);                    
-            const hashBuffer = await crypto.subtle.digest('SHA-256', msgBuffer);
-            const hashArray = Array.from(new Uint8Array(hashBuffer));
-            return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
-        }
-
-        // ================== 모달 제어 시스템 ==================
-        function closeModalAll() {
-            document.querySelectorAll('.modal').forEach(m => m.style.display = 'none');
-            document.body.style.overflow = "auto";
-        }
-
-        window.onclick = function(event) {
-            if (event.target.classList.contains('modal')) {
-                event.target.style.display = "none";
-                document.body.style.overflow = "auto";
-            }
-        }
-
-        const modalTexts = {
-            about: {
-                title: "ℹ️ 사이트 소개 (About Us)",
-                content: "안녕하세요! '포켓몬 띠부실 도감 보관소'에 오신 것을 환영합니다.\n\n본 사이트는 수집가분들이 다양한 시즌의 포켓몬 띠부씰 및 스티커 수집 현황을 직관적이고 편리하게 기록하고 관리할 수 있도록 지원하는 개인 수집용 대시보드 허브 공간입니다.\n\n[주요 기능]\n- 역대 시즌별 포켓몬 띠부씰 도감 리스트 대시보드 제공\n- 실시간 클릭 수집 현황 체크 및 자동 진행률 바 저장 시스템\n- 브라우저 로컬 저장소(localStorage) 기반 무서버 내역 유지 기술 적용\n\n앞으로도 깔끔한 수집 편의성을 제공하기 위해 지속적으로 보완해 나갈 예정입니다. 이용해 주셔서 감사합니다!"
-            },
-            privacy: {
-                title: "🔒 개인정보처리방침 (Privacy Policy)",
-                content: "본 '포켓몬 띠부실 도감 보관소'는 이용자의 개인정보를 매우 소중하게 생각하며, 관련된 법령을 준수합니다.\n\n1. 개인정보의 수집 항목 및 목적\n본 사이트는 회원가입 시스템이 없는 완전 개방형 사이트로, 이용자의 이름, 전화번호, 비밀번호 등 어떠한 민감 개인정보도 서버에 수집하거나 요구하지 않습니다.\n\n2. 데이터의 저장 (웹 로컬스토리지 활용)\n사용자가 도감에서 체크하는 수집 진행 내역은 이용자 본인의 PC/모바일 브라우저 임시 저장소인 'localStorage'에만 안전하게 기록됩니다. 이 데이터는 외부 서버로 전송되지 않으며 브라우저 쿠키 삭제 시 초기화될 수 있습니다.\n\n3. 쿠키 및 서드파티 분석 툴 활용\n본 사이트는 통합 방문자 수 카운팅 및 향후 구글 애드센스(Google AdSense) 광고 게재 등을 위하여 무인성 비식별 로그/쿠키 데이터를 활용할 수 있습니다. 구글은 쿠키를 사용하여 사용자의 이전 방문을 기반으로 광고를 게재하며, 사용자는 구글 광고 설정에서 맞춤설정 광고를 해제할 수 있습니다."
-            }
-        };
-
-        function openModal(type) {
-            if(modalTexts[type]) {
-                document.getElementById('modalHeader').innerText = modalTexts[type].title;
-                document.getElementById('modalBody').innerText = modalTexts[type].content;
-                document.getElementById('infoModal').style.display = "block";
-                document.body.style.overflow = "hidden";
-            }
-        }
-        function closeModal() { document.getElementById('infoModal').style.display = "none"; document.body.style.overflow = "auto"; }
-
-        // ================== 공지사항 / 업데이트 기능 (사용자) ==================
-        function openNoticeModal() {
-            document.getElementById('noticeModal').style.display = "block";
-            document.body.style.overflow = "hidden";
-            fetchNotices('notice');
-        }
-        function closeNoticeModal() { document.getElementById('noticeModal').style.display = "none"; document.body.style.overflow = "auto"; }
-
-        function switchNoticeTab(tab) {
-            currentNoticeTab = tab;
-            document.querySelectorAll('.notice-tab').forEach(t => t.classList.remove('active'));
-            document.querySelector(`.notice-tab[data-tab="${tab}"]`).classList.add('active');
-            fetchNotices(tab);
-        }
-
-        function fetchNotices(type) {
-            const container = document.getElementById('notice-list-container');
-            container.innerHTML = '<div class="no-data">로딩 중...</div>';
-            
-            fetch(`${firebaseBaseUrl}/${type}s.json`)
-                .then(res => res.json())
-                .then(data => {
-                    if (!data || Object.keys(data).length === 0) {
-                        container.innerHTML = `<div class="no-data">📭 아직 등록된 ${type === 'notice' ? '공지사항' : '업데이트'} 내역이 없습니다.</div>`;
-                        return;
-                    }
-                    container.innerHTML = Object.keys(data).reverse().map(key => `
-                        <div class="notice-item">
-                            <div class="notice-header">
-                                <h3>${data[key].title}</h3>
-                                <span class="notice-date">${data[key].date}</span>
-                            </div>
-                            <div class="notice-content">${data[key].content}</div>
-                        </div>
-                    `).join('');
-                })
-                .catch(() => container.innerHTML = '<div class="no-data">❌ 데이터를 불러오지 못했습니다.</div>');
-        }
-
-        // ================== 관리자 전용 기능 ==================
-        async function openAdminModal() {
-            const inputPw = prompt("🔒 관리자 전용 액세스 비밀번호를 입력하세요:");
-            if (!inputPw) return; 
-            const hash = await sha256(inputPw.trim());
-            if (hash.toUpperCase() === ADMIN_HASH) {
-                document.getElementById('adminModal').style.display = "block";
-                document.body.style.overflow = "hidden";
-                document.getElementById('admin-notice-btn').style.display = 'block';
-                fetchSuggestions();
-            } else {
-                alert("❌ 비밀번호가 올바르지 않습니다.");
-            }
-        }
-        function closeAdminModal() { document.getElementById('adminModal').style.display = "none"; document.body.style.overflow = "auto"; document.getElementById('admin-notice-btn').style.display = 'none'; }
-
-        // 관리자 공지사항 관리 팝업 열기
-        function openAdminNoticeModal() {
-            document.getElementById('adminModal').style.display = "none"; // 뒤에꺼 닫기
-            document.getElementById('adminNoticeModal').style.display = "block";
-            fetchAdminNotices(adminCurrentTab);
-        }
-        function closeAdminNoticeModal() {
-            document.getElementById('adminNoticeModal').style.display = "none";
-            document.getElementById('adminModal').style.display = "block"; // 다시 기존 관리자 창으로 돌아가기
-        }
-
-        function switchAdminNoticeTab(tab) {
-            adminCurrentTab = tab;
-            document.querySelectorAll('.admin-notice-tab').forEach(t => t.classList.remove('active'));
-            document.querySelector(`.admin-notice-tab[data-tab="${tab}"]`).classList.add('active');
-            fetchAdminNotices(tab);
-        }
-
-        function submitNotice() {
-            const title = document.getElementById('notice-title').value.trim();
-            const content = document.getElementById('notice-content').value.trim();
-            if (!title || !content) { alert("제목과 내용을 모두 입력하세요."); return; }
-
-            fetch(`${firebaseBaseUrl}/${adminCurrentTab}s.json`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ title, content, date: new Date().toLocaleDateString('ko-KR') })
-            }).then(() => {
-                alert("✅ 게시물이 등록되었습니다.");
-                document.getElementById('notice-title').value = '';
-                document.getElementById('notice-content').value = '';
-                fetchAdminNotices(adminCurrentTab);
-            });
-        }
-
-        function fetchAdminNotices(type) {
-            const container = document.getElementById('admin-notice-list');
-            container.innerHTML = '로딩 중...';
-            fetch(`${firebaseBaseUrl}/${type}s.json`).then(res => res.json()).then(data => {
-                if (!data) { container.innerHTML = "등록된 항목이 없습니다."; return; }
-                container.innerHTML = Object.keys(data).reverse().map(key => `
-                    <div class="admin-notice-item">
-                        <div class="admin-notice-header">
-                            <h4>${data[key].title} (${data[key].date})</h4>
-                            <button class="btn-delete" onclick="deleteNotice('${type}', '${key}')">삭제</button>
-                        </div>
-                    </div>
-                `).join('');
-            });
-        }
-
-        function deleteNotice(type, id) {
-            if(!confirm("이 게시물을 정말 삭제하시겠습니까?")) return;
-            fetch(`${firebaseBaseUrl}/${type}s/${id}.json`, { method: 'DELETE' }).then(() => fetchAdminNotices(type));
-        }
-
-
-        // ================== 건의사항 제어 ==================
-        function openSuggestModal() { document.getElementById('suggestModal').style.display = "block"; document.body.style.overflow = "hidden"; }
-        function closeSuggestModal() { document.getElementById('suggestModal').style.display = "none"; document.body.style.overflow = "auto"; document.getElementById('suggestion-form').reset(); }
-
-        function submitSuggestion(event) {
-            event.preventDefault();
-            const payload = {
-                nickname: document.getElementById('suggest-nickname').value.trim(),
-                email: document.getElementById('suggest-email').value.trim() || "미기입",
-                content: document.getElementById('suggest-content').value.trim(),
-                regDate: new Date().toLocaleString('ko-KR')
-            };
-            fetch(`${firebaseBaseUrl}/suggestions.json`, {
-                method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload)
-            }).then(() => { alert('🎉 의견이 성공적으로 발송되었습니다!'); closeSuggestModal(); });
-        }
-
-        function fetchSuggestions() {
-            const targetContainer = document.getElementById('admin-list-target');
-            fetch(`${firebaseBaseUrl}/suggestions.json`).then(res => res.json()).then(data => {
-                if (!data) { targetContainer.innerHTML = '<div class="no-data">📭 등록된 건의사항이 없습니다.</div>'; return; }
-                targetContainer.innerHTML = Object.keys(data).reverse().map(key => `
-                    <div class="admin-item">
-                        <button class="item-delete-btn" onclick="deleteSuggestion('${key}')">삭제</button>
-                        <div class="admin-meta">👤 ${data[key].nickname} (${data[key].email}) | 📅 ${data[key].regDate}</div>
-                        <div class="admin-content">${data[key].content}</div>
-                    </div>
-                `).join('');
-            });
-        }
-
-        function deleteSuggestion(id) {
-            if (!confirm("⚠️ 영구 삭제하시겠습니까?")) return;
-            fetch(`${firebaseBaseUrl}/suggestions/${id}.json`, { method: 'DELETE' }).then(() => fetchSuggestions());
-        }
-
-        // ================== 공통(다크모드/방문자수/카드 세팅) ==================
-        function toggleTheme() {
-            const newTheme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
-            document.documentElement.setAttribute('data-theme', newTheme);
-            localStorage.setItem('pokedoc_main_theme', newTheme);
-            document.getElementById('theme-btn').innerText = newTheme === 'dark' ? "☀️ 라이트 모드 보기" : "🌙 다크 모드 보기";
-        }
-
-        function updateIntegratedCounter() {
-            const apiEndpoint = `${firebaseBaseUrl}/visits.json`;
-            fetch(apiEndpoint).then(res => res.json()).then(val => {
-                const newVal = val ? Number(val) + 1 : 1;
-                fetch(apiEndpoint, { method: 'PUT', body: JSON.stringify(newVal) }).then(() => {
-                    document.getElementById('main-visitor-count').innerText = newVal.toLocaleString();
-                });
-            }).catch(() => document.getElementById('main-visitor-count').innerText = "1");
-        }
-
-        // 도감 메뉴 렌더링을 외부 js 대신 html 안에 복구 (이 부분 중요!!)
-        const cardData = [
-            { href: "main/2022_halloween.html", styleClass: "card-halloween", type: "seal", storage: "collected_halloween_2022", total: 27, img: "image/main_image/2022_Halloween_main.png", title: "🎃 [띠부씰] 2022 할로윈", desc: "27종의 특별한 할로윈 스티커" },
-            { href: "main/2022_winter.html", styleClass: "card-winter", type: "seal", storage: "collected_winter_2022", total: 30, img: "image/main_image/2022_winter_main.png", title: "❄️ [띠부씰] 2022 윈터", desc: "30종의 특별한 겨울 스티커" },
-            { href: "main/2023_lovely.html", styleClass: "card-lovely", type: "seal", storage: "collected_lovely_2023", total: 30, img: "image/main_image/2023_lovely_main.png", title: "💕 [띠부씰] 2023 러블리", desc: "30종의 특별한 러블리 스티커" },
-            { href: "main/30y_art.html", styleClass: "card-art30y", type: "seal", storage: "collected_30y_art", total: 100, img: "image/main_image/30y_art_main.png", title: "✨ [띠부씰] 30주년 아트웍", desc: "100종의 아트웍 스페셜 스티커" },
-            { href: "main/2023_new.html", styleClass: "card-new2023", type: "seal", storage: "collected_new_2023", total: 55, img: "image/main_image/2023_new_main.png", title: "⚡ [띠부씰] 2023 NEW", desc: "55종의 NEW 시즌 스티커" },
-            { href: "main/2022_1season.html", styleClass: "card-season1", type: "seal", storage: "collected_1season_2022", total: 159, img: "image/main_image/2022_1season_main.png", title: "🌿 [띠부씰] 2022 1세대", desc: "159종의 오리지널 1세대 스티커" },
-            { href: "main/2022_2season.html", styleClass: "card-season2", type: "seal", storage: "collected_2season_2022", total: 116, img: "image/main_image/2022_season2_main.png", title: "🍯 [띠부씰] 2022 2세대", desc: "116종의 화려한 2세대 스티커" },
-            { href: "main/2024_Mega_evolution.html", styleClass: "card-mega", type: "seal", storage: "collected_mega_evolution_2024", total: 53, img: "image/main_image/2024_mega_main.png", title: "🔮 [띠부씰] 2024 메가진화", desc: "53종의 한정판 BIG 사이즈 띠부씰" },
-            { href: "main/2023_new_1season.html", styleClass: "card-new-s1", type: "seal", storage: "collected_new_1season_2023", total: 139, img: "image/main_image/2023_new_season1_main.png", title: "🍇 [띠부씰] 2023 NEW 시즌1", desc: "139종으로 대폭 개편된 뉴 스티커" },
-            { href: "main/2024_ID_picture.html", styleClass: "card-id2024", type: "sticker", storage: "collected_id_picture_2024_1st", total: 100, img: "image/main_image/2024_ID_picture_main.png", title: "📷 [스티커] 2024 증명사진 1탄", desc: "100종의 포켓몬 증명사진 스티커" },
-            { href: "main/2025_ID_picture.html", styleClass: "card-id2025", type: "sticker", storage: "collected_id_picture_2025_2nd", total: 100, img: "image/main_image/2025_ID_picture_main.jpg", title: "📷 [스티커] 2025 증명사진 2탄", desc: "100종의 포켓몬 증명사진 스티커" },
-            { href: "main/2024_new_season2.html", styleClass: "card-season2-2024", type: "seal", storage: "collected_new_season2_2024", total: 163, img: "image/main_image/2024_new_season2_main.png", title: "🌊 [띠부씰] 2024 NEW 시즌2", desc: "163종 (꼬부기 소방대 포함) 스티커" },
-            { href: "main/2024_new_season3.html", styleClass: "card-season3-2024", type: "seal", storage: "collected_new_season3_2024", total: 154, img: "image/main_image/2024_new_season3_main.png", title: "🍁 [띠부씰] 2024 NEW 시즌3", desc: "154종의 풍성한 뉴 시즌3 스티커" },
-            { href: "main/2025_new_season4.html", styleClass: "card-season4-2025", type: "seal", storage: "collected_new_season4_2025", total: 168, img: "image/main_image/2025_new_season4_main.png", title: "❄️ [띠부씰] 2025 NEW 시즌4", desc: "168종의 특별한 NEW 시즌4 스티커" },
-            { href: "main/2026_new_season5.html", styleClass: "card-season5-2026", type: "seal", storage: "collected_season5_2026", total: 150, img: "image/main_image/2026_new_season5_main.png", title: "🌸 [띠부씰] 2026 NEW 시즌5", desc: "150종의 기념비적인 30주년 스티커" },
-            { href: "main/baskin_30y.html", styleClass: "card-baskin-30y", type: "sticker", storage: "collected_baskin_30y_2026", total: 27, img: "image/main_image/baskin_30y_main.jpg", title: "🍦 [스티커] 배스킨라빈스 30주년", desc: "27종의 포켓몬 3D 스틱바 스티커" },
-            { href: "main/2024_pixel_art.html", styleClass: "card-pixel2024", type: "seal", storage: "collected_pixel_art_2024", total: 151, img: "image/main_image/2024_pixel_art_main.png", title: "👾 [띠부씰] 2024 픽셀아트", desc: "151종의 한정판 픽셀아트 시리즈" },
-            { href: "main/2024_removable.html", styleClass: "card-removable2024", type: "sticker", storage: "collected_removable_2024", total: 40, img: "image/main_image/2024_2024_removable_main.jpg", title: "✨ [스티커] 2024 리무버블", desc: "40종의 애사비 젤리 리무버블 시리즈" },
-            { href: "main/2025_pocketpis.html", styleClass: "card-pocketpis", type: "seal", storage: "collected_pocketpis_2025", total: 114, img: "image/main_image/2025_pocketpis_main.png", title: "📷 [띠부씰] 포켓피스 도감", desc: "2025년형 포켓피스 114종 수집 현황" }
-        ];
-
-        function renderCards() {
-            const grid = document.getElementById('menu-grid');
-            let grandTotalCount = 0;
-            let grandCollectedCount = 0;
-
-            grid.innerHTML = cardData.map(card => {
-                const collectedData = JSON.parse(localStorage.getItem(card.storage)) || [];
-                const count = collectedData.length;
-                grandTotalCount += card.total;
-                grandCollectedCount += count;
-                const percent = card.total > 0 ? Math.round((count / card.total) * 100) : 0;
-
-                return `
-                    <a href="${card.href}" class="menu-card ${card.styleClass}" data-type="${card.type}" data-storage="${card.storage}">
-                        <img src="${card.img}" alt="${card.title}">
-                        <h2>${card.title}</h2>
-                        <p>${card.desc}</p>
-                        <div class="progress-box">
-                            <div class="progress-text"><span>진행률</span><span>${count}/${card.total} (${percent}%)</span></div>
-                            <div class="progress-bar-bg"><div class="progress-bar-fill" style="width: ${percent}%"></div></div>
-                        </div>
-                    </a>
-                `;
-            }).join('');
-
-            document.getElementById('grand-total').innerText = grandTotalCount.toLocaleString();
-            document.getElementById('grand-collected').innerText = grandCollectedCount.toLocaleString();
-            document.getElementById('grand-percent').innerText = grandTotalCount > 0 ? Math.round((grandCollectedCount / grandTotalCount) * 100) : 0;
-        }
-
-        function filterCards() {
-            const query = document.getElementById('search-bar').value.toLowerCase();
-            document.querySelectorAll('.menu-card').forEach(card => {
-                const title = card.querySelector('h2').innerText.toLowerCase();
-                const desc = card.querySelector('p').innerText.toLowerCase();
-                const matches = (title.includes(query) || desc.includes(query)) && (currentFilterTag === 'all' || card.dataset.type === currentFilterTag);
-                card.style.display = matches ? 'flex' : 'none';
-            });
-        }
-
-        function filterTag(tag) {
-            currentFilterTag = tag;
-            document.querySelectorAll('.tag-btn').forEach(b => b.classList.toggle('active', b.dataset.filter === tag));
-            filterCards();
-        }
-
-        window.addEventListener('DOMContentLoaded', () => {
-            const savedTheme = localStorage.getItem('pokedoc_main_theme') || 'light';
-            document.documentElement.setAttribute('data-theme', savedTheme);
-            document.getElementById('theme-btn').innerText = savedTheme === 'dark' ? "☀️ 라이트 모드 보기" : "🌙 다크 모드 보기";
-
-            renderCards(); // 카드와 진행률 함께 생성
-            updateIntegratedCounter();
-        });
-    </script>
 </body>
 </html>
