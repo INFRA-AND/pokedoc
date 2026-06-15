@@ -1,14 +1,14 @@
 var adminCurrentTab = 'notice';
 
 function openAdminNoticeModal() {
-    document.getElementById('adminModal').style.display = "none"; // 기존 의견관리 창 숨기기
-    document.getElementById('adminNoticeModal').style.display = "block";
+    document.getElementById('adminModal').style.display = "none"; // 기존 관리자 창 숨기기
+    document.getElementById('adminNoticeModal').style.display = "block"; // 새 공지관리 창 띄우기
     loadAdminNotices('notice');
 }
 
 function closeAdminNoticeModal() {
     document.getElementById('adminNoticeModal').style.display = "none";
-    document.getElementById('adminModal').style.display = "block"; // 다시 의견관리 창으로 복귀
+    document.getElementById('adminModal').style.display = "block"; // 다시 관리자 창으로 복귀
 }
 
 function switchAdminNoticeTab(tab) {
@@ -29,7 +29,9 @@ function loadAdminNotices(type) {
     if(!container) return;
     container.innerHTML = '<div class="loading" style="padding:20px; text-align:center; color:#64748b;">데이터를 불러오는 중입니다...</div>';
 
-    fetch(`${firebaseBaseUrl}/${type}s.json`)
+    const dbUrl = "https://pokedoc-f09af-default-rtdb.asia-southeast1.firebasedatabase.app";
+
+    fetch(`${dbUrl}/${type}s.json`)
         .then(res => res.json())
         .then(data => {
             if (!data || Object.keys(data).length === 0) {
@@ -46,7 +48,7 @@ function loadAdminNotices(type) {
                 const itemHtml = `
                     <div class="admin-notice-item">
                         <div class="admin-notice-header">
-                            <h4>${item.title}</h4>
+                            <h4 style="margin:0;">${item.title}</h4>
                             <button class="btn-delete" onclick="deleteNotice('${type}', '${item.id}')">삭제</button>
                         </div>
                         <div style="font-size: 0.8rem; color: #64748b; margin-bottom: 8px;">${item.date}</div>
@@ -73,13 +75,14 @@ function submitNotice(type) {
         return;
     }
 
+    const dbUrl = "https://pokedoc-f09af-default-rtdb.asia-southeast1.firebasedatabase.app";
     const payload = {
         title: title,
         content: content,
         date: new Date().toLocaleDateString('ko-KR')
     };
 
-    fetch(`${firebaseBaseUrl}/${type}s.json`, {
+    fetch(`${dbUrl}/${type}s.json`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload)
@@ -103,7 +106,9 @@ function submitNotice(type) {
 function deleteNotice(type, id) {
     if (!confirm('정말 삭제하시겠습니까? (복구 불가)')) return;
 
-    fetch(`${firebaseBaseUrl}/${type}s/${id}.json`, {
+    const dbUrl = "https://pokedoc-f09af-default-rtdb.asia-southeast1.firebasedatabase.app";
+    
+    fetch(`${dbUrl}/${type}s/${id}.json`, {
         method: 'DELETE'
     })
     .then(res => {
