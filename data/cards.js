@@ -124,7 +124,7 @@ const CARDS_DATA = [
         href: "main/2024_new_season3.html",
         class: "card-season3-2024",
         type: "seal",
-        storage: "collected_season3_2024",
+        storage: "collected_new_season3_2024",  // ✅ 수정: collected_season3_2024 → collected_new_season3_2024
         total: 154,
         image: "image/main_image/2024_new_season3_main.png",
         title: "🍁 [띠부씰] 2024 NEW 시즌3",
