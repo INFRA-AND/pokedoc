@@ -1,6 +1,5 @@
-// 공지사항/업데이트 관리
-const firebaseBaseUrl = "https://pokedoc-f09af-default-rtdb.asia-southeast1.firebasedatabase.app";
 let currentNoticeTab = 'notice'; // 'notice' 또는 'update'
+const firebaseBaseUrl = "https://pokedoc-f09af-default-rtdb.asia-southeast1.firebasedatabase.app";
 
 function openNoticeModal() {
     document.getElementById('noticeModal').style.display = "block";
@@ -23,22 +22,21 @@ function switchNoticeTab(tab) {
 
 function fetchNotices(type) {
     const container = document.getElementById('notice-list-container');
-    container.innerHTML = '<div class="loading">로딩 중...</div>';
+    container.innerHTML = '<div class="loading">데이터를 불러오는 중입니다...</div>';
 
     fetch(`${firebaseBaseUrl}/${type}s.json`)
         .then(res => res.json())
         .then(data => {
             if (!data || Object.keys(data).length === 0) {
-                container.innerHTML = `<div class="no-data">📭 ${type === 'notice' ? '공지사항' : '업데이트'}이 없습니다.</div>`;
+                container.innerHTML = `<div class="no-data">📭 아직 등록된 ${type === 'notice' ? '공지사항' : '업데이트'} 내역이 없습니다.</div>`;
                 return;
             }
-
             container.innerHTML = '';
-
+            // 최신순 정렬
             const sortedItems = Object.keys(data).map(key => ({
                 id: key,
                 ...data[key]
-            })).reverse(); // 최신순 정렬
+            })).reverse();
 
             sortedItems.forEach(item => {
                 const itemHtml = `
@@ -55,6 +53,6 @@ function fetchNotices(type) {
         })
         .catch(err => {
             console.error(err);
-            container.innerHTML = '<div class="no-data">❌ 데이터를 불러오지 못했습니다.</div>';
+            container.innerHTML = '<div class="no-data">❌ 서버와 연결할 수 없습니다.</div>';
         });
 }
