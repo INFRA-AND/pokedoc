@@ -50,11 +50,11 @@
             font-family: 'Apple SD Gothic Neo', sans-serif; 
             background: var(--bg-body); 
             color: var(--text-main);
-            padding: 40px 15px; /* 모바일 좌우 여백 확보를 위해 15px로 미세조정 */
+            padding: 40px 15px;
             text-align: center; 
             margin: 0;
             transition: background 0.3s, color 0.3s;
-            -webkit-text-size-adjust: none; /* iOS 폰트 비정상 확대 방지 */
+            -webkit-text-size-adjust: none;
         }
 
         h1 {
@@ -79,7 +79,7 @@
             display: flex;
             justify-content: flex-end;
             gap: 10px;
-            flex-wrap: wrap; /* 모바일에서 버튼이 넘치면 자동 줄바꿈 */
+            flex-wrap: wrap;
         }
         .control-btn {
             background: var(--bg-card);
@@ -175,10 +175,10 @@
             border-color: #3b82f6;
         }
         
-        /* 📱 반응형 플렉스/그리드 카드 상자 설정 (핵심 변경!) */
+        /* 📱 반응형 플렉스/그리드 카드 상자 설정 */
         .menu-container {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); /* 기기 사이즈 맞춤형 자동 그리드 확장 기술 적용 */
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
             gap: 20px;
             max-width: 1200px;
             margin: 0 auto;
@@ -201,7 +201,7 @@
             text-align: center;
             border: 1px solid var(--border-card);
             box-sizing: border-box;
-            min-height: 250px; /* 모든 카드의 최소 높이 통일 */
+            min-height: 250px;
         }
 
         .menu-card:hover { 
@@ -314,10 +314,10 @@
         .modal-content {
             background-color: var(--bg-card);
             color: var(--text-main);
-            margin: 15% auto; /* 상단 마진 최적화 */
+            margin: 15% auto;
             padding: 25px 20px;
             border: 1px solid var(--border-card);
-            width: 90%; /* 모달 좌우 여백 모바일 대응 */
+            width: 90%;
             max-width: 550px;
             border-radius: 12px;
             text-align: left;
@@ -336,7 +336,7 @@
             font-size: 0.9rem;
             color: var(--text-main);
             line-height: 1.6;
-            max-height: 300px; /* 모바일 스크린 대응을 위해 약간 축소 */
+            max-height: 300px;
             overflow-y: auto;
             white-space: pre-wrap;
         }
@@ -373,12 +373,12 @@
         .item-delete-btn:hover { background: #dc2626; }
         .no-data { text-align: center; color: var(--text-sub); padding: 25px; font-weight: 500; }
 
-        /* 📱 모달 위치 조정 및 상단 제어 바 반응형 미디어 쿼리 전용 브레이크 포인트 (추가) */
+        /* 📱 모바일 반응형 */
         @media (max-width: 640px) {
             body { padding: 25px 12px; }
             h1 { font-size: 1.8rem; }
-            .top-controls { justify-content: center; width: 100%; } /* 모바일에서는 상단 바 중앙 정렬화 */
-            .control-btn { font-size: 0.8rem; padding: 8px 14px; flex: 1; min-width: 100px; text-align: center; } /* 꽉 찬 레이아웃 배분 */
+            .top-controls { justify-content: center; width: 100%; }
+            .control-btn { font-size: 0.8rem; padding: 8px 14px; flex: 1; min-width: 100px; text-align: center; }
             .modal-content { margin: 25% auto; width: 95%; }
         }
     </style>
@@ -435,7 +435,7 @@
             <div class="progress-box"></div>
         </a>
 
-        <a href="main/30y_art.html" class="menu-card card-art30y" data-type="seal" data-storage="collected_30y_art" data-total="100">
+        <a href="main/30y_art.html" class="menu-card card-art30y" data-type="seal" data-storage="collected_art_30y" data-total="100">
             <img src="image/main_image/30y_art_main.png" alt="30주년 아트웍">
             <h2>✨ [띠부씰] 30주년 아트웍</h2>
             <p>100종의 아트웍 스페셜 스티커</p>
@@ -463,7 +463,7 @@
             <div class="progress-box"></div>
         </a>
 
-        <a href="main/2024_Mega_evolution.html" class="menu-card card-mega" data-type="seal" data-storage="collected_mega_2024" data-total="53">
+        <a href="main/2024_Mega_evolution.html" class="menu-card card-mega" data-type="seal" data-storage="collected_mega_evolution_2024" data-total="53">
             <img src="image/main_image/2024_mega_main.png" alt="2024 메가진화">
             <h2>🔮 [띠부씰] 2024 메가진화</h2>
             <p>53종의 한정판 BIG 사이즈 띠부씰</p>
@@ -477,21 +477,21 @@
             <div class="progress-box"></div>
         </a>
 
-        <a href="main/2024_ID_picture.html" class="menu-card card-id2024" data-type="sticker" data-storage="collected_id2024" data-total="100">
+        <a href="main/2024_ID_picture.html" class="menu-card card-id2024" data-type="sticker" data-storage="collected_id_picture_2024_1st" data-total="100">
             <img src="image/main_image/2024_ID_picture_main.png" alt="2024 증명사진 1탄">
             <h2>📷 [스티커] 2024 증명사진 1탄</h2>
             <p>100종의 포켓몬 증명사진 스티커</p>
             <div class="progress-box"></div>
         </a>
 
-        <a href="main/2025_ID_picture.html" class="menu-card card-id2025" data-type="sticker" data-storage="collected_id2025" data-total="100">
+        <a href="main/2025_ID_picture.html" class="menu-card card-id2025" data-type="sticker" data-storage="collected_id_picture_2025_2nd" data-total="100">
             <img src="image/main_image/2025_ID_picture_main.jpg" alt="2025 증명사진 2탄">
             <h2>📷 [스티커] 2025 증명사진 2탄</h2>
             <p>100종의 포켓몬 증명사진 스티커</p>
             <div class="progress-box"></div>
         </a>
 
-        <a href="main/2024_new_season2.html" class="menu-card card-season2-2024" data-type="seal" data-storage="collected_season2_2024" data-total="163">
+        <a href="main/2024_new_season2.html" class="menu-card card-season2-2024" data-type="seal" data-storage="collected_new_season2_2024" data-total="163">
             <img src="image/main_image/2024_new_season2_main.png" alt="2024 NEW 시즌2">
             <h2>🌊 [띠부씰] 2024 NEW 시즌2</h2>
             <p>163종 (꼬부기 소방대 포함) 시즌2 스티커</p>
@@ -505,28 +505,28 @@
             <div class="progress-box"></div>
         </a>
 
-        <a href="main/2025_new_season4.html" class="menu-card card-season4-2025" data-type="seal" data-storage="collected_season4_2025" data-total="168">
+        <a href="main/2025_new_season4.html" class="menu-card card-season4-2025" data-type="seal" data-storage="collected_new_season4_2025" data-total="168">
             <img src="image/main_image/2025_new_season4_main.png" alt="2025 NEW 시즌4">
             <h2>❄️ [띠부씰] 2025 NEW 시즌4</h2>
             <p>168종의 특별한 NEW 시즌4 스티커</p>
             <div class="progress-box"></div>
         </a>
 
-        <a href="main/2026_new_season5.html" class="menu-card card-season5-2026" data-type="seal" data-storage="collected_season5_2026" data-total="150">
+        <a href="main/2026_new_season5.html" class="menu-card card-season5-2026" data-type="seal" data-storage="collected_new_season5_2026" data-total="150">
             <img src="image/main_image/2026_new_season5_main.png" alt="2026 NEW 시즌5">
             <h2>🌸 [띠부씰] 2026 NEW 시즌5</h2>
             <p>150종의 기념비적인 30주년 스티커</p>
             <div class="progress-box"></div>
         </a>
 
-        <a href="main/baskin_30y.html" class="menu-card card-baskin-30y" data-type="sticker" data-storage="collected_baskin_30y" data-total="27">
+        <a href="main/baskin_30y.html" class="menu-card card-baskin-30y" data-type="sticker" data-storage="collected_baskin_30y_2026" data-total="27">
             <img src="image/main_image/baskin_30y_main.jpg" alt="배스킨라빈스 30주년">
             <h2>🍦 [스티커] 배스킨라빈스 30주년</h2>
             <p>27종의 특별한 포켓몬 3D 스틱바 스티커</p>
             <div class="progress-box"></div>
         </a>
 
-        <a href="main/2024_pixel_art.html" class="menu-card card-pixel2024" data-type="seal" data-storage="collected_pixel2024" data-total="151">
+        <a href="main/2024_pixel_art.html" class="menu-card card-pixel2024" data-type="seal" data-storage="collected_pixel_art_2024" data-total="151">
             <img src="image/main_image/2024_pixel_art_main.png" alt="2024 픽셀아트">
             <h2>👾 [띠부씰] 2024 픽셀아트</h2>
             <p>151종의 한정판 픽셀아트 띠부씰 시리즈</p>
@@ -859,6 +859,19 @@
             initTheme();
             calculateProgress();
             updateIntegratedCounter();
+            
+            // 🔄 3초마다 자동 업데이트
+            setInterval(calculateProgress, 3000);
+        });
+
+        // 페이지 복귀 시 즉시 업데이트
+        window.addEventListener('focus', calculateProgress);
+        
+        // 탭 전환 시 업데이트
+        document.addEventListener('visibilitychange', () => {
+            if (document.visibilityState === 'visible') {
+                calculateProgress();
+            }
         });
 
         const modalTexts = {
