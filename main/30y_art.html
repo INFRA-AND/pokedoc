@@ -52,6 +52,8 @@
         .home-btn { background-color: #475569; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3); }
         .download-btn { background-color: var(--accent); color: #1a1a1a; box-shadow: 0 4px 15px rgba(250, 204, 21, 0.3); }
         .share-btn { background-color: var(--sub-accent); box-shadow: 0 4px 15px rgba(59, 130, 246, 0.4); }
+        /* 👇 초기화 버튼 스타일 추가 */
+        .reset-btn { background-color: #ef4444; box-shadow: 0 4px 15px rgba(239, 68, 68, 0.4); }
 
         .grid-container {
             display: grid;
@@ -87,9 +89,10 @@
         <a href="../index.html" style="text-decoration: none;">
             <button class="btn home-btn">🏠 메인 목록으로</button>
         </a>
-        <div style="display: flex; gap: 10px; flex: 1; justify-content: flex-end;">
+        <div style="display: flex; gap: 10px; flex: 1; justify-content: flex-end; flex-wrap: wrap;">
             <button class="btn download-btn" onclick="downloadDoc()">내 도감 이미지로 저장</button>
             <button class="btn share-btn" onclick="copyShareLink()">현재 도감 링크 복사</button>
+            <button class="btn reset-btn" onclick="resetProgress()">🔄 초기화</button>
         </div>
     </div>
 
@@ -109,6 +112,7 @@
         const total = 100;
         const grid = document.getElementById('grid');
         const progressText = document.getElementById('progress-text');
+        // 👇 이 부분이 핵심입니다. 이 키값을 index.html이 알아야 합니다.
         const storageKey = 'collected_art_30y';
 
         const urlParams = new URLSearchParams(window.location.search);
@@ -184,6 +188,22 @@
                 link.href = canvas.toDataURL('image/png');
                 link.click();
             });
+        }
+
+        // 👇 새롭게 추가된 초기화 함수
+        function resetProgress() {
+            if(confirm("정말로 수집 내역을 초기화하시겠습니까? (이 작업은 되돌릴 수 없습니다)")) {
+                collected = []; 
+                localStorage.removeItem(storageKey); 
+                
+                document.querySelectorAll('.sticker-card').forEach(card => {
+                    card.classList.remove('collected');
+                });
+                
+                updateProgress();
+                updateURL();
+                alert("초기화되었습니다.");
+            }
         }
 
         // 초기 실행
