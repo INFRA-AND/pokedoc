@@ -1,18 +1,18 @@
-// 관리자 전용: 공지사항/업데이트 작성/수정/삭제
+let adminCurrentTab = 'notice';
 
 function openAdminNoticeModal() {
-    // 기존 관리자 인증 후 실행
+    document.getElementById('adminModal').style.display = "none"; 
     document.getElementById('adminNoticeModal').style.display = "block";
-    document.body.style.overflow = "hidden";
-    loadAdminNotices();
+    loadAdminNotices('notice');
 }
 
 function closeAdminNoticeModal() {
     document.getElementById('adminNoticeModal').style.display = "none";
-    document.body.style.overflow = "auto";
+    document.getElementById('adminModal').style.display = "block"; 
 }
 
 function switchAdminNoticeTab(tab) {
+    adminCurrentTab = tab;
     const tabs = document.querySelectorAll('.admin-notice-tab');
     tabs.forEach(t => t.classList.remove('active'));
     document.querySelector(`.admin-notice-tab[data-tab="${tab}"]`).classList.add('active');
@@ -24,20 +24,19 @@ function switchAdminNoticeTab(tab) {
     loadAdminNotices(tab);
 }
 
-function loadAdminNotices(type = 'notice') {
+function loadAdminNotices(type) {
     const container = document.getElementById(`admin-${type}-list`);
-    container.innerHTML = '<div class="loading">로딩 중...</div>';
+    if(!container) return;
+    container.innerHTML = '<div class="loading">데이터를 불러오는 중입니다...</div>';
 
     fetch(`${firebaseBaseUrl}/${type}s.json`)
         .then(res => res.json())
         .then(data => {
             if (!data || Object.keys(data).length === 0) {
-                container.innerHTML = '<div class="no-data">📭 항목이 없습니다.</div>';
+                container.innerHTML = '<div class="no-data">📭 등록된 항목이 없습니다.</div>';
                 return;
             }
-
             container.innerHTML = '';
-
             const sortedItems = Object.keys(data).map(key => ({
                 id: key,
                 ...data[key]
@@ -48,13 +47,10 @@ function loadAdminNotices(type = 'notice') {
                     <div class="admin-notice-item">
                         <div class="admin-notice-header">
                             <h4>${item.title}</h4>
-                            <div class="admin-notice-actions">
-                                <button class="btn-edit" onclick="editNotice('${type}', '${item.id}', '${escapeQuotes(item.title)}', '${escapeQuotes(item.content)}')">수정</button>
-                                <button class="btn-delete" onclick="deleteNotice('${type}', '${item.id}')">삭제</button>
-                            </div>
+                            <button class="btn-delete" onclick="deleteNotice('${type}', '${item.id}')">삭제</button>
                         </div>
-                        <div class="admin-notice-info">${item.date}</div>
-                        <div class="admin-notice-preview">${item.content.substring(0, 100)}...</div>
+                        <div style="font-size: 0.8rem; color: #64748b; margin-bottom: 8px;">${item.date}</div>
+                        <div style="font-size: 0.9rem;">${item.content.replace(/\n/g, '<br>')}</div>
                     </div>
                 `;
                 container.insertAdjacentHTML('beforeend', itemHtml);
@@ -69,21 +65,18 @@ function loadAdminNotices(type = 'notice') {
 function submitNotice(type) {
     const titleInput = document.getElementById(`${type}-title`);
     const contentInput = document.getElementById(`${type}-content`);
-    
     const title = titleInput.value.trim();
     const content = contentInput.value.trim();
 
     if (!title || !content) {
-        alert('제목과 내용을 입력해주세요.');
+        alert('제목과 내용을 모두 입력해주세요.');
         return;
     }
 
-    const today = new Date().toLocaleDateString('ko-KR');
-    
     const payload = {
         title: title,
         content: content,
-        date: today
+        date: new Date().toLocaleDateString('ko-KR')
     };
 
     fetch(`${firebaseBaseUrl}/${type}s.json`, {
@@ -93,7 +86,7 @@ function submitNotice(type) {
     })
     .then(res => {
         if (res.ok) {
-            alert('✅ 작성되었습니다.');
+            alert('✅ 성공적으로 게시되었습니다.');
             titleInput.value = '';
             contentInput.value = '';
             loadAdminNotices(type);
@@ -107,42 +100,8 @@ function submitNotice(type) {
     });
 }
 
-function editNotice(type, id, title, content) {
-    const newTitle = prompt('제목을 입력하세요:', title);
-    if (newTitle === null) return;
-
-    const newContent = prompt('내용을 입력하세요:', content);
-    if (newContent === null) return;
-
-    const today = new Date().toLocaleDateString('ko-KR');
-
-    const payload = {
-        title: newTitle,
-        content: newContent,
-        date: today
-    };
-
-    fetch(`${firebaseBaseUrl}/${type}s/${id}.json`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload)
-    })
-    .then(res => {
-        if (res.ok) {
-            alert('✅ 수정되었습니다.');
-            loadAdminNotices(type);
-        } else {
-            alert('❌ 수정에 실패했습니다.');
-        }
-    })
-    .catch(err => {
-        console.error(err);
-        alert('네트워크 오류가 발생했습니다.');
-    });
-}
-
 function deleteNotice(type, id) {
-    if (!confirm('정말 삭제하시겠습니까?')) return;
+    if (!confirm('정말 삭제하시겠습니까? (복구 불가)')) return;
 
     fetch(`${firebaseBaseUrl}/${type}s/${id}.json`, {
         method: 'DELETE'
@@ -155,12 +114,5 @@ function deleteNotice(type, id) {
             alert('❌ 삭제에 실패했습니다.');
         }
     })
-    .catch(err => {
-        console.error(err);
-        alert('네트워크 오류가 발생했습니다.');
-    });
-}
-
-function escapeQuotes(str) {
-    return str.replace(/'/g, "\\'");
+    .catch(err => console.error(err));
 }
