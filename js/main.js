@@ -53,22 +53,49 @@ function closeModal() {
     document.body.style.overflow = "auto";
 }
 
-function updateIntegratedCounter() {
-    const apiEndpoint = `${firebaseBaseUrl}/visits.json`;
+function getTodayKey() {
+    const now = new Date();
+    const y = now.getFullYear();
+    const m = String(now.getMonth() + 1).padStart(2, '0');
+    const d = String(now.getDate()).padStart(2, '0');
+    return `${y}-${m}-${d}`;
+}
 
-    fetch(apiEndpoint)
+function updateIntegratedCounter() {
+    const todayKey = getTodayKey();
+    const totalEndpoint = `${firebaseBaseUrl}/visits.json`;
+    const dailyEndpoint = `${firebaseBaseUrl}/daily/${todayKey}.json`;
+
+    // 누적 방문자 수 업데이트
+    const totalPromise = fetch(totalEndpoint)
         .then(res => res.json())
         .then(currentValue => {
             const newValue = currentValue ? Number(currentValue) + 1 : 1;
-            fetch(apiEndpoint, { method: 'PUT', body: JSON.stringify(newValue) })
-            .then(() => {
-                const countDisplay = document.getElementById('main-visitor-count');
-                if (countDisplay) countDisplay.innerText = newValue.toLocaleString();
-            });
+            return fetch(totalEndpoint, { method: 'PUT', body: JSON.stringify(newValue) })
+                .then(() => newValue);
+        });
+
+    // 오늘 방문자 수 업데이트
+    const dailyPromise = fetch(dailyEndpoint)
+        .then(res => res.json())
+        .then(currentValue => {
+            const newValue = currentValue ? Number(currentValue) + 1 : 1;
+            return fetch(dailyEndpoint, { method: 'PUT', body: JSON.stringify(newValue) })
+                .then(() => newValue);
+        });
+
+    Promise.all([totalPromise, dailyPromise])
+        .then(([totalCount, dailyCount]) => {
+            const totalDisplay = document.getElementById('main-visitor-count-total');
+            const dailyDisplay = document.getElementById('main-visitor-count-today');
+            if (totalDisplay) totalDisplay.innerText = totalCount.toLocaleString();
+            if (dailyDisplay) dailyDisplay.innerText = dailyCount.toLocaleString();
         })
         .catch(err => {
-            const countDisplay = document.getElementById('main-visitor-count');
-            if (countDisplay) countDisplay.innerText = "1";
+            const totalDisplay = document.getElementById('main-visitor-count-total');
+            const dailyDisplay = document.getElementById('main-visitor-count-today');
+            if (totalDisplay) totalDisplay.innerText = "-";
+            if (dailyDisplay) dailyDisplay.innerText = "-";
         });
 }
 
