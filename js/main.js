@@ -13,7 +13,9 @@ function renderCards() {
         cardElement.setAttribute('data-total', card.total);
 
         cardElement.innerHTML = `
-            <img src="${card.image}" alt="${card.title}">
+            <div class="menu-card-img-wrap">
+                <img src="${card.image}" alt="${card.title}">
+            </div>
             <h2>${card.title}</h2>
             <p>${card.description}</p>
             <div class="progress-box"></div>
