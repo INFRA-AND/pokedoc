@@ -217,12 +217,17 @@
 
         function downloadDoc() {
             const target = document.getElementById('capture-area');
+            target.style.width = '1040px';
+            target.style.minWidth = '1040px';
             html2canvas(target, {
                 useCORS: true,
                 allowTaint: true,
                 backgroundColor: "#1a1a1a",
-                scale: 2
+                scale: 2,
+                windowWidth: 1200
             }).then(canvas => {
+                target.style.width = '';
+                target.style.minWidth = '';
                 const link = document.createElement('a');
                 link.download = '내_2023_러블리_도감.png';
                 link.href = canvas.toDataURL('image/png');
