@@ -1,0 +1,797 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>포켓몬 카드 도감 by AND</title>
+    <link rel="preconnect" href="https://cdn.jsdelivr.net">
+    <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+    <style>
+        :root {
+            --bg: #0f172a;
+            --surface: #1e293b;
+            --surface2: #263344;
+            --border: #334155;
+            --text: #f1f5f9;
+            --sub: #94a3b8;
+            --accent: #3b82f6;
+            --accent2: #8b5cf6;
+            --green: #10b981;
+            --radius: 16px;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: 'Pretendard', 'Apple SD Gothic Neo', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            -webkit-text-size-adjust: none;
+        }
+
+        /* ── 상단 네비 ── */
+        .topbar {
+            position: sticky; top: 0; z-index: 100;
+            background: rgba(15,23,42,0.9);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--border);
+            padding: 12px 20px;
+            display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap;
+        }
+        .topbar-left { display: flex; align-items: center; gap: 12px; }
+        .back-btn {
+            background: var(--surface); border: 1px solid var(--border);
+            color: var(--text); padding: 7px 14px; border-radius: 20px;
+            cursor: pointer; font-size: 0.85rem; font-weight: 600; font-family: inherit;
+            text-decoration: none; transition: 0.18s; white-space: nowrap;
+        }
+        .back-btn:hover { background: var(--surface2); }
+        .topbar-title { font-size: 1rem; font-weight: 800; }
+
+        /* 언어 선택 */
+        .lang-selector { display: flex; gap: 4px; }
+        .lang-btn {
+            background: none; border: 1px solid var(--border);
+            color: var(--sub); padding: 5px 10px; border-radius: 8px;
+            cursor: pointer; font-size: 0.78rem; font-weight: 700; font-family: inherit;
+            transition: 0.15s;
+        }
+        .lang-btn.active { background: var(--accent); color: white; border-color: var(--accent); }
+
+        /* ── 히어로 ── */
+        .hero {
+            padding: 40px 20px 28px;
+            text-align: center;
+        }
+        .hero-badge {
+            display: inline-block;
+            background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+            color: white; font-size: 0.72rem; font-weight: 700;
+            letter-spacing: 1.5px; text-transform: uppercase;
+            padding: 4px 12px; border-radius: 20px; margin-bottom: 14px;
+        }
+        .hero h1 {
+            font-size: 2rem; font-weight: 800; line-height: 1.25; margin-bottom: 8px;
+            background: linear-gradient(135deg, #f1f5f9, #60a5fa, #a78bfa);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+        }
+        .hero p { color: var(--sub); font-size: 0.92rem; }
+
+        /* ── 탭 ── */
+        .tabs {
+            display: flex; justify-content: center; gap: 8px;
+            padding: 0 20px 24px; flex-wrap: wrap;
+        }
+        .tab-btn {
+            background: var(--surface); border: 1px solid var(--border);
+            color: var(--sub); padding: 9px 20px; border-radius: 22px;
+            cursor: pointer; font-size: 0.88rem; font-weight: 700; font-family: inherit;
+            transition: 0.18s;
+        }
+        .tab-btn.active {
+            background: linear-gradient(135deg, var(--accent), var(--accent2));
+            color: white; border-color: transparent;
+            box-shadow: 0 4px 14px rgba(99,102,241,0.3);
+        }
+
+        /* ── 세트 그리드 ── */
+        .set-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 16px; padding: 0 20px 60px; max-width: 1200px; margin: 0 auto;
+        }
+        .set-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 20px;
+            cursor: pointer;
+            transition: transform 0.22s, box-shadow 0.22s;
+            position: relative; overflow: hidden;
+        }
+        .set-card::before {
+            content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px;
+        }
+        .set-card:hover { transform: translateY(-4px); box-shadow: 0 12px 36px rgba(0,0,0,0.5); }
+        .set-logo {
+            width: 100%; height: 64px; object-fit: contain;
+            margin-bottom: 14px; filter: drop-shadow(0 2px 8px rgba(0,0,0,0.3));
+        }
+        .set-logo-placeholder {
+            width: 100%; height: 64px; margin-bottom: 14px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 0.85rem; color: var(--sub); font-weight: 700; letter-spacing: 2px;
+        }
+        .set-name { font-size: 1rem; font-weight: 800; margin-bottom: 4px; }
+        .set-en-name { font-size: 0.8rem; color: var(--sub); margin-bottom: 10px; }
+        .set-meta {
+            display: flex; justify-content: space-between; align-items: center;
+            font-size: 0.78rem; color: var(--sub);
+        }
+        .set-progress-wrap { margin-top: 12px; }
+        .set-progress-label { display: flex; justify-content: space-between; font-size: 0.75rem; color: var(--sub); margin-bottom: 4px; }
+        .set-progress-bg { background: var(--border); height: 5px; border-radius: 3px; overflow: hidden; }
+        .set-progress-fill { background: linear-gradient(90deg, var(--green), var(--accent)); height: 100%; transition: width 0.5s; }
+
+        /* ── 카드 뷰 ── */
+        #view-cards { display: none; }
+        .card-view-header {
+            padding: 20px 20px 0;
+            max-width: 1200px; margin: 0 auto;
+        }
+        .card-view-title { font-size: 1.4rem; font-weight: 800; margin-bottom: 4px; }
+        .card-view-sub { font-size: 0.85rem; color: var(--sub); margin-bottom: 18px; }
+
+        /* 필터바 */
+        .filter-bar {
+            display: flex; gap: 10px; flex-wrap: wrap; align-items: center;
+            padding: 0 20px 18px; max-width: 1200px; margin: 0 auto;
+        }
+        .filter-search {
+            flex: 1; min-width: 180px; padding: 10px 16px;
+            background: var(--surface); border: 1px solid var(--border);
+            color: var(--text); border-radius: 22px; font-size: 0.88rem;
+            font-family: inherit; outline: none; transition: border-color 0.2s;
+        }
+        .filter-search:focus { border-color: var(--accent); }
+        .filter-select {
+            background: var(--surface); border: 1px solid var(--border);
+            color: var(--text); padding: 10px 14px; border-radius: 22px;
+            font-size: 0.85rem; font-family: inherit; cursor: pointer; outline: none;
+        }
+        .filter-chip {
+            background: var(--surface); border: 1px solid var(--border);
+            color: var(--sub); padding: 7px 14px; border-radius: 20px;
+            cursor: pointer; font-size: 0.82rem; font-weight: 600; font-family: inherit;
+            transition: 0.15s; white-space: nowrap;
+        }
+        .filter-chip.active {
+            background: linear-gradient(135deg, var(--accent), var(--accent2));
+            color: white; border-color: transparent;
+        }
+
+        /* 수집 통계 바 */
+        .collect-stats {
+            margin: 0 20px 18px; padding: 14px 18px;
+            background: var(--surface); border: 1px solid var(--border);
+            border-radius: 12px; max-width: 1200px;
+            display: flex; align-items: center; gap: 14px; flex-wrap: wrap;
+        }
+        .collect-stats-num { font-size: 1.1rem; font-weight: 800; color: var(--accent); }
+        .collect-stats-bar { flex: 1; min-width: 120px; }
+        .collect-stats-bg { background: var(--border); height: 8px; border-radius: 4px; overflow: hidden; }
+        .collect-stats-fill { background: linear-gradient(90deg, var(--green), var(--accent)); height: 100%; transition: width 0.6s; }
+        .collect-stats-pct { font-size: 0.82rem; color: var(--sub); white-space: nowrap; }
+
+        /* 카드 그리드 */
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 14px; padding: 0 20px 80px; max-width: 1200px; margin: 0 auto;
+        }
+        .pcard {
+            background: var(--surface); border: 1px solid var(--border);
+            border-radius: 12px; overflow: hidden;
+            cursor: pointer; transition: transform 0.2s, box-shadow 0.2s;
+            position: relative; user-select: none;
+        }
+        .pcard:hover { transform: translateY(-3px); box-shadow: 0 8px 24px rgba(0,0,0,0.4); }
+        .pcard.collected { border-color: var(--green); box-shadow: 0 0 0 1px var(--green); }
+        .pcard-img-wrap {
+            position: relative; aspect-ratio: 2.5/3.5; overflow: hidden;
+            background: #0a0f1a;
+        }
+        .pcard-img {
+            width: 100%; height: 100%; object-fit: cover;
+            transition: opacity 0.3s; display: block;
+        }
+        .pcard-img.loading { opacity: 0; }
+        .pcard-collect-overlay {
+            position: absolute; top: 6px; right: 6px;
+            width: 24px; height: 24px; border-radius: 50%;
+            background: rgba(15,23,42,0.85);
+            border: 2px solid var(--border);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 0.7rem; transition: 0.2s;
+        }
+        .pcard.collected .pcard-collect-overlay {
+            background: var(--green); border-color: var(--green); color: white;
+        }
+        .pcard-info { padding: 8px 10px 10px; }
+        .pcard-num { font-size: 0.7rem; color: var(--sub); margin-bottom: 2px; }
+        .pcard-name { font-size: 0.82rem; font-weight: 700; line-height: 1.3; margin-bottom: 5px; word-break: keep-all; }
+        .rarity-badge {
+            display: inline-block; font-size: 0.65rem; font-weight: 800;
+            padding: 2px 6px; border-radius: 4px; letter-spacing: 0.5px;
+        }
+        .pcard-price { font-size: 0.72rem; color: var(--sub); margin-top: 4px; }
+
+        /* 카드 모달 */
+        .modal-backdrop {
+            display: none; position: fixed; inset: 0; z-index: 9999;
+            background: rgba(0,0,0,0.75); backdrop-filter: blur(6px);
+            align-items: center; justify-content: center; padding: 20px;
+        }
+        .modal-backdrop.open { display: flex; }
+        .modal-box {
+            background: var(--surface); border: 1px solid var(--border);
+            border-radius: 20px; max-width: 480px; width: 100%;
+            max-height: 90vh; overflow-y: auto;
+            box-shadow: 0 24px 64px rgba(0,0,0,0.6);
+        }
+        .modal-top { display: flex; gap: 16px; padding: 20px; }
+        .modal-card-img {
+            width: 140px; flex-shrink: 0; border-radius: 10px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+        }
+        .modal-info { flex: 1; }
+        .modal-num { font-size: 0.78rem; color: var(--sub); margin-bottom: 4px; }
+        .modal-name { font-size: 1.15rem; font-weight: 800; margin-bottom: 6px; line-height: 1.3; }
+        .modal-badges { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 10px; }
+        .modal-type-badge {
+            font-size: 0.72rem; font-weight: 700; padding: 3px 9px;
+            border-radius: 6px; background: var(--surface2); color: var(--sub);
+        }
+        .modal-section { border-top: 1px solid var(--border); padding: 16px 20px; }
+        .modal-section-title { font-size: 0.75rem; color: var(--sub); font-weight: 700; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 10px; }
+        .price-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
+        .price-label { font-size: 0.82rem; color: var(--sub); }
+        .price-val { font-size: 0.95rem; font-weight: 800; color: var(--text); }
+        .price-usd { font-size: 0.75rem; color: var(--sub); }
+        .modal-actions { display: flex; gap: 10px; padding: 14px 20px 20px; flex-wrap: wrap; }
+        .action-btn {
+            flex: 1; padding: 11px 14px; border-radius: 10px; border: none;
+            font-size: 0.88rem; font-weight: 700; font-family: inherit;
+            cursor: pointer; transition: 0.18s; text-align: center;
+        }
+        .action-collect { background: var(--green); color: white; }
+        .action-collect.active { background: #059669; }
+        .action-naver { background: #03c75a; color: white; text-decoration: none; display: flex; align-items: center; justify-content: center; }
+        .action-close { background: var(--surface2); color: var(--sub); border: 1px solid var(--border); }
+
+        /* 로딩 */
+        .loading-wrap { text-align: center; padding: 60px 20px; color: var(--sub); }
+        .loading-spinner {
+            width: 36px; height: 36px; border: 3px solid var(--border);
+            border-top-color: var(--accent); border-radius: 50%;
+            animation: spin 0.8s linear infinite; margin: 0 auto 14px;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        .empty-msg { text-align: center; padding: 48px 20px; color: var(--sub); font-size: 0.95rem; }
+
+        /* 반응형 */
+        @media (max-width: 600px) {
+            .hero h1 { font-size: 1.55rem; }
+            .set-grid { grid-template-columns: 1fr 1fr; gap: 10px; padding: 0 12px 60px; }
+            .card-grid { grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); gap: 10px; padding: 0 12px 80px; }
+            .filter-bar { padding: 0 12px 14px; gap: 8px; }
+            .modal-top { flex-direction: column; }
+            .modal-card-img { width: 100%; max-width: 200px; margin: 0 auto; display: block; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- 상단 네비 -->
+<div class="topbar">
+    <div class="topbar-left">
+        <a href="index.html" class="back-btn">← 메인으로</a>
+        <span class="topbar-title">🃏 포켓몬 카드 도감</span>
+    </div>
+    <div class="lang-selector" id="lang-selector">
+        <button class="lang-btn active" data-lang="kr" onclick="setLang('kr')">한국어</button>
+        <button class="lang-btn" data-lang="jp" onclick="setLang('jp')">日本語</button>
+        <button class="lang-btn" data-lang="en" onclick="setLang('en')">English</button>
+        <button class="lang-btn" data-lang="cn" onclick="setLang('cn')">中文</button>
+    </div>
+</div>
+
+<!-- ── 세트 목록 뷰 ── -->
+<div id="view-sets">
+    <div class="hero">
+        <div class="hero-badge">✨ Pokemon Card Archive</div>
+        <h1 id="hero-title">포켓몬 카드 도감</h1>
+        <p>확장팩별 카드 목록 · 수집 현황 · 시세 조회</p>
+    </div>
+    <div class="tabs">
+        <button class="tab-btn active" data-tab="expansion" onclick="switchTab('expansion')">🃏 확장팩</button>
+        <button class="tab-btn" data-tab="structure" onclick="switchTab('structure')">📦 구축덱</button>
+        <button class="tab-btn" data-tab="promo" onclick="switchTab('promo')">⭐ 프로모</button>
+    </div>
+    <div class="set-grid" id="set-grid"></div>
+</div>
+
+<!-- ── 카드 그리드 뷰 ── -->
+<div id="view-cards">
+    <div class="card-view-header">
+        <div style="display:flex; align-items:center; gap:12px; margin-bottom:12px;">
+            <button class="back-btn" onclick="showSetView()">← 목록으로</button>
+            <div>
+                <div class="card-view-title" id="cv-title">세트명</div>
+                <div class="card-view-sub" id="cv-sub"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="collect-stats" id="collect-stats" style="display:none;">
+        <div>
+            <div class="collect-stats-num" id="stat-count">0 / 0</div>
+            <div style="font-size:0.75rem; color:var(--sub);">수집 현황</div>
+        </div>
+        <div class="collect-stats-bar">
+            <div class="collect-stats-bg">
+                <div class="collect-stats-fill" id="stat-bar" style="width:0%"></div>
+            </div>
+        </div>
+        <div class="collect-stats-pct" id="stat-pct">0%</div>
+    </div>
+
+    <div class="filter-bar">
+        <input type="text" class="filter-search" id="search-input" placeholder="🔍 카드 이름 검색..." oninput="applyFilters()">
+        <button class="filter-chip active" data-type="all" onclick="setTypeFilter('all')">전체</button>
+        <button class="filter-chip" data-type="Pokémon" onclick="setTypeFilter('Pokémon')">포켓몬</button>
+        <button class="filter-chip" data-type="Trainer" onclick="setTypeFilter('Trainer')">트레이너스</button>
+        <button class="filter-chip" data-type="Energy" onclick="setTypeFilter('Energy')">에너지</button>
+        <select class="filter-select" id="rarity-select" onchange="applyFilters()">
+            <option value="all">전체 레어리티</option>
+        </select>
+    </div>
+
+    <div class="card-grid" id="card-grid"></div>
+</div>
+
+<!-- ── 카드 상세 모달 ── -->
+<div class="modal-backdrop" id="card-modal" onclick="closeModalOutside(event)">
+    <div class="modal-box">
+        <div class="modal-top">
+            <img class="modal-card-img" id="modal-img" src="" alt="">
+            <div class="modal-info">
+                <div class="modal-num" id="modal-num"></div>
+                <div class="modal-name" id="modal-name"></div>
+                <div class="modal-badges" id="modal-badges"></div>
+                <div style="font-size:0.8rem; color:var(--sub); line-height:1.5;" id="modal-desc"></div>
+            </div>
+        </div>
+        <div class="modal-section">
+            <div class="modal-section-title">💰 시세 정보</div>
+            <div class="price-row">
+                <span class="price-label">TCGPlayer 참고가 (USD)</span>
+                <span>
+                    <span class="price-val" id="modal-price-usd">-</span>
+                </span>
+            </div>
+            <div class="price-row">
+                <span class="price-label">환산 참고가 (KRW ≈)</span>
+                <span class="price-val" id="modal-price-krw">-</span>
+            </div>
+            <div style="font-size:0.72rem; color:var(--sub); margin-top:6px;">
+                * USD → KRW 환산은 참고용이며 실제 한국 시세와 다를 수 있습니다.
+            </div>
+        </div>
+        <div class="modal-actions">
+            <button class="action-btn action-collect" id="modal-collect-btn" onclick="toggleModalCollect()">⭕ 수집 등록</button>
+            <a class="action-btn action-naver" id="modal-naver-btn" href="#" target="_blank" rel="noopener">🛒 네이버 시세</a>
+            <button class="action-btn action-close" onclick="closeModal()">닫기</button>
+        </div>
+    </div>
+</div>
+
+<script src="data/card-sets.js"></script>
+<script>
+/* ══════════════════════════════════
+   상태
+══════════════════════════════════ */
+let currentLang     = 'kr';
+let currentTab      = 'expansion';
+let currentSetId    = null;
+let allCards        = [];       // 현재 세트의 전체 카드
+let filteredCards   = [];
+let collectionData  = {};       // { setId: Set<cardNumber> }
+let currentTypeFilter = 'all';
+let modalCard       = null;
+const USD_TO_KRW    = 1380;     // 환율 고정 (참고용)
+
+/* ══════════════════════════════════
+   언어 / 탭
+══════════════════════════════════ */
+function setLang(lang) {
+    currentLang = lang;
+    document.querySelectorAll('.lang-btn').forEach(b => b.classList.toggle('active', b.dataset.lang === lang));
+    if (currentSetId) {
+        updateCardViewHeader();
+    } else {
+        renderSetGrid();
+        updateHeroTitle();
+    }
+}
+
+function updateHeroTitle() {
+    const titles = { kr: '포켓몬 카드 도감', jp: 'ポケモンカード図鑑', en: 'Pokémon Card Dex', cn: '神奇宝贝卡牌图鉴' };
+    document.getElementById('hero-title').textContent = titles[currentLang] || titles.kr;
+}
+
+function switchTab(tab) {
+    currentTab = tab;
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.toggle('active', b.dataset.tab === tab));
+    renderSetGrid();
+}
+
+/* ══════════════════════════════════
+   수집 데이터 (localStorage)
+══════════════════════════════════ */
+function loadCollection() {
+    try {
+        const raw = localStorage.getItem('pokemon_card_collection');
+        const parsed = raw ? JSON.parse(raw) : {};
+        Object.keys(parsed).forEach(k => {
+            collectionData[k] = new Set(parsed[k]);
+        });
+    } catch(e) { collectionData = {}; }
+}
+
+function saveCollection() {
+    const plain = {};
+    Object.keys(collectionData).forEach(k => {
+        plain[k] = [...collectionData[k]];
+    });
+    localStorage.setItem('pokemon_card_collection', JSON.stringify(plain));
+}
+
+function isCollected(setId, cardId) {
+    return collectionData[setId] && collectionData[setId].has(cardId);
+}
+
+function toggleCollect(setId, cardId) {
+    if (!collectionData[setId]) collectionData[setId] = new Set();
+    if (collectionData[setId].has(cardId)) {
+        collectionData[setId].delete(cardId);
+    } else {
+        collectionData[setId].add(cardId);
+    }
+    saveCollection();
+}
+
+function getSetCollected(setId) {
+    return collectionData[setId] ? collectionData[setId].size : 0;
+}
+
+/* ══════════════════════════════════
+   세트 목록 렌더링
+══════════════════════════════════ */
+function renderSetGrid() {
+    const grid = document.getElementById('set-grid');
+    const filtered = POKEMON_CARD_SETS.filter(s => s.type === currentTab);
+
+    if (filtered.length === 0) {
+        grid.innerHTML = `<div class="empty-msg" style="grid-column:1/-1">🔜 준비 중입니다</div>`;
+        return;
+    }
+
+    grid.innerHTML = filtered.map(set => {
+        const name  = set.name[currentLang] || set.name.en;
+        const enName = set.name.en;
+        const release = set.releaseDate[currentLang] || set.releaseDate.en || '';
+        const collected = getSetCollected(set.id);
+        const total = set.total || '?';
+        const pct = (total && collected) ? Math.round(collected / total * 100) : 0;
+
+        return `
+        <div class="set-card" onclick="openSetView('${set.id}')"
+             style="--set-color:${set.color};">
+            <div style="position:absolute;top:0;left:0;right:0;height:4px;background:${set.color};border-radius:${getComputedStyle(document.documentElement).getPropertyValue('--radius')} ${getComputedStyle(document.documentElement).getPropertyValue('--radius')} 0 0;"></div>
+            <img class="set-logo"
+                 src="https://images.pokemontcg.io/${set.id}/logo.png"
+                 onerror="this.style.display='none';this.nextElementSibling.style.display='flex';"
+                 alt="${enName} logo">
+            <div class="set-logo-placeholder" style="display:none;">${enName.toUpperCase()}</div>
+            <div class="set-name">${name}</div>
+            <div class="set-en-name">${enName !== name ? enName : ''}</div>
+            <div class="set-meta">
+                <span>📅 ${release}</span>
+                <img src="https://images.pokemontcg.io/${set.id}/symbol.png"
+                     style="height:18px; filter:invert(0.6);" onerror="this.style.display='none'" alt="">
+            </div>
+            <div class="set-progress-wrap">
+                <div class="set-progress-label">
+                    <span>수집 현황</span>
+                    <span>${collected} / ${total} (${pct}%)</span>
+                </div>
+                <div class="set-progress-bg">
+                    <div class="set-progress-fill" style="width:${pct}%"></div>
+                </div>
+            </div>
+        </div>`;
+    }).join('');
+}
+
+/* ══════════════════════════════════
+   세트 → 카드 뷰
+══════════════════════════════════ */
+async function openSetView(setId) {
+    currentSetId = setId;
+    currentTypeFilter = 'all';
+    document.querySelectorAll('.filter-chip').forEach(c => c.classList.toggle('active', c.dataset.type === 'all'));
+    document.getElementById('search-input').value = '';
+    document.getElementById('rarity-select').value = 'all';
+
+    document.getElementById('view-sets').style.display = 'none';
+    document.getElementById('view-cards').style.display = 'block';
+    document.getElementById('card-grid').innerHTML = `<div class="loading-wrap" style="grid-column:1/-1"><div class="loading-spinner"></div><div>카드 정보를 불러오는 중...</div></div>`;
+    document.getElementById('collect-stats').style.display = 'none';
+
+    updateCardViewHeader();
+
+    try {
+        const cards = await fetchAllCards(setId);
+        allCards = cards;
+        buildRarityFilter(cards);
+        applyFilters();
+        document.getElementById('collect-stats').style.display = 'flex';
+        updateStats();
+    } catch(e) {
+        document.getElementById('card-grid').innerHTML = `<div class="empty-msg" style="grid-column:1/-1">❌ 카드 정보를 불러올 수 없습니다.<br><small>${e.message}</small></div>`;
+    }
+}
+
+function updateCardViewHeader() {
+    const set = POKEMON_CARD_SETS.find(s => s.id === currentSetId);
+    if (!set) return;
+    const name = set.name[currentLang] || set.name.en;
+    document.getElementById('cv-title').textContent = name;
+    document.getElementById('cv-sub').textContent = `${set.name.en}  ·  ${set.releaseDate[currentLang] || set.releaseDate.en || ''}`;
+}
+
+function showSetView() {
+    currentSetId = null;
+    allCards = [];
+    document.getElementById('view-cards').style.display = 'none';
+    document.getElementById('view-sets').style.display = 'block';
+    renderSetGrid();
+}
+
+/* ══════════════════════════════════
+   API 호출 (pokemontcg.io)
+══════════════════════════════════ */
+async function fetchAllCards(setId) {
+    const pageSize = 250;
+    let page = 1;
+    let cards = [];
+
+    while (true) {
+        const url = `https://api.pokemontcg.io/v2/cards?q=set.id:${setId}&pageSize=${pageSize}&page=${page}&orderBy=number`;
+        const res = await fetch(url);
+        if (!res.ok) throw new Error(`API 오류: ${res.status}`);
+        const json = await res.json();
+        cards = cards.concat(json.data);
+        if (cards.length >= json.totalCount || json.data.length < pageSize) break;
+        page++;
+    }
+    return cards;
+}
+
+/* ══════════════════════════════════
+   레어리티 필터 옵션 구성
+══════════════════════════════════ */
+function buildRarityFilter(cards) {
+    const seen = new Set();
+    const codes = [];
+
+    cards.forEach(c => {
+        const code = RARITY_CODE_MAP[c.rarity] || c.rarity || '?';
+        if (!seen.has(code)) { seen.add(code); codes.push(code); }
+    });
+
+    // 순서 정렬
+    const ordered = RARITY_ORDER.filter(r => seen.has(r));
+    ordered.push(...codes.filter(r => !RARITY_ORDER.includes(r)));
+
+    const sel = document.getElementById('rarity-select');
+    sel.innerHTML = `<option value="all">전체 레어리티</option>` +
+        ordered.map(r => `<option value="${r}">${r}</option>`).join('');
+}
+
+/* ══════════════════════════════════
+   필터 적용
+══════════════════════════════════ */
+function setTypeFilter(type) {
+    currentTypeFilter = type;
+    document.querySelectorAll('.filter-chip').forEach(c => c.classList.toggle('active', c.dataset.type === type));
+    applyFilters();
+}
+
+function applyFilters() {
+    const search  = document.getElementById('search-input').value.toLowerCase();
+    const rarity  = document.getElementById('rarity-select').value;
+
+    filteredCards = allCards.filter(c => {
+        if (currentTypeFilter !== 'all' && c.supertype !== currentTypeFilter) return false;
+        if (rarity !== 'all') {
+            const code = RARITY_CODE_MAP[c.rarity] || c.rarity;
+            if (code !== rarity) return false;
+        }
+        if (search) {
+            const name = (c.name || '').toLowerCase();
+            const num  = (c.number || '').toLowerCase();
+            if (!name.includes(search) && !num.includes(search)) return false;
+        }
+        return true;
+    });
+
+    renderCardGrid();
+    updateStats();
+}
+
+/* ══════════════════════════════════
+   카드 그리드 렌더링
+══════════════════════════════════ */
+function renderCardGrid() {
+    const grid = document.getElementById('card-grid');
+    if (filteredCards.length === 0) {
+        grid.innerHTML = `<div class="empty-msg" style="grid-column:1/-1">검색 결과가 없습니다.</div>`;
+        return;
+    }
+
+    grid.innerHTML = filteredCards.map(card => {
+        const code    = RARITY_CODE_MAP[card.rarity] || card.rarity || '';
+        const style   = RARITY_STYLE[code] || { bg: '#475569', text: '#fff' };
+        const collected = isCollected(currentSetId, card.id);
+        const price   = getPriceSummary(card);
+
+        return `
+        <div class="pcard${collected ? ' collected' : ''}" id="pcard-${card.id}"
+             data-id="${card.id}" onclick="openModal('${card.id}')">
+            <div class="pcard-img-wrap">
+                <img class="pcard-img loading"
+                     src="${card.images?.small || ''}"
+                     onload="this.classList.remove('loading')"
+                     onerror="this.src='https://images.pokemontcg.io/placeholder.png'; this.classList.remove('loading');"
+                     alt="${card.name}" loading="lazy">
+                <div class="pcard-collect-overlay">${collected ? '✓' : ''}</div>
+            </div>
+            <div class="pcard-info">
+                <div class="pcard-num">#${card.number}</div>
+                <div class="pcard-name">${card.name}</div>
+                ${code ? `<span class="rarity-badge" style="background:${style.bg};color:${style.text}">${code}</span>` : ''}
+                ${price ? `<div class="pcard-price">$${price}</div>` : ''}
+            </div>
+        </div>`;
+    }).join('');
+}
+
+function getPriceSummary(card) {
+    const p = card.tcgplayer?.prices;
+    if (!p) return null;
+    const val = p.holofoil?.mid || p.normal?.mid || p.reverseHolofoil?.mid || p['1stEditionNormal']?.mid;
+    return val ? val.toFixed(2) : null;
+}
+
+/* ══════════════════════════════════
+   수집 통계
+══════════════════════════════════ */
+function updateStats() {
+    const total = filteredCards.length;
+    const collected = filteredCards.filter(c => isCollected(currentSetId, c.id)).length;
+    const pct = total ? Math.round(collected / total * 100) : 0;
+
+    document.getElementById('stat-count').textContent = `${collected} / ${total}`;
+    document.getElementById('stat-bar').style.width = `${pct}%`;
+    document.getElementById('stat-pct').textContent = `${pct}%`;
+}
+
+/* ══════════════════════════════════
+   카드 모달
+══════════════════════════════════ */
+function openModal(cardId) {
+    const card = allCards.find(c => c.id === cardId);
+    if (!card) return;
+    modalCard = card;
+
+    document.getElementById('modal-img').src = card.images?.large || card.images?.small || '';
+    document.getElementById('modal-num').textContent = `#${card.number}`;
+    document.getElementById('modal-name').textContent = card.name;
+
+    // 뱃지
+    const code  = RARITY_CODE_MAP[card.rarity] || card.rarity || '';
+    const style = RARITY_STYLE[code] || { bg: '#475569', text: '#fff' };
+    const badges = document.getElementById('modal-badges');
+    badges.innerHTML = '';
+    if (card.supertype) {
+        const typeLabel = { 'Pokémon': '포켓몬', 'Trainer': '트레이너스', 'Energy': '에너지' }[card.supertype] || card.supertype;
+        badges.insertAdjacentHTML('beforeend', `<span class="modal-type-badge">${typeLabel}</span>`);
+    }
+    if (code) badges.insertAdjacentHTML('beforeend', `<span class="rarity-badge" style="background:${style.bg};color:${style.text}">${code}</span>`);
+
+    // 설명
+    document.getElementById('modal-desc').textContent = [
+        card.hp ? `HP ${card.hp}` : '',
+        card.types?.join(' / ') || '',
+        card.subtypes?.join(', ') || '',
+    ].filter(Boolean).join('  ·  ');
+
+    // 가격
+    const prices = card.tcgplayer?.prices;
+    let usdPrice = null;
+    if (prices) {
+        const tier = prices.holofoil || prices.normal || prices.reverseHolofoil || prices['1stEditionNormal'];
+        usdPrice = tier?.mid || tier?.market || null;
+    }
+    document.getElementById('modal-price-usd').textContent = usdPrice ? `$${usdPrice.toFixed(2)}` : '-';
+    document.getElementById('modal-price-krw').textContent = usdPrice ? `₩${Math.round(usdPrice * USD_TO_KRW).toLocaleString()}` : '-';
+
+    // 네이버 쇼핑
+    const naverQuery = encodeURIComponent(`포켓몬카드 ${card.name}`);
+    document.getElementById('modal-naver-btn').href = `https://search.shopping.naver.com/search/all?query=${naverQuery}`;
+
+    // 수집 버튼
+    updateModalCollectBtn();
+
+    document.getElementById('card-modal').classList.add('open');
+    document.body.style.overflow = 'hidden';
+}
+
+function updateModalCollectBtn() {
+    if (!modalCard) return;
+    const collected = isCollected(currentSetId, modalCard.id);
+    const btn = document.getElementById('modal-collect-btn');
+    btn.textContent = collected ? '✓ 수집 완료' : '⭕ 수집 등록';
+    btn.classList.toggle('active', collected);
+    btn.style.background = collected ? '#059669' : 'var(--green)';
+}
+
+function toggleModalCollect() {
+    if (!modalCard) return;
+    toggleCollect(currentSetId, modalCard.id);
+    updateModalCollectBtn();
+
+    // 그리드 카드 동기화
+    const el = document.getElementById(`pcard-${modalCard.id}`);
+    if (el) {
+        const collected = isCollected(currentSetId, modalCard.id);
+        el.classList.toggle('collected', collected);
+        const overlay = el.querySelector('.pcard-collect-overlay');
+        if (overlay) overlay.textContent = collected ? '✓' : '';
+    }
+    updateStats();
+
+    // 세트 목록 수집 현황 캐시 갱신용 (뒤로 갔을 때)
+    // 이미 collectionData 에 반영됨
+}
+
+function closeModal() {
+    document.getElementById('card-modal').classList.remove('open');
+    document.body.style.overflow = '';
+    modalCard = null;
+}
+
+function closeModalOutside(e) {
+    if (e.target === document.getElementById('card-modal')) closeModal();
+}
+
+/* ══════════════════════════════════
+   초기화
+══════════════════════════════════ */
+loadCollection();
+renderSetGrid();
+</script>
+</body>
+</html>
