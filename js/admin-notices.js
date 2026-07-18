@@ -34,6 +34,10 @@ function loadAdminNotices(type) {
     fetch(`${dbUrl}/${type}s.json`)
         .then(res => res.json())
         .then(data => {
+            if (data && typeof data === 'object' && data.error) {
+                container.innerHTML = '<div class="no-data" style="padding:20px; text-align:center; color:#ef4444;">⚠️ 데이터베이스 접근이 거부되었습니다. Firebase 규칙을 확인해주세요.</div>';
+                return;
+            }
             if (!data || Object.keys(data).length === 0) {
                 container.innerHTML = '<div class="no-data" style="padding:20px; text-align:center; color:#64748b;">📭 등록된 항목이 없습니다.</div>';
                 return;
@@ -45,13 +49,14 @@ function loadAdminNotices(type) {
             })).reverse();
 
             sortedItems.forEach(item => {
+                if (!item.title || !item.content) return;
                 const itemHtml = `
                     <div class="admin-notice-item">
                         <div class="admin-notice-header">
                             <h4 style="margin:0;">${item.title}</h4>
                             <button class="btn-delete" onclick="deleteNotice('${type}', '${item.id}')">삭제</button>
                         </div>
-                        <div style="font-size: 0.8rem; color: #64748b; margin-bottom: 8px;">${item.date}</div>
+                        <div style="font-size: 0.8rem; color: #64748b; margin-bottom: 8px;">${item.date || ''}</div>
                         <div style="font-size: 0.9rem;">${item.content.replace(/\n/g, '<br>')}</div>
                     </div>
                 `;
