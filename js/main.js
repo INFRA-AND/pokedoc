@@ -63,25 +63,34 @@ function getTodayKey() {
     return `${y}-${m}-${d}`;
 }
 
+function safeFirebaseFetch(endpoint) {
+    return fetch(endpoint)
+        .then(res => res.json())
+        .then(data => {
+            if (data && typeof data === 'object' && data.error) {
+                throw new Error('Firebase: ' + data.error);
+            }
+            return data;
+        });
+}
+
 function updateIntegratedCounter() {
     const todayKey = getTodayKey();
     const totalEndpoint = `${firebaseBaseUrl}/visits.json`;
     const dailyEndpoint = `${firebaseBaseUrl}/daily/${todayKey}.json`;
 
-    // 누적 방문자 수 업데이트
-    const totalPromise = fetch(totalEndpoint)
-        .then(res => res.json())
+    const totalPromise = safeFirebaseFetch(totalEndpoint)
         .then(currentValue => {
-            const newValue = currentValue ? Number(currentValue) + 1 : 1;
+            const parsed = Number(currentValue);
+            const newValue = (!isNaN(parsed) && parsed > 0) ? parsed + 1 : 1;
             return fetch(totalEndpoint, { method: 'PUT', body: JSON.stringify(newValue) })
                 .then(() => newValue);
         });
 
-    // 오늘 방문자 수 업데이트
-    const dailyPromise = fetch(dailyEndpoint)
-        .then(res => res.json())
+    const dailyPromise = safeFirebaseFetch(dailyEndpoint)
         .then(currentValue => {
-            const newValue = currentValue ? Number(currentValue) + 1 : 1;
+            const parsed = Number(currentValue);
+            const newValue = (!isNaN(parsed) && parsed > 0) ? parsed + 1 : 1;
             return fetch(dailyEndpoint, { method: 'PUT', body: JSON.stringify(newValue) })
                 .then(() => newValue);
         });

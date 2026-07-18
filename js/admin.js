@@ -42,6 +42,10 @@ function fetchSuggestions() {
     fetch(`${firebaseBaseUrl}/suggestions.json`)
         .then(res => res.json())
         .then(data => {
+            if (data && typeof data === 'object' && data.error) {
+                targetContainer.innerHTML = '<div class="no-data">⚠️ 데이터베이스 접근이 거부되었습니다. Firebase 규칙을 확인해주세요.</div>';
+                return;
+            }
             if (!data || Object.keys(data).length === 0) {
                 targetContainer.innerHTML = '<div class="no-data">📭 등록된 건의 및 요구사항이 전혀 없습니다.</div>';
                 return;
@@ -55,11 +59,12 @@ function fetchSuggestions() {
             })).reverse();
 
             sortedItems.forEach(item => {
+                if (!item.nickname) return;
                 const itemHtml = `
                     <div class="admin-item" id="msg-${item.id}">
                         <button class="item-delete-btn" onclick="deleteSuggestion('${item.id}')">삭제</button>
-                        <div class="admin-meta">👤 ${item.nickname} (${item.email}) | 📅 ${item.regDate}</div>
-                        <div class="admin-content">${item.content}</div>
+                        <div class="admin-meta">👤 ${item.nickname} (${item.email || ''}) | 📅 ${item.regDate || ''}</div>
+                        <div class="admin-content">${item.content || ''}</div>
                     </div>
                 `;
                 targetContainer.insertAdjacentHTML('beforeend', itemHtml);
